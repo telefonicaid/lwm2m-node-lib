@@ -1,0 +1,30 @@
+{
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": true,
+  "trailing": true,
+  "maxparams": 3,
+  "maxdepth": 4,
+  "camelcase": true,
+  "maxlen": 120,
+  "node": true,
+  "expr": true,
+  "globals": {
+    "describe":true,
+    "it": true,
+    "expect": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "mock": true,
+    "sinon": true
+  }
+}

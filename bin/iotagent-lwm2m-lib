@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+var cli = require('../lib/cli'),
+    tnb = require('../');
+
+var cmd = cli.process();
+
+console.log([cmd, tnb.awesome()].join(' '));
+

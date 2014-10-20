@@ -1,0 +1,1 @@
+module.exports = require('./lib/iotagent-lwm2m-lib');
