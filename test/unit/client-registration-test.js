@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Telefonica Investigación y Desarrollo, S.A.U
+ * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
  * This file is part of iotagent-lwm2m-lib
  *
@@ -29,6 +29,22 @@ var libLwm2m2 = require('../..'),
     should = require('should');
 
 
+function checkCode(requestUrl, payload, code) {
+    return function (done) {
+        var req = coap.request(requestUrl),
+            rs = new Readable();
+
+        rs.push(payload);
+        rs.push(null);
+        rs.pipe(req);
+
+        req.on('response', function(res) {
+            res.code.should.equal(code);
+            done();
+        });
+    };
+}
+
 describe('Client registration interface tests', function() {
     beforeEach(function (done) {
         libLwm2m2.start(null, done);
@@ -48,25 +64,33 @@ describe('Client registration interface tests', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should fail with a 4.00 Bad Request', function(done) {
-            var req = coap.request(requestUrl),
-                rs = new Readable();
-
-            rs.push(payload);
-            rs.push(null);
-            rs.pipe(req);
-
-            req.on('response', function(res) {
-                res.code.should.equal('4.00');
-                done();
-            });
-        });
+        it('should fail with a 4.00 Bad Request', checkCode(requestUrl, payload, '4.00'));
     });
-    describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function () {
-        it('should fail with a 4.00 Bad Request if the request doesn\'t indicate a lifetime');
+    describe('When a client registration requests doesn\'t indicate a lifetime arrives', function () {
+        var requestUrl =  {
+                host: 'localhost',
+                port: 5683,
+                method: 'POST',
+                pathname: '/rd',
+                query: 'ep=ROOM001&lwm2m=1.0&b=U'
+            },
+            payload = '</1>, </2>, </3>, </4>, </5>';
+
+
+        it('should fail with a 4.00 Bad Request', checkCode(requestUrl, payload, '4.00'));
     });
-    describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function () {
-        it('should fail with a 4.00 Bad Request if the request doesn\'t indicate a binding');
+    describe('When a client registration requests doesn\'t indicate a binding arrives', function () {
+        var requestUrl =  {
+                host: 'localhost',
+                port: 5683,
+                method: 'POST',
+                pathname: '/rd',
+                query: 'ep=ROOM001&lt=86400&lwm2m=1.0'
+            },
+            payload = '</1>, </2>, </3>, </4>, </5>';
+
+
+        it('should fail with a 4.00', checkCode(requestUrl, payload, '4.00'));
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
@@ -78,18 +102,6 @@ describe('Client registration interface tests', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should return a 2.01 Created code', function(done) {
-            var req = coap.request(requestUrl),
-                rs = new Readable();
-
-            rs.push(payload);
-            rs.push(null);
-            rs.pipe(req);
-
-            req.on('response', function(res) {
-                res.code.should.equal('2.01');
-                done();
-            });
-        });
+        it('should return a 2.01 Created code', checkCode(requestUrl, payload, '2.01'));
     });
 });
