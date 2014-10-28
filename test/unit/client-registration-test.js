@@ -39,7 +39,28 @@ describe('Client registration interface tests', function() {
     });
 
     describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function() {
-        it('should fail with a 4.00 Bad Request');
+        var requestUrl =  {
+                host: 'localhost',
+                port: 5683,
+                method: 'POST',
+                pathname: '/rd',
+                query: 'lt=86400&lwm2m=1.0&b=U'
+            },
+            payload = '</1>, </2>, </3>, </4>, </5>';
+
+        it('should fail with a 4.00 Bad Request', function(done) {
+            var req = coap.request(requestUrl),
+                rs = new Readable();
+
+            rs.push(payload);
+            rs.push(null);
+            rs.pipe(req);
+
+            req.on('response', function(res) {
+                res.code.should.equal('4.00');
+                done();
+            });
+        });
     });
     describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function () {
         it('should fail with a 4.00 Bad Request if the request doesn\'t indicate a lifetime');
