@@ -23,9 +23,32 @@
 
 'use strict';
 
-describe('Client update registration interface tests', function() {
-    describe('When a correct cliente registration update request arrives', function() {
-        it('should update the indicated attributes');
-        it('should return a 2.04 Changed code');
-    });
-});
+/*jshint unused:false */
+
+var libLwm2m2 = require('../..'),
+    coap = require('coap'),
+    Readable = require('stream').Readable,
+    should = require('should');
+
+function checkCode(requestUrl, payload, code) {
+
+    return function (done) {
+        var req = coap.request(requestUrl),
+            rs = new Readable();
+
+        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
+            callback();
+        });
+
+        rs.push(payload);
+        rs.push(null);
+        rs.pipe(req);
+
+        req.on('response', function(res) {
+            res.code.should.equal(code);
+            done();
+        });
+    };
+}
+
+exports.checkCode = checkCode;

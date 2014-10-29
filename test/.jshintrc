@@ -8,7 +8,7 @@
     "noempty": true,
     "quotmark": "single",
     "undef": true,
-    "unused": false,
+    "unused": true,
     "trailing": true,
     "maxparams": 6,
     "maxdepth": 4,
