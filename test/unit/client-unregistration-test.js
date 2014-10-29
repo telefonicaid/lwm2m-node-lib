@@ -20,4 +20,12 @@
  * For those usages not covered by the GNU Affero General Public License
  * please contact with::[contacto@tid.es]
  */
-module.exports = require('./lib/iotagent-lwm2m-lib');
+
+'use strict';
+
+describe('Client unregistration interface tests', function() {
+    describe('When a correct client unregistration request arrives', function() {
+        it('should remove the device registration');
+        it('should return a 2.02 Deleted code');
+    });
+});
