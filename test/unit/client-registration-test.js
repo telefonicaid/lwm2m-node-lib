@@ -26,28 +26,9 @@
 var libLwm2m2 = require('../..'),
     coap = require('coap'),
     Readable = require('stream').Readable,
+    utils = require('./testUtils'),
     should = require('should');
 
-
-function checkCode(requestUrl, payload, code) {
-    return function (done) {
-        var req = coap.request(requestUrl),
-            rs = new Readable();
-
-        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
-            callback();
-        });
-
-        rs.push(payload);
-        rs.push(null);
-        rs.pipe(req);
-
-        req.on('response', function(res) {
-            res.code.should.equal(code);
-            done();
-        });
-    };
-}
 
 describe('Client registration interface tests', function() {
     beforeEach(function (done) {
@@ -68,7 +49,7 @@ describe('Client registration interface tests', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should fail with a 4.00 Bad Request', checkCode(requestUrl, payload, '4.00'));
+        it('should fail with a 4.00 Bad Request', utils.checkCode(requestUrl, payload, '4.00'));
     });
     describe('When a client registration requests doesn\'t indicate a lifetime arrives', function () {
         var requestUrl =  {
@@ -81,7 +62,7 @@ describe('Client registration interface tests', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00 Bad Request', checkCode(requestUrl, payload, '4.00'));
+        it('should fail with a 4.00 Bad Request', utils.checkCode(requestUrl, payload, '4.00'));
     });
     describe('When a client registration requests doesn\'t indicate a binding arrives', function () {
         var requestUrl =  {
@@ -94,7 +75,7 @@ describe('Client registration interface tests', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00', checkCode(requestUrl, payload, '4.00'));
+        it('should fail with a 4.00', utils.checkCode(requestUrl, payload, '4.00'));
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
@@ -106,7 +87,7 @@ describe('Client registration interface tests', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should return a 2.01 Created code', checkCode(requestUrl, payload, '2.01'));
+        it('should return a 2.01 Created code', utils.checkCode(requestUrl, payload, '2.01'));
 
         it('should invoke the "registration" handler with the parameters', function (done) {
             var req = coap.request(requestUrl),

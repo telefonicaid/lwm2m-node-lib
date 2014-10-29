@@ -23,11 +23,32 @@
 
 'use strict';
 
+/*jshint unused:false */
 
+var libLwm2m2 = require('../..'),
+    coap = require('coap'),
+    Readable = require('stream').Readable,
+    should = require('should');
 
-describe('Client unregistration interface tests', function() {
-    describe('When a correct client unregistration request arrives', function() {
-        it('should remove the device registration');
-        it('should return a 2.02 Deleted code');
-    });
-});
+function checkCode(requestUrl, payload, code) {
+
+    return function (done) {
+        var req = coap.request(requestUrl),
+            rs = new Readable();
+
+        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
+            callback();
+        });
+
+        rs.push(payload);
+        rs.push(null);
+        rs.pipe(req);
+
+        req.on('response', function(res) {
+            res.code.should.equal(code);
+            done();
+        });
+    };
+}
+
+exports.checkCode = checkCode;
