@@ -35,7 +35,7 @@ describe('Client unregistration interface tests', function() {
     });
 
     describe('When a unregistration for a not registered device arrives', function () {
-        it('should return a 4.04 Not found code [Not in the specs]');
+        it('should return a 4.04 Not found code');
     });
     describe('When a correct client unregistration request arrives', function() {
         it('should remove the device registration');

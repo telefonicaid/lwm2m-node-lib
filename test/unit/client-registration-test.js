@@ -76,7 +76,7 @@ describe('Client registration interface tests', function() {
 
         it('should fail with a 4.00', utils.checkCode(requestUrl, payload, '4.00'));
     });
-    describe('When a correct client registration requests arrives', function () {
+    describe.only('When a correct client registration requests arrives', function () {
         var requestUrl =  {
                 host: 'localhost',
                 port: 5683,
@@ -116,6 +116,25 @@ describe('Client registration interface tests', function() {
                 done();
             });
         });
-        it('should include Location-Path Options in the response');
+        it('should include Location-Path Options in the response', function (done) {
+            var req = coap.request(requestUrl),
+                rs = new Readable(),
+                handlerCalled = false;
+
+            libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
+                callback();
+            });
+
+            rs.push(payload);
+            rs.push(null);
+            rs.pipe(req);
+
+            req.on('response', function(res) {
+                res.options.length.should.equal(1);
+                res.options[0].name.should.equal('Location-Path');
+                res.options[0].value.should.match(/\/rd\/.*/);
+                done();
+            });
+        });
     });
 });
