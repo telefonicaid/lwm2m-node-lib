@@ -1,5 +1,10 @@
 'use strict';
 
+var libLwm2m2 = require('../..'),
+    coap = require('coap'),
+    Readable = require('stream').Readable,
+    utils = require('./testUtils'),
+    should = require('should');
 
 describe('Client registration interface tests', function() {
     describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function () {
