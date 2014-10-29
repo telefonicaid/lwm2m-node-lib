@@ -76,7 +76,7 @@ describe('Client registration interface tests', function() {
 
         it('should fail with a 4.00', utils.checkCode(requestUrl, payload, '4.00'));
     });
-    describe.only('When a correct client registration requests arrives', function () {
+    describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
                 host: 'localhost',
                 port: 5683,
