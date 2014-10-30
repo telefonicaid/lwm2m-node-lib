@@ -27,7 +27,7 @@ var libLwm2m2 = require('../..'),
     utils = require('./testUtils'),
     async = require('async');
 
-describe('Client update registration interface tests', function() {
+describe('Client update registration interface', function() {
     var deviceLocation;
 
     function registerHandlers(callback) {

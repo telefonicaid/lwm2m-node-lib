@@ -29,7 +29,7 @@ var libLwm2m2 = require('../..'),
     async = require('async'),
     should = require('should');
 
-describe('Client unregistration interface tests', function() {
+describe('Client unregistration interface', function() {
     var deviceLocation;
 
     function registerHandlers(callback) {

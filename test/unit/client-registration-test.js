@@ -29,7 +29,7 @@ var libLwm2m2 = require('../..'),
     utils = require('./testUtils'),
     should = require('should');
 
-describe('Client registration interface tests', function() {
+describe('Client registration interface', function() {
     beforeEach(function (done) {
         libLwm2m2.start(null, done);
     });
