@@ -26,12 +26,13 @@
 var libLwm2m2 = require('../..'),
     coap = require('coap'),
     Readable = require('stream').Readable,
+    config = require('../../config'),
     utils = require('./testUtils'),
     should = require('should');
 
 describe('Client registration interface', function() {
     beforeEach(function (done) {
-        libLwm2m2.start(null, done);
+        libLwm2m2.start(config, done);
     });
 
     afterEach(function(done) {
@@ -41,7 +42,7 @@ describe('Client registration interface', function() {
     describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function() {
         var requestUrl =  {
                 host: 'localhost',
-                port: 5683,
+                port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
                 query: 'lt=86400&lwm2m=1.0&b=U'
@@ -53,7 +54,7 @@ describe('Client registration interface', function() {
     describe('When a client registration requests doesn\'t indicate a lifetime arrives', function () {
         var requestUrl =  {
                 host: 'localhost',
-                port: 5683,
+                port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
                 query: 'ep=ROOM001&lwm2m=1.0&b=U'
@@ -66,7 +67,7 @@ describe('Client registration interface', function() {
     describe('When a client registration requests doesn\'t indicate a binding arrives', function () {
         var requestUrl =  {
                 host: 'localhost',
-                port: 5683,
+                port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
                 query: 'ep=ROOM001&lt=86400&lwm2m=1.0'
@@ -79,7 +80,7 @@ describe('Client registration interface', function() {
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
                 host: 'localhost',
-                port: 5683,
+                port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
                 query: 'ep=ROOM001&lt=86400&lwm2m=1.0&b=U'

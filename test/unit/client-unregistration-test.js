@@ -26,6 +26,7 @@
 var libLwm2m2 = require('../..'),
     coap = require('coap'),
     utils = require('./testUtils'),
+    config = require('../../config'),
     async = require('async'),
     should = require('should');
 
@@ -42,7 +43,7 @@ describe('Client unregistration interface', function() {
 
     beforeEach(function (done) {
         async.series([
-            async.apply(libLwm2m2.start, null),
+            async.apply(libLwm2m2.start, config),
             registerHandlers,
             utils.registerClient
         ], function (error, results) {
@@ -58,7 +59,7 @@ describe('Client unregistration interface', function() {
     describe('When a unregistration for a not registered device arrives', function () {
         var removeRequest = {
             host: 'localhost',
-                port: 5683,
+                port: config.server.port,
                 method: 'DELETE',
                 pathname: '/rd/6'
         };
@@ -74,7 +75,7 @@ describe('Client unregistration interface', function() {
     describe('When a correct client unregistration request arrives', function() {
         var removeRequest = {
             host: 'localhost',
-            port: 5683,
+            port: config.server.port,
             method: 'DELETE'
         };
 

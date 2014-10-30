@@ -25,6 +25,7 @@
 
 var libLwm2m2 = require('../..'),
     utils = require('./testUtils'),
+    config = require('../../config'),
     async = require('async');
 
 describe('Client update registration interface', function() {
@@ -44,7 +45,7 @@ describe('Client update registration interface', function() {
 
     beforeEach(function (done) {
         async.series([
-            async.apply(libLwm2m2.start, null),
+            async.apply(libLwm2m2.start, config),
             registerHandlers,
             utils.registerClient
         ], function (error, results) {
@@ -60,7 +61,7 @@ describe('Client update registration interface', function() {
     describe('When a correct cliente registration update request arrives', function() {
         var updateRequest = {
             host: 'localhost',
-            port: 5683,
+            port: config.server.port,
             method: 'PUT',
             query: 'lt=86400&b=U'
         };
