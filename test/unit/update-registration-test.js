@@ -24,10 +24,8 @@
 'use strict';
 
 var libLwm2m2 = require('../..'),
-    coap = require('coap'),
     utils = require('./testUtils'),
-    async = require('async'),
-    should = require('should');
+    async = require('async');
 
 describe('Client update registration interface tests', function() {
     var deviceLocation;
@@ -65,7 +63,7 @@ describe('Client update registration interface tests', function() {
             port: 5683,
             method: 'PUT',
             query: 'lt=86400&b=U'
-        }
+        };
 
         beforeEach(function() {
             updateRequest.pathname = deviceLocation;
