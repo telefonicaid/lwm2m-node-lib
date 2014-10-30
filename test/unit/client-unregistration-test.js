@@ -51,8 +51,7 @@ describe('Client unregistration interface tests', function() {
 
     function registerClient(callback) {
         var req = coap.request(creationRequest),
-            rs = new Readable(),
-            handlerCalled = false;
+            rs = new Readable();
 
         rs.push(payload);
         rs.push(null);
@@ -113,7 +112,6 @@ describe('Client unregistration interface tests', function() {
 
         it('should remove the device registration', function(done) {
             var req = coap.request(removeRequest),
-                rs = new Readable(),
                 handlerCalled = false;
 
             libLwm2m2.setHandler('unregistration', function(device, callback) {

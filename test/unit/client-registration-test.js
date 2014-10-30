@@ -118,8 +118,7 @@ describe('Client registration interface tests', function() {
         });
         it('should include Location-Path Options in the response', function (done) {
             var req = coap.request(requestUrl),
-                rs = new Readable(),
-                handlerCalled = false;
+                rs = new Readable();
 
             libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
                 callback();
