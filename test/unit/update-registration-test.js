@@ -59,7 +59,7 @@ describe('Client update registration interface tests', function() {
         libLwm2m2.stop(done);
     });
 
-    describe.only('When a correct cliente registration update request arrives', function() {
+    describe('When a correct cliente registration update request arrives', function() {
         var updateRequest = {
             host: 'localhost',
             port: 5683,
