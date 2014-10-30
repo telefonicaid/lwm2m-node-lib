@@ -25,21 +25,12 @@
 
 var libLwm2m2 = require('../..'),
     coap = require('coap'),
-    Readable = require('stream').Readable,
     utils = require('./testUtils'),
     async = require('async'),
     should = require('should');
 
 describe('Client unregistration interface tests', function() {
-    var creationRequest =  {
-            host: 'localhost',
-            port: 5683,
-            method: 'POST',
-            pathname: '/rd',
-            query: 'ep=ROOM001&lt=86400&lwm2m=1.0&b=U'
-        },
-        payload = '</1>, </2>, </3>, </4>, </5>',
-        deviceLocation;
+    var deviceLocation;
 
     function registerHandlers(callback) {
         libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, innerCb) {
@@ -49,31 +40,15 @@ describe('Client unregistration interface tests', function() {
         callback();
     }
 
-    function registerClient(callback) {
-        var req = coap.request(creationRequest),
-            rs = new Readable();
-
-        rs.push(payload);
-        rs.push(null);
-        rs.pipe(req);
-
-        req.on('response', function(res) {
-            for (var i = 0; i < res.options.length; i++) {
-                if (res.options[i].name === 'Location-Path') {
-                    deviceLocation = res.options[i].value;
-                }
-            }
-
-            callback();
-        });
-    }
-
     beforeEach(function (done) {
         async.series([
             async.apply(libLwm2m2.start, null),
             registerHandlers,
-            registerClient
-        ], done);
+            utils.registerClient
+        ], function (error, results) {
+            deviceLocation = results[2];
+            done();
+        });
     });
 
     afterEach(function(done) {
