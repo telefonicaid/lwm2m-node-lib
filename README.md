@@ -5,7 +5,10 @@ The [Open Mobile Alliance Lightweight M2M protocol](http://openmobilealliance.or
 communicate resource constrained devices. The protocol defines two roles for the devices: a Lightweight M2M Client (the constrained device) and a Lightweight M2M Server (meant to consume the device data and control its execution).
 
 This library aims to provide a simple way to build a Lightweight M2M Server with Node.js, giving an abstraction over the 
-COAP Protocol based on function calls and handlers.
+COAP Protocol based on function calls and handlers. The provided features are:
+* Creation of a server listening to Client calls for the LWTM2M Interfaces, linked to handlers defined by the user.
+* Registry of devices connected to the server (in-memory registry for the first version).
+* Server calls to the registered devices in the registry (for Device Management Interface mostly).
 
 ## Usage
 Note: as it is not yet published in npm repositories, this module has to be currently used as a github dependency in the package.json. To do so, add the following dependency to your package.json file, indicating the commit you want to use:
