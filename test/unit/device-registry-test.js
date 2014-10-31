@@ -26,6 +26,7 @@
 var libLwm2m2 = require('../..'),
     utils = require('./testUtils'),
     config = require('../../config'),
+    should = require('should'),
     async = require('async');
 
 describe('Device registry', function() {
