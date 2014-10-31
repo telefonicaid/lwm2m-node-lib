@@ -69,14 +69,14 @@ Signature:
 ```
 function write(deviceId, objectType, objectId, resourceId, value, callback)
 ```
-
+Execute a Write operation over the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId, changing its value to the value passed as a parameter. The device id can be found from the register, based on the name or listing all the available ones.
 
 #### Device Management Interface: Read
 Signature:
 ```
 function read(deviceId, objectType, objectId, resourceId, callback)
 ```
-
+Execute a read operation for the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId. The device id can be found from the register, based on the name or listing all the available ones.
 
 ## Development documentation
 ### Project build
