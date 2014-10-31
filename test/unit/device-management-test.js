@@ -23,12 +23,78 @@
 
 'use strict';
 
+var libLwm2m2 = require('../..'),
+    utils = require('./testUtils'),
+    config = require('../../config'),
+    libcoap = require('coap'),
+    should = require('should'),
+    server = libcoap.createServer(),
+    async = require('async');
+
 describe('Device management interface' , function() {
+    var deviceLocation;
+
+    function registerHandlers(callback) {
+        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, innerCb) {
+            innerCb();
+        });
+
+        libLwm2m2.setHandler('updateRegistration', function(object, innerCb) {
+            innerCb();
+        });
+
+        callback();
+    }
+
+    beforeEach(function (done) {
+        async.series([
+            async.apply(libLwm2m2.start, config),
+            registerHandlers,
+            utils.registerClient
+        ], function (error, results) {
+            server.listen(function (error) {
+                deviceLocation = results[2];
+                done();
+            });
+        });
+    });
+
+    afterEach(function(done) {
+        libLwm2m2.stop(function (error) {
+            server.removeAllListeners('request');
+            server.close(done);
+        });
+    });
+
     describe('When the user invokes the Read operation on an attribute', function() {
-        it('should send a COAP GET Operation on the selected attribute');
+        it('should send a COAP GET Operation on the selected attribute', function (done) {
+            server.on('request', function (req, res) {
+                req.method.should.equal('GET');
+                res.code = '2.05';
+                res.end('The Read content');
+            });
+
+            libLwm2m2.read(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('The Read content');
+                done();
+            });
+        });
     });
     describe('When the user invokes the Write operation on an attribute', function() {
-        it('should send a COAP PUT Operation on the selected attribute');
+        it('should send a COAP PUT Operation on the selected attribute', function (done) {
+            server.on('request', function (req, res) {
+                req.method.should.equal('PUT');
+                res.code = '2.04';
+                res.end('The content');
+            });
+
+            libLwm2m2.write(deviceLocation.split('/')[2], '6', '2', '5', 'The value', function (error) {
+                should.not.exist(error);
+                done();
+            });
+        });
     });
     describe('When the user invokes the Execute operation on an attribute', function() {
         it('should send a COAP POST Operation on the selected attribute');
