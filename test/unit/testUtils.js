@@ -52,14 +52,14 @@ function checkCode(requestUrl, payload, code) {
     };
 }
 
-function registerClient(callback) {
+function registerClient(deviceName, callback) {
     var rs = new Readable(),
         creationRequest =  {
             host: 'localhost',
             port: config.server.port,
             method: 'POST',
             pathname: '/rd',
-            query: 'ep=ROOM001&lt=86400&lwm2m=1.0&b=U'
+            query: 'ep=' +  deviceName + '&lt=86400&lwm2m=1.0&b=U'
         },
         payload = '</1>, </2>, </3>, </4>, </5>',
         req = coap.request(creationRequest),

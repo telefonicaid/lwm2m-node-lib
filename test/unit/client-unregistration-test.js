@@ -45,7 +45,7 @@ describe('Client unregistration interface', function() {
         async.series([
             async.apply(libLwm2m2.start, config),
             registerHandlers,
-            utils.registerClient
+            async.apply(utils.registerClient, 'ROOM001')
         ], function (error, results) {
             deviceLocation = results[2];
             done();
