@@ -72,6 +72,7 @@ describe('Device management interface' , function() {
                 req.method.should.equal('GET');
                 res.code = '2.05';
                 res.end('The Read content');
+
             });
 
             libLwm2m2.read(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
@@ -84,14 +85,19 @@ describe('Device management interface' , function() {
     });
     describe('When the user invokes the Write operation on an attribute', function() {
         it('should send a COAP PUT Operation on the selected attribute', function (done) {
+            var data = '';
+
             server.on('request', function (req, res) {
                 req.method.should.equal('PUT');
                 res.code = '2.04';
+
+                data = res._request.payload.toString();
                 res.end('The content');
             });
 
             libLwm2m2.write(deviceLocation.split('/')[2], '6', '2', '5', 'The value', function (error) {
                 should.not.exist(error);
+                data.should.equal('The value');
                 done();
             });
         });
