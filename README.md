@@ -1,6 +1,82 @@
 # iotagent-lwm2m-lib
 
-Library for Lightweight M2M IoT Agents.
+## Overview
+The [Open Mobile Alliance Lightweight M2M protocol](http://openmobilealliance.org/about-oma/work-program/m2m-enablers/) is a machine to machine communication protocol built over [COAP](https://tools.ietf.org/html/draft-ietf-core-coap), and meant to
+communicate resource constrained devices. The protocol defines two roles for the devices: a Lightweight M2M Client (the constrained device) and a Lightweight M2M Server (meant to consume the device data and control its execution).
+
+This library aims to provide a simple way to build a Lightweight M2M Server with Node.js, giving an abstraction over the 
+COAP Protocol based on function calls and handlers. The provided features are:
+* Creation of a server listening to Client calls for the LWTM2M Interfaces, linked to handlers defined by the user.
+* Registry of devices connected to the server (in-memory registry for the first version).
+* Server calls to the registered devices in the registry (for Device Management Interface mostly).
+
+## Usage
+Note: as it is not yet published in npm repositories, this module has to be currently used as a github dependency in the package.json. To do so, add the following dependency to your package.json file, indicating the commit you want to use:
+
+```
+"iotagent-lwm2m-lib": "https://github.com/dmoranj/iotagent-lwm2m-lib/tarball/43664dd4b011673dd56d52b00d825cc3cf2ef679"
+```
+
+In order to use this library, first you must require it:
+```
+var lwtm2m = require('iotagent-lwm2m-lib');
+```
+As a Lightweight M2M Server, the library supports two kind of features, one for each direction of the communication: client-to-server and server-to-client. Each feature set is defined in the following sections.
+
+### Listening features (client -> server)
+
+#### Starting and stopping the server
+To start the LWTM2M Server execute the following command:
+```
+lwtm2m.start(config, function(error) {
+  console.log('Listening');
+});
+```
+The config object contains all the information required to start the server (see its structure in the Configuration section below).
+
+Only one server can be listening at a time in the library (is treated as a singleton), so multiple calls to 'start()' without a previous call to 'stop()' will end up in an error.
+
+To stop the server, execute the following method:
+```
+lwtm2m.stop(function(error) {
+  console.log('Server stopped');
+});
+```
+No information is needed to stop the server, as there is a single instance per module.
+
+#### Handling incoming messages
+The server listens to multiple kinds incoming messages from the devices, described in the different LWTM2M Interfaces. For each operation of an interface that needs to be captured by the server, this library provides a handler that will have the opportunity to manage the event.
+
+The following table lists the current supported events along with the expected signature of the handlers. Be careful with the handler signatures, as an interruption in the callbacks pipeline may hang up your server.
+
+| Interface        | Operation              | Code                  | Signature            |
+|:---------------- |:---------------------- |:--------------------- |:-------------------- |
+| Registration     | Register               | registration          | fn(endpoint, lifetime, version, binding, callback) |
+| Registration     | Update                 | unregistration        | fn(device, callback) |
+| Registration     | De-register            | updateRegistration    | function(object, callback) |
+
+The meaning of each parameter should be clear reading the operation description in OMA's documentation.
+
+### Configuration
+The configuration object should contain the following fields:
+* `server.port`: port where the COAP server will start listening.
+
+### Writing features (server -> client)
+Each writing feature is modelled as a function in the LWTM2M module. The following sections describe the implemented features, identified by its Interface and name of the operation.
+
+#### Device Management Interface: Write
+Signature:
+```
+function write(deviceId, objectType, objectId, resourceId, value, callback)
+```
+Execute a Write operation over the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId, changing its value to the value passed as a parameter. The device id can be found from the register, based on the name or listing all the available ones.
+
+#### Device Management Interface: Read
+Signature:
+```
+function read(deviceId, objectType, objectId, resourceId, callback)
+```
+Execute a read operation for the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId. The device id can be found from the register, based on the name or listing all the available ones.
 
 ## Development documentation
 ### Project build
