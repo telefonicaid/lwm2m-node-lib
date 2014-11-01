@@ -23,7 +23,7 @@
 
 'use strict';
 
-var libLwm2m2 = require('../..'),
+var libLwm2m2 = require('../..').server,
     coap = require('coap'),
     Readable = require('stream').Readable,
     config = require('../../config'),
