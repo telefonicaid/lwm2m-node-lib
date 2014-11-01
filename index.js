@@ -20,4 +20,5 @@
  * For those usages not covered by the GNU Affero General Public License
  * please contact with::[contacto@tid.es]
  */
+
 module.exports = require('./lib/iotagent-lwm2m-lib');
