@@ -23,9 +23,9 @@
 
 'use strict';
 
-var libLwm2m2 = require('../..').server,
-    utils = require('./testUtils'),
-    config = require('../../config'),
+var libLwm2m2 = require('../../../').server,
+    utils = require('./../testUtils'),
+    config = require('../../../config'),
     async = require('async');
 
 describe('Client update registration interface', function() {

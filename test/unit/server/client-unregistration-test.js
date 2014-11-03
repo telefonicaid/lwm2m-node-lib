@@ -23,10 +23,10 @@
 
 'use strict';
 
-var libLwm2m2 = require('../..').server,
+var libLwm2m2 = require('../../../').server,
     coap = require('coap'),
-    utils = require('./testUtils'),
-    config = require('../../config'),
+    utils = require('./../testUtils'),
+    config = require('../../../config'),
     async = require('async'),
     should = require('should');
 

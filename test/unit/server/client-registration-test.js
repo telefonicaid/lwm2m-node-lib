@@ -23,11 +23,11 @@
 
 'use strict';
 
-var libLwm2m2 = require('../..').server,
+var libLwm2m2 = require('../../../').server,
     coap = require('coap'),
     Readable = require('stream').Readable,
-    config = require('../../config'),
-    utils = require('./testUtils'),
+    config = require('../../../config'),
+    utils = require('./../testUtils'),
     should = require('should');
 
 describe('Client registration interface', function() {
