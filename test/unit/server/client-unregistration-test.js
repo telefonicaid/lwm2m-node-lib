@@ -61,7 +61,7 @@ describe('Client unregistration interface', function() {
             host: 'localhost',
                 port: config.server.port,
                 method: 'DELETE',
-                pathname: '/rd/6'
+                pathname: '/rd/136'
         };
 
         beforeEach(function () {

@@ -30,7 +30,7 @@ var async = require('async'),
     config = require('../../../config');
 
 
-describe.only('Client-initiated registration', function() {
+describe('Client-initiated registration', function() {
     beforeEach(function(done) {
         lwm2mServer.start(config, done);
     });
@@ -70,6 +70,32 @@ describe.only('Client-initiated registration', function() {
         it('should update the set of supported objects');
     });
     describe('When the client unregistration method is executed', function() {
-        it('should send a COAP DELETE Message to the provided location');
+        var deviceInformation;
+
+        beforeEach(function(done) {
+            lwm2mServer.setHandler('registration', function (endpoint, lifetime, version, binding, callback) {
+                callback(null);
+            });
+            lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, info) {
+                deviceInformation = info;
+                done();
+            });
+        });
+
+        it('should send a COAP DELETE Message to the provided location', function(done) {
+            var handlerCalled = false;
+
+            lwm2mServer.setHandler('unregistration', function (device, callback) {
+                should.exist(device);
+                handlerCalled = true;
+                callback(null);
+            });
+
+            lwm2mClient.unregister(deviceInformation, function (error) {
+                handlerCalled.should.equal(true);
+                done();
+            });
+
+        });
     });
 });
