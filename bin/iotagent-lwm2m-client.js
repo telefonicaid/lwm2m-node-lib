@@ -23,65 +23,11 @@
  * please contact with::[contacto@tid.es]
  */
 
-var readline = require('readline'),
-    config = require('../config'),
+var config = require('../config'),
+    clUtils = require('../lib/commandLineUtils'),
     lwm2mClient = require('../').client,
     async = require('async'),
     separator = '\n\n\t';
-
-var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-function printName(name) {
-    return function() {
-        console.log('Executing: %s', name);
-        rl.prompt();
-    }
-}
-
-function showHelp() {
-    var keyList = Object.keys(commands);
-
-    console.log('\n');
-
-    for (var i = 0; i < keyList.length; i++) {
-        var parameters = '';
-
-        for (var j = 0; j < commands[keyList[i]].parameters.length; j++) {
-            parameters += '<' + commands[keyList[i]].parameters[j] + '> ';
-        }
-
-        console.log("%s %s \n\n%s\n", keyList[i], parameters, commands[keyList[i]].description);
-    }
-}
-
-function executeCommander(command) {
-    if (command[0]=='help') {
-        showHelp();
-    } else if (commands[command[0]]) {
-        if (command.length -1 !== commands[command[0]].parameters.length) {
-            console.log('Wrong number of parameters. Expected: %s', JSON.stringify(commands[command[0]].parameters));
-        } else {
-            commands[command[0]].handler(command.slice(1));
-        }
-    } else if (command[0] == '') {
-        console.log('\n');
-    } else {
-        console.log('Unrecognized command');
-    }
-    rl.prompt();
-}
-
-function initialize() {
-    rl.setPrompt('\033[36mLWM2M-Client> \033[0m');
-    rl.prompt();
-
-    rl.on('line', function (cmd) {
-        executeCommander(cmd.split(' '));
-    });
-}
 
 function handleError(error) {
     console.log('\nError:\n--------------------------------\nCode: %s\nMessage: %s\n\n', error.name, error.message);
@@ -144,12 +90,6 @@ function list() {
     });
 }
 
-function showConfig(config, branch) {
-    return function () {
-        console.log('\Config:\n--------------------------------\n\n%s', JSON.stringify(config[branch], null, 4));
-    };
-}
-
 var commands = {
     'create': {
         parameters: ['objectUri'],
@@ -184,18 +124,18 @@ var commands = {
     'connect': {
         parameters: ['host port'],
         description: '\tConnect to the server in the selected host and port.',
-        handler: printName('connecting')
+        handler: clUtils.printName('connecting')
     },
     'disconnect': {
         parameters: [],
         description: '\tDisconnect from the current server.',
-        handler: printName('disconnecting')
+        handler: clUtils.printName('disconnecting')
     },
     'config': {
         parameters: [],
         description: '\tPrint the current config.',
-        handler: showConfig(config, 'client')
+        handler: clUtils.showConfig(config, 'client')
     }
 };
 
-initialize();
+clUtils.initialize(commands);
