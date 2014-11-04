@@ -24,20 +24,38 @@
  */
 
 var config = require('../config'),
-    lwm2mClient = require('../').server,
+    lwm2mServer = require('../').server,
     clUtils = require('../lib/commandLineUtils'),
     separator = '\n\n\t';
+
+function handleResult(message) {
+    return function(error) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            console.log('Success: %s', message);
+        }
+    };
+}
+
+function start() {
+    lwm2mServer.start(config, handleResult('COAP Server started.'));
+}
+
+function stop() {
+    lwm2mServer.stop(config, handleResult('COAP Server stopped.'));
+}
 
 var commands = {
     'start': {
         parameters: [],
         description: '\tStarts a new Lightweight M2M server listening in the prefconfigured port.',
-        handler: clUtils.printName('start')
+        handler: start
     },
     'stop': {
         parameters: [],
         description: '\tStops the current LWTM2M Server running.',
-        handler: clUtils.printName('stop')
+        handler: stop
     },
     'list': {
         parameters: [],

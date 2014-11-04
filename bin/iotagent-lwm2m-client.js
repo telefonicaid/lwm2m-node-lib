@@ -29,10 +29,6 @@ var config = require('../config'),
     async = require('async'),
     separator = '\n\n\t';
 
-function handleError(error) {
-    console.log('\nError:\n--------------------------------\nCode: %s\nMessage: %s\n\n', error.name, error.message);
-}
-
 function printObject(result) {
     var resourceIds = Object.keys(result.attributes);
     console.log('\nObject:\n--------------------------------\nObjectType: %s\nObjectId: %s\nObjectUri: %s',
@@ -49,7 +45,7 @@ function printObject(result) {
 
 function handleObjectFunction(error, result) {
     if (error) {
-        handleError(error);
+        clUtils.handleError(error);
     } else {
         printObject(result);
     }
@@ -78,7 +74,7 @@ function unset(command) {
 function list() {
     lwm2mClient.registry.list(function(error, objList) {
         if (error){
-            handleError(error);
+            clUtils.handleError(error);
         } else {
             console.log('\nList:\n--------------------------------\n');
             for (var i=0; i < objList.length; i++) {
