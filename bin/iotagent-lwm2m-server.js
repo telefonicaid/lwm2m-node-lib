@@ -74,6 +74,12 @@ function executeCommander(command) {
     rl.prompt();
 }
 
+function showConfig(config, branch) {
+    return function () {
+        console.log('\Config:\n--------------------------------\n\n%s', JSON.stringify(config[branch], null, 4));
+    };
+}
+
 var commands = {
     'start': {
         parameters: [],
@@ -111,6 +117,11 @@ var commands = {
         description: '\tCancel the discover order for the given resource (defined with a LWTM2M URI) ' +
             'to the given device.',
         handler: printName('cancel')
+    },
+    'config': {
+        parameters: [],
+        description: '\tPrint the current config.',
+        handler: showConfig(config, 'server')
     }
 };
 

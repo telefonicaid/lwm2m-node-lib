@@ -28,7 +28,7 @@ var objectRegistry = require('../../..').client.registry,
     apply = async.apply,
     should = require('should');
 
-describe.only('Client registry', function() {
+describe('Client registry', function() {
     describe('When a new object with URI "/1/3" is created in the registry', function() {
         beforeEach(function(done) {
             objectRegistry.create('/1/3', done);

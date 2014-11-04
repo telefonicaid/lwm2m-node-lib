@@ -144,6 +144,12 @@ function list() {
     });
 }
 
+function showConfig(config, branch) {
+    return function () {
+        console.log('\Config:\n--------------------------------\n\n%s', JSON.stringify(config[branch], null, 4));
+    };
+}
+
 var commands = {
     'create': {
         parameters: ['objectUri'],
@@ -184,6 +190,11 @@ var commands = {
         parameters: [],
         description: '\tDisconnect from the current server.',
         handler: printName('disconnecting')
+    },
+    'config': {
+        parameters: [],
+        description: '\tPrint the current config.',
+        handler: showConfig(config, 'client')
     }
 };
 
