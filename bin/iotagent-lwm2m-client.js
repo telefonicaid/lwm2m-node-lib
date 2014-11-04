@@ -61,8 +61,8 @@ function executeCommander(command) {
     if (command[0]=='help') {
         showHelp();
     } else if (commands[command[0]]) {
-        if (command.length -1 < commands[command[0]].parameters.length) {
-            console.log('Wrong number of parameters');
+        if (command.length -1 !== commands[command[0]].parameters.length) {
+            console.log('Wrong number of parameters. Expected: %s', JSON.stringify(commands[command[0]].parameters));
         } else {
             commands[command[0]].handler(command.slice(1));
         }
