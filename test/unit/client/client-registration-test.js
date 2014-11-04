@@ -23,12 +23,51 @@
 
 'use strict';
 
-describe('Client registration', function() {
-    describe('When the client registration method is executed', function() {
-        it('should send a COAP POST Message with the required parameters');
+var async = require('async'),
+    should = require('should'),
+    lwm2mServer = require('../../../').server,
+    lwm2mClient = require('../../../').client,
+    config = require('../../../config');
+
+
+describe.only('Client-initiated registration', function() {
+    beforeEach(function(done) {
+        lwm2mServer.start(config, done);
+    });
+    afterEach(function(done) {
+        lwm2mServer.stop(done);
+    });
+
+    describe('When the client tries to register in an existent LWTM2M server', function() {
+        it('should send a COAP POST Message with the required parameters', function(done) {
+            var handlerCalled = false;
+
+            lwm2mServer.setHandler('registration', function (endpoint, lifetime, version, binding, callback) {
+                should.exist(endpoint);
+                should.exist(lifetime);
+                should.exist(binding);
+                should.exist(version);
+                endpoint.should.equal('testEndpoint');
+                lifetime.should.equal(config.client.lifetime);
+                binding.should.equal('U');
+                handlerCalled = true;
+                callback(null);
+            });
+
+            lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error) {
+                handlerCalled.should.equal(true);
+                done();
+            });
+        });
+        it('should pass the returned location to the callback if there is no error');
+        it('should send the complete set of supported objects');
+    });
+    describe('When the client tries to register in an unexistent server', function() {
+        it('should raise a SERVER_NOT_FOUND error');
     });
     describe('When the client update method is executed', function() {
         it('should send a COAP UPDATE Message with the required parameters');
+        it('should update the set of supported objects');
     });
     describe('When the client unregistration method is executed', function() {
         it('should send a COAP DELETE Message to the provided location');
