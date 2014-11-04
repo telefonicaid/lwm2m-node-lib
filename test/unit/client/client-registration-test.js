@@ -23,8 +23,7 @@
 
 'use strict';
 
-var async = require('async'),
-    should = require('should'),
+var should = require('should'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
     config = require('../../../config');
