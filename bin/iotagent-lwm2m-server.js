@@ -25,6 +25,7 @@
 
 var config = require('../config'),
     lwm2mServer = require('../').server,
+    async = require('async'),
     clUtils = require('../lib/commandLineUtils'),
     separator = '\n\n\t';
 
@@ -33,13 +34,37 @@ function handleResult(message) {
         if (error) {
             clUtils.handleError(error);
         } else {
-            console.log('Success: %s', message);
+            console.log('\nSuccess: %s\n', message);
+            clUtils.prompt();
         }
     };
 }
 
+function registrationHandler(endpoint, lifetime, version, binding, callback) {
+    console.log('\nDevice registration:\n----------------------------\n');
+    console.log('Endpoint name: %s\nLifetime: %s\nBinding: %s', endpoint, lifetime, binding);
+    clUtils.prompt();
+    callback();
+}
+
+function unregistrationHandler(device, callback) {
+    console.log('\nDevice unregistration:\n----------------------------\n');
+    console.log('Device location: %s', device);
+    clUtils.prompt();
+    callback();
+}
+
+function setHandlers(callback) {
+    lwm2mServer.setHandler('registration', registrationHandler);
+    lwm2mServer.setHandler('unregistration', unregistrationHandler);
+    callback();
+}
+
 function start() {
-    lwm2mServer.start(config, handleResult('COAP Server started.'));
+    async.series([
+        async.apply(lwm2mServer.start, config),
+        setHandlers
+    ], handleResult('Lightweight M2M Server started'));
 }
 
 function stop() {

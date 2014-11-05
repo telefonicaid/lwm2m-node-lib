@@ -92,6 +92,7 @@ function connect(command) {
             clUtils.handleError(error);
         } else {
             console.log('\nConnected:\n--------------------------------\nDevice location: %s', deviceInfo.location);
+            clUtils.prompt();
         }
     });
 }
