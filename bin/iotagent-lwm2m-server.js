@@ -43,7 +43,7 @@ function start() {
 }
 
 function stop() {
-    lwm2mServer.stop(config, handleResult('COAP Server stopped.'));
+    lwm2mServer.stop(handleResult('COAP Server stopped.'));
 }
 
 var commands = {

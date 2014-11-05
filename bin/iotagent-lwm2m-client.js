@@ -86,6 +86,16 @@ function list() {
     });
 }
 
+function connect(command) {
+    lwm2mClient.register(command[0], command[1], command[2], function (error, deviceInfo) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            console.log('\nConnected:\n--------------------------------\nDevice location: %s', deviceInfo.location);
+        }
+    });
+}
+
 var commands = {
     'create': {
         parameters: ['objectUri'],
@@ -118,9 +128,9 @@ var commands = {
         handler: list
     },
     'connect': {
-        parameters: ['host port'],
-        description: '\tConnect to the server in the selected host and port.',
-        handler: clUtils.printName('connecting')
+        parameters: ['host', 'port', 'endpointName'],
+        description: '\tConnect to the server in the selected host and port, using the selected endpointName.',
+        handler: connect
     },
     'disconnect': {
         parameters: [],
