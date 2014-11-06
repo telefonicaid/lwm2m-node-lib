@@ -65,7 +65,37 @@ describe('Client-initiated registration', function() {
         it('should raise a SERVER_NOT_FOUND error');
     });
     describe('When the client update method is executed', function() {
-        it('should send a COAP UPDATE Message with the required parameters');
+        var deviceInformation;
+
+        beforeEach(function(done) {
+            lwm2mServer.setHandler('registration', function (endpoint, lifetime, version, binding, callback) {
+                callback(null);
+            });
+            lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, info) {
+                deviceInformation = info;
+                done();
+            });
+            lwm2mServer.setHandler('unregistration', function (device, callback) {
+                callback(null);
+            });
+        });
+
+        it('should send a COAP UPDATE Message with the required parameters', function(done) {
+            var handlerCalled = false;
+
+            lwm2mServer.setHandler('updateRegistration', function (device, callback) {
+                should.exist(device);
+                handlerCalled = true;
+                callback(null);
+            });
+
+            lwm2mClient.update(deviceInformation, function (error) {
+                handlerCalled.should.equal(true);
+                done();
+            });
+
+        });
+
         it('should update the set of supported objects');
     });
     describe('When the client unregistration method is executed', function() {
@@ -96,5 +126,14 @@ describe('Client-initiated registration', function() {
             });
 
         });
+    });
+    describe('When the client registration method is rejected with an error', function() {
+        it('should invoke the callback with the appropriate error');
+    });
+    describe('When the client update registration method is rejected with an error', function() {
+        it('should invoke the callback with the same error');
+    });
+    describe('When the client unregistration method is rejected with an error', function() {
+        it('should invoke the callback with the same error');
     });
 });
