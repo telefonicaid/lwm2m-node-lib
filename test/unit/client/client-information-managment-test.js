@@ -31,7 +31,7 @@ var should = require('should'),
     config = require('../../../config'),
     testInfo = {};
 
-describe('Client-side information management', function() {
+describe.only('Client-side information management', function() {
     var deviceInformation,
         deviceId;
 
@@ -64,6 +64,8 @@ describe('Client-side information management', function() {
         };
 
         it('should change the appropriate value in the selected object', function (done) {
+            var handlerCalled = false;
+
             lwm2mClient.setHandler(deviceInformation.serverInfo, 'write',
                 function (objectType, objectId, resourceId, value, callback) {
                     should.exist(objectType);
@@ -74,16 +76,60 @@ describe('Client-side information management', function() {
                     objectId.should.equal(obj.id);
                     resourceId.should.equal(obj.resource);
                     value.should.equal(obj.value);
+                    handlerCalled = true;
                     callback();
                 });
 
             lwm2mServer.write(deviceId, obj.type, obj.id, obj.resource, obj.value, function(error) {
                 should.not.exist(error);
+                handlerCalled.should.equal(true);
                 done();
             });
         });
     });
-    describe('When a read request arrives to the client', function() {
-        it('should send a response with the required object value');
+    describe('When a read request arrives to the client for an existent resource of an existent object', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+        });
+        it('should send a response with the required object value', function(done) {
+            var handlerCalled = false;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    should.exist(objectType);
+                    should.exist(objectId);
+                    should.exist(resourceId);
+                    objectType.should.equal(obj.type);
+                    objectId.should.equal(obj.id);
+                    resourceId.should.equal(obj.resource);
+                    handlerCalled = true;
+                    callback(null, resourceValue);
+                });
+
+            lwm2mServer.read(deviceId, obj.type, obj.id, obj.resource, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal(obj.value);
+                handlerCalled.should.equal(true);
+                done();
+            });
+        });
+    });
+    describe('When a read request arrives to the client for an unexistent object instance', function() {
+        it('should raise a 4.04 OBJECT_NOT_FOUND error');
+    });
+    describe('When a read request arrives to the client for an unexistent resource of an object', function() {
+        it('should raise a 4.04 RESOURCE_NOT_FOUND error');
     });
 });
