@@ -31,15 +31,16 @@ var libLwm2m2 = require('../..').server,
     config = require('../../config'),
     should = require('should');
 
-function checkCode(requestUrl, payload, code) {
+function checkCode(testInfo, requestUrl, payload, code) {
 
     return function (done) {
         var req = coap.request(requestUrl),
             rs = new Readable();
 
-        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
-            callback();
-        });
+        libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+            function(endpoint, lifetime, version, binding, callback) {
+                callback();
+            });
 
         rs.push(payload);
         rs.push(null);

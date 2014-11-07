@@ -28,32 +28,37 @@ var libLwm2m2 = require('../../../').server,
     utils = require('./../testUtils'),
     config = require('../../../config'),
     async = require('async'),
-    should = require('should');
+    should = require('should'),
+    testInfo = {};
 
 describe('Client unregistration interface', function() {
     var deviceLocation;
 
     function registerHandlers(callback) {
-        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, innerCb) {
-            innerCb();
-        });
+        libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+            function(endpoint, lifetime, version, binding, innerCb) {
+                innerCb();
+            });
 
         callback();
     }
 
     beforeEach(function (done) {
-        async.series([
-            async.apply(libLwm2m2.start, config),
-            registerHandlers,
-            async.apply(utils.registerClient, 'ROOM001')
-        ], function (error, results) {
-            deviceLocation = results[2];
-            done();
+        libLwm2m2.start(config.server, function (error, srvInfo){
+            testInfo.serverInfo = srvInfo;
+
+            async.series([
+                registerHandlers,
+                async.apply(utils.registerClient, 'ROOM001')
+            ], function (error, results) {
+                deviceLocation = results[1];
+                done();
+            });
         });
     });
 
     afterEach(function(done) {
-        libLwm2m2.stop(done);
+        libLwm2m2.stop(testInfo.serverInfo, done);
     });
 
     describe('When a unregistration for a not registered device arrives', function () {
@@ -65,12 +70,12 @@ describe('Client unregistration interface', function() {
         };
 
         beforeEach(function () {
-            libLwm2m2.setHandler('unregistration', function(device, callback) {
+            libLwm2m2.setHandler(testInfo.serverInfo, 'unregistration', function(device, callback) {
                 callback();
             });
         });
 
-        it('should return a 4.04 Not found code', utils.checkCode(removeRequest, '', '4.04'));
+        it('should return a 4.04 Not found code', utils.checkCode(testInfo, removeRequest, '', '4.04'));
     });
     describe('When a correct client unregistration request arrives', function() {
         var removeRequest = {
@@ -79,18 +84,16 @@ describe('Client unregistration interface', function() {
             method: 'DELETE'
         };
 
-        beforeEach(function () {
+        beforeEach(function (done) {
             removeRequest.pathname = deviceLocation;
-            libLwm2m2.setHandler('unregistration', function(device, callback) {
-                callback();
-            });
+            done();
         });
 
         it('should remove the device registration', function(done) {
             var req = coap.request(removeRequest),
                 handlerCalled = false;
 
-            libLwm2m2.setHandler('unregistration', function(device, callback) {
+            libLwm2m2.setHandler(testInfo.serverInfo, 'unregistration', function(device, callback) {
                 should.exist(device);
                 should.exist(device.name);
                 device.name.should.equal('ROOM001');
@@ -105,6 +108,6 @@ describe('Client unregistration interface', function() {
 
             req.end();
         });
-        it('should return a 4.04 Not found code', utils.checkCode(removeRequest, '', '2.02'));
+        it('should return a 4.04 Not found code', utils.checkCode(testInfo, removeRequest, '', '2.02'));
     });
 });

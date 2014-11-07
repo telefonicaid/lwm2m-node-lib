@@ -29,17 +29,19 @@ var libLwm2m2 = require('../../../').server,
     libcoap = require('coap'),
     should = require('should'),
     server = libcoap.createServer(),
-    async = require('async');
+    async = require('async'),
+    testInfo = {};
 
 describe('Device management interface' , function() {
     var deviceLocation;
 
     function registerHandlers(callback) {
-        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, innerCb) {
-            innerCb();
-        });
+        libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+            function(endpoint, lifetime, version, binding, innerCb) {
+                innerCb();
+            });
 
-        libLwm2m2.setHandler('updateRegistration', function(object, innerCb) {
+        libLwm2m2.setHandler(testInfo.serverInfo, 'updateRegistration', function(object, innerCb) {
             innerCb();
         });
 
@@ -47,20 +49,23 @@ describe('Device management interface' , function() {
     }
 
     beforeEach(function (done) {
-        async.series([
-            async.apply(libLwm2m2.start, config),
-            registerHandlers,
-            async.apply(utils.registerClient, 'ROOM001')
-        ], function (error, results) {
-            server.listen(function (error) {
-                deviceLocation = results[2];
-                done();
+        libLwm2m2.start(config.server, function (error, srvInfo){
+            testInfo.serverInfo = srvInfo;
+
+            async.series([
+                registerHandlers,
+                async.apply(utils.registerClient, 'ROOM001')
+            ], function (error, results) {
+                server.listen(function (error) {
+                    deviceLocation = results[1];
+                    done();
+                });
             });
         });
     });
 
     afterEach(function(done) {
-        libLwm2m2.stop(function (error) {
+        libLwm2m2.stop(testInfo.serverInfo, function (error) {
             server.removeAllListeners('request');
             server.close(done);
         });

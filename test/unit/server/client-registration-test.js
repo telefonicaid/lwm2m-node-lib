@@ -28,18 +28,22 @@ var libLwm2m2 = require('../../../').server,
     Readable = require('stream').Readable,
     config = require('../../../config'),
     utils = require('./../testUtils'),
-    should = require('should');
+    should = require('should'),
+    testInfo = {};
 
 describe('Client registration interface', function() {
     beforeEach(function (done) {
-        libLwm2m2.start(config, done);
+        libLwm2m2.start(config.server, function (error, srvInfo) {
+            testInfo.serverInfo = srvInfo;
+            done();
+        });
     });
 
     afterEach(function(done) {
-        libLwm2m2.stop(done);
+        libLwm2m2.stop(testInfo.serverInfo, done);
     });
 
-    describe('When a client registration requests doesn\'t indicate a endpoint name arrives', function() {
+    describe('When a client registration request doesn\'t indicate a endpoint name arrives', function() {
         var requestUrl =  {
                 host: 'localhost',
                 port: config.server.port,
@@ -49,7 +53,7 @@ describe('Client registration interface', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should fail with a 4.00 Bad Request', utils.checkCode(requestUrl, payload, '4.00'));
+        it('should fail with a 4.00 Bad Request', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
     });
     describe('When a client registration requests doesn\'t indicate a lifetime arrives', function () {
         var requestUrl =  {
@@ -62,7 +66,7 @@ describe('Client registration interface', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00 Bad Request', utils.checkCode(requestUrl, payload, '4.00'));
+        it('should fail with a 4.00 Bad Request', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
     });
     describe('When a client registration requests doesn\'t indicate a binding arrives', function () {
         var requestUrl =  {
@@ -75,7 +79,7 @@ describe('Client registration interface', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00', utils.checkCode(requestUrl, payload, '4.00'));
+        it('should fail with a 4.00', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
@@ -87,26 +91,27 @@ describe('Client registration interface', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should return a 2.01 Created code', utils.checkCode(requestUrl, payload, '2.01'));
+        it('should return a 2.01 Created code', utils.checkCode(testInfo, requestUrl, payload, '2.01'));
 
         it('should invoke the "registration" handler with the parameters', function (done) {
             var req = coap.request(requestUrl),
                 rs = new Readable(),
                 handlerCalled = false;
 
-            libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
-                should.exist(endpoint);
-                should.exist(lifetime);
-                should.exist(version);
-                should.exist(binding);
-                endpoint.should.equal('ROOM001');
-                lifetime.should.equal('86400');
-                version.should.equal('1.0');
-                binding.should.equal('U');
-                handlerCalled = true;
+            libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+                function(endpoint, lifetime, version, binding, callback) {
+                    should.exist(endpoint);
+                    should.exist(lifetime);
+                    should.exist(version);
+                    should.exist(binding);
+                    endpoint.should.equal('ROOM001');
+                    lifetime.should.equal('86400');
+                    version.should.equal('1.0');
+                    binding.should.equal('U');
+                    handlerCalled = true;
 
-                callback();
-            });
+                    callback();
+                });
 
             rs.push(payload);
             rs.push(null);
@@ -121,9 +126,10 @@ describe('Client registration interface', function() {
             var req = coap.request(requestUrl),
                 rs = new Readable();
 
-            libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, callback) {
-                callback();
-            });
+            libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+                function(endpoint, lifetime, version, binding, callback) {
+                    callback();
+                });
 
             rs.push(payload);
             rs.push(null);

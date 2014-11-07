@@ -26,17 +26,19 @@
 var libLwm2m2 = require('../../../').server,
     utils = require('./../testUtils'),
     config = require('../../../config'),
-    async = require('async');
+    async = require('async'),
+    testInfo = {};
 
 describe('Client update registration interface', function() {
     var deviceLocation;
 
     function registerHandlers(callback) {
-        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, innerCb) {
-            innerCb();
-        });
+        libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+            function(endpoint, lifetime, version, binding, innerCb) {
+                innerCb();
+            });
 
-        libLwm2m2.setHandler('updateRegistration', function(object, innerCb) {
+        libLwm2m2.setHandler(testInfo.serverInfo, 'updateRegistration', function(object, innerCb) {
             innerCb();
         });
 
@@ -44,18 +46,21 @@ describe('Client update registration interface', function() {
     }
 
     beforeEach(function (done) {
-        async.series([
-            async.apply(libLwm2m2.start, config),
-            registerHandlers,
-            async.apply(utils.registerClient, 'ROOM001')
-        ], function (error, results) {
-            deviceLocation = results[2];
-            done();
+        libLwm2m2.start(config.server, function (error, srvInfo){
+            testInfo.serverInfo = srvInfo;
+
+            async.series([
+                registerHandlers,
+                async.apply(utils.registerClient, 'ROOM001')
+            ], function (error, results) {
+                deviceLocation = results[1];
+                done();
+            });
         });
     });
 
     afterEach(function(done) {
-        libLwm2m2.stop(done);
+        libLwm2m2.stop(testInfo.serverInfo, done);
     });
 
     describe('When a correct cliente registration update request arrives', function() {
@@ -70,6 +75,6 @@ describe('Client update registration interface', function() {
             updateRequest.pathname = deviceLocation;
         });
 
-        it('should return a 2.04 Changed code', utils.checkCode(updateRequest, '', '2.04'));
+        it('should return a 2.04 Changed code', utils.checkCode(testInfo, updateRequest, '', '2.04'));
     });
 });

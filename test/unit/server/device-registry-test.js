@@ -27,33 +27,38 @@ var libLwm2m2 = require('../../../').server,
     utils = require('./../testUtils'),
     config = require('../../../config'),
     should = require('should'),
-    async = require('async');
+    async = require('async'),
+    testInfo = {};
 
 describe('Device registry', function() {
     var deviceLocation;
 
     function registerHandlers(callback) {
-        libLwm2m2.setHandler('registration', function(endpoint, lifetime, version, binding, innerCb) {
-            innerCb();
-        });
+        libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+            function(endpoint, lifetime, version, binding, innerCb) {
+                innerCb();
+            });
 
         callback();
     }
 
     beforeEach(function (done) {
-        async.series([
-            async.apply(libLwm2m2.start, config),
-            registerHandlers,
-            async.apply(utils.registerClient, 'ROOM001'),
-            async.apply(utils.registerClient, 'ROOM002')
-        ], function (error, results) {
-            deviceLocation = results[2];
-            done();
+        libLwm2m2.start(config.server, function (error, srvInfo){
+            testInfo.serverInfo = srvInfo;
+
+            async.series([
+                registerHandlers,
+                async.apply(utils.registerClient, 'ROOM001'),
+                async.apply(utils.registerClient, 'ROOM002')
+            ], function (error, results) {
+                deviceLocation = results[2];
+                done();
+            });
         });
     });
 
     afterEach(function(done) {
-        libLwm2m2.stop(done);
+        libLwm2m2.stop(testInfo.serverInfo, done);
     });
 
     describe('When a user executes the List operation of the library on a registry with two records', function () {
