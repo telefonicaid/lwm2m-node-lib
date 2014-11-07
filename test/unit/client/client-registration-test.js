@@ -30,7 +30,7 @@ var should = require('should'),
     testInfo = {};
 
 
-describe.skip('Client-initiated registration', function() {
+describe('Client-initiated registration', function() {
     beforeEach(function(done) {
         lwm2mServer.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
@@ -42,6 +42,13 @@ describe.skip('Client-initiated registration', function() {
     });
 
     describe('When the client tries to register in an existent LWTM2M server', function() {
+        var deviceInformation;
+
+        afterEach(function (done) {
+            if (deviceInformation) {
+                lwm2mClient.unregister(deviceInformation, done);
+            }
+        });
         it('should send a COAP POST Message with the required parameters', function(done) {
             var handlerCalled = false;
 
@@ -59,8 +66,9 @@ describe.skip('Client-initiated registration', function() {
                 });
 
             lwm2mClient.register('localhost', config.server.port, 'testEndpoint',
-                function (error) {
+                function (error, info) {
                     handlerCalled.should.equal(true);
+                    deviceInformation = info;
                     done();
                 });
         });
@@ -86,6 +94,10 @@ describe.skip('Client-initiated registration', function() {
             lwm2mServer.setHandler(testInfo.serverInfo, 'unregistration', function (device, callback) {
                 callback(null);
             });
+        });
+
+        afterEach(function(done) {
+            lwm2mClient.unregister(deviceInformation, done);
         });
 
         it('should send a COAP UPDATE Message with the required parameters', function(done) {

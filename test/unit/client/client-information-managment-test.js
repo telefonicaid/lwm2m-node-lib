@@ -31,7 +31,7 @@ var should = require('should'),
     config = require('../../../config'),
     testInfo = {};
 
-describe.only('Client-side information management', function() {
+describe('Client-side information management', function() {
     var deviceInformation,
         deviceId;
 
