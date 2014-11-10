@@ -185,7 +185,7 @@ describe('Client-side information management', function() {
             lwm2mServer.read(deviceId, obj.type, '75', obj.resource, function(error, result) {
                 should.exist(error);
                 should.not.exist(result);
-                error.name.equal('RESOURCE_NOT_FOUND');
+                error.name.should.equal('RESOURCE_NOT_FOUND');
                 handlerCalled.should.equal(false);
                 done();
             });
