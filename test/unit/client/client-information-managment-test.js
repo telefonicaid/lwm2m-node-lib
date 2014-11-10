@@ -159,6 +159,36 @@ describe('Client-side information management', function() {
         });
     });
     describe('When a read request arrives to the client for an unexistent resource of an object', function() {
-        it('should raise a 4.04 RESOURCE_NOT_FOUND error');
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+        });
+        it('should raise a 4.04 RESOURCE_NOT_FOUND error', function(done) {
+            var handlerCalled = false;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    handlerCalled = true;
+                    callback(null, resourceValue);
+                });
+
+            lwm2mServer.read(deviceId, obj.type, '75', obj.resource, function(error, result) {
+                should.exist(error);
+                should.not.exist(result);
+                error.name.equal('RESOURCE_NOT_FOUND');
+                handlerCalled.should.equal(false);
+                done();
+            });
+        });
     });
 });
