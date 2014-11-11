@@ -11,7 +11,10 @@ config.server = {
 config.client = {
     port: 5683,                          // Port where the client will be listening
     lifetime: '85671',
-    version: '1.0'
+    version: '1.0',
+    observe: {
+        period: 3000
+    }
 }
 
 module.exports = config;
