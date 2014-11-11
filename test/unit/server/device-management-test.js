@@ -110,7 +110,11 @@ describe('Device management interface' , function() {
     describe('When the user invokes the Execute operation on an attribute', function() {
         it('should send a COAP POST Operation on the selected attribute');
     });
-    describe('When the user invokes the Attributes operation on an attribute', function() {
+    describe('When the user invokes the Discovery operation on an attribute', function() {
+        it('should send a COAP GET Operation on the selected attributes ' +
+            'with the Accept: application/link-format header');
+    });
+    describe('When the user invokes the Write Attributes operation on an attribute', function() {
         it('should send a COAP PUT Operation on the selected attribute with the appropriate parameters');
     });
 });

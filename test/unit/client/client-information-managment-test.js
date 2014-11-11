@@ -201,7 +201,7 @@ describe('Client-side information management', function() {
     describe('When a Discover request arrives targeting an unexistent resource ID', function() {
         it('should raise a RESOURCE_NOT_FOUND error');
     });
-    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
+    describe('When a Write attributes request arrives targeting an unexistent resource ID', function() {
         it('should raise a RESOURCE_NOT_FOUND error');
     });
     describe('When a Discover request arrives targeting an existent object ID', function() {
@@ -213,7 +213,7 @@ describe('Client-side information management', function() {
     describe('When a Discover request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
     });
-    describe('When a Write attributes request arrives targeting an existent object ID', function() {
+    describe('When a Write attributes request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
     });
 });
