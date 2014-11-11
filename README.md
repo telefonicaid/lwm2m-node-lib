@@ -4,13 +4,12 @@
 The [Open Mobile Alliance Lightweight M2M protocol](http://openmobilealliance.org/about-oma/work-program/m2m-enablers/) is a machine to machine communication protocol built over [COAP](https://tools.ietf.org/html/draft-ietf-core-coap), and meant to
 communicate resource constrained devices. The protocol defines two roles for the devices: a Lightweight M2M Client (the constrained device) and a Lightweight M2M Server (meant to consume the device data and control its execution).
 
-This library aims to provide a simple way to build a Lightweight M2M Server with Node.js, giving an abstraction over the 
-COAP Protocol based on function calls and handlers. The provided features are:
+This library aims to provide a simple way to build Lightweight M2M Servers and Clients with Node.js, giving an abstraction over the COAP Protocol based on function calls and handlers. The provided features are:
 * Creation of a server listening to Client calls for the LWTM2M Interfaces, linked to handlers defined by the user.
 * Registry of devices connected to the server (in-memory registry for the first version).
-* Server calls to the registered devices in the registry (for Device Management Interface mostly).
+* Server calls to the registered devices in the registry (for Device Management Interface mostly) to retrieve information.
 
-How to start (command line clients)
+The library also provides command line clients to test both its client and server capabilities.
 
 ## Command line applications
 The library provides two command line applications in order to help developing both Lightweight M2M clients and/or servers. This applications can be used to simulate the behavior of one of the peers of the communication. Both of them use the iotagent-lwm2m-lib library to serve all the LWTM2M requests. The following sections explain the basic features of each one.
