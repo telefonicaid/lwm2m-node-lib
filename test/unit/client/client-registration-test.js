@@ -76,7 +76,32 @@ describe('Client-initiated registration', function() {
         it('should send the complete set of supported objects');
     });
     describe('When the client tries to register in an unexistent server', function() {
-        it('should raise a SERVER_NOT_FOUND error');
+        var deviceInformation;
+
+        afterEach(function (done) {
+            if (deviceInformation) {
+                lwm2mClient.unregister(deviceInformation, done);
+            } else {
+                done();
+            }
+        });
+        it('should raise a SERVER_NOT_FOUND error', function(done) {
+            var handlerCalled = false;
+
+            lwm2mServer.setHandler(testInfo.serverInfo, 'registration',
+                function (endpoint, lifetime, version, binding, callback) {
+                    handlerCalled = true;
+                    callback(null);
+                });
+
+            lwm2mClient.register('http://unexistent.com', 12345, 'testEndpoint',
+                function (error, info) {
+                    should.exist(error);
+                    error.name.should.equal('SERVER_NOT_FOUND');
+                    handlerCalled.should.equal(false);
+                    done();
+                });
+        });
     });
     describe('When the client update method is executed', function() {
         var deviceInformation;
