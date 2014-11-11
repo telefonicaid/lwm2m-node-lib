@@ -118,4 +118,10 @@ describe('Device management interface' , function() {
         it('should send a COAP PUT Operation on the selected attribute ' +
             'with the given parameters and without payload');
     });
+    describe('When the user invokes the Create operation on an instance', function() {
+        it('should send a COAP POST Operation to the selected Object ID and Instance ID');
+    });
+    describe('When the user invokes the Delete operation on an instance', function() {
+        it('should send a COAP DELETE Operation to the selected Object ID and Instance ID');
+    });
 });
