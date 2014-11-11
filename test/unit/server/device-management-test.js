@@ -198,7 +198,23 @@ describe('Device management interface' , function() {
         });
     });
     describe('When the user invokes the Create operation on an instance', function() {
-        it('should send a COAP POST Operation to the selected Object ID and Instance ID');
+        it('should send a COAP POST Operation to the selected Object ID and Instance ID', function (done) {
+            var requestArrived = false;
+
+            server.on('request', function (req, res) {
+                req.method.should.equal('POST');
+                res.code = '2.01';
+                req.url.should.equal('/6/3');
+                requestArrived = true;
+                res.end('The Read content');
+            });
+
+            libLwm2m2.create(deviceLocation.split('/')[2], '6', '3', function (error) {
+                should.not.exist(error);
+                requestArrived.should.equal(true);
+                done();
+            });
+        });
     });
     describe('When the user invokes the Delete operation on an instance', function() {
         it('should send a COAP DELETE Operation to the selected Object ID and Instance ID');
