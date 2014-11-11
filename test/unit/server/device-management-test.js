@@ -113,7 +113,20 @@ describe('Device management interface' , function() {
     });
     describe('When the user invokes the Discovery operation on an attribute', function() {
         it('should send a COAP GET Operation on the selected attributes ' +
-            'with the Accept: application/link-format header');
+            'with the Accept: application/link-format header', function (done) {
+            server.on('request', function (req, res) {
+                req.method.should.equal('GET');
+                res.code = '2.05';
+                res.end('</3/2/1>;pmin=10;pmax=60;lt=42.2');
+            });
+
+            libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</3/2/1>;pmin=10;pmax=60;lt=42.2');
+                done();
+            });
+        });
     });
     describe('When the user invokes the Write Attributes operation over a resource', function() {
         it('should send a COAP PUT Operation on the selected attribute ' +
