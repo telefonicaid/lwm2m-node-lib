@@ -55,7 +55,7 @@ describe('Client-side information management', function() {
         ], done);
     });
 
-    describe('When a write request arrives to the client', function() {
+    describe('When a Write request arrives to the client', function() {
         var obj = {
             type: '3',
             id: '6',
@@ -87,7 +87,7 @@ describe('Client-side information management', function() {
             });
         });
     });
-    describe('When a read request arrives to the client for an existent resource of an existent object', function() {
+    describe('When a Read request arrives to the client for an existent resource of an existent object', function() {
         var obj = {
             type: '3',
             id: '6',
@@ -126,7 +126,7 @@ describe('Client-side information management', function() {
             });
         });
     });
-    describe('When a read request arrives to the client for an unexistent object instance', function() {
+    describe('When a Read request arrives to the client for an unexistent object instance', function() {
         var obj = {
             type: '3',
             id: '6',
@@ -158,7 +158,7 @@ describe('Client-side information management', function() {
             });
         });
     });
-    describe('When a read request arrives to the client for an unexistent resource of an object', function() {
+    describe('When a Read request arrives to the client for an unexistent resource of an object', function() {
         var obj = {
             type: '3',
             id: '6',
@@ -190,5 +190,30 @@ describe('Client-side information management', function() {
                 done();
             });
         });
+    });
+
+    describe('When a Discover request arrives targeting an existent resource ID', function() {
+        it('should return all the attributes of the selected resource ID');
+    });
+    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
+        it('should overwrite the given attributes in the selected resource ID');
+    });
+    describe('When a Discover request arrives targeting an unexistent resource ID', function() {
+        it('should raise a RESOURCE_NOT_FOUND error');
+    });
+    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
+        it('should raise a RESOURCE_NOT_FOUND error');
+    });
+    describe('When a Discover request arrives targeting an existent object ID', function() {
+        it('should return all the attributes of the selected object ID');
+    });
+    describe('When a Write attributes request arrives targeting an existent object ID', function() {
+        it('should overwrite the given attributes in the selected object ID');
+    });
+    describe('When a Discover request arrives targeting an unexistent object ID', function() {
+        it('should raise a OBJECT_NOT_FOUND error');
+    });
+    describe('When a Write attributes request arrives targeting an existent object ID', function() {
+        it('should raise a OBJECT_NOT_FOUND error');
     });
 });
