@@ -27,6 +27,7 @@ var config = require('../config'),
     clUtils = require('../lib/commandLineUtils'),
     lwm2mClient = require('../').client,
     async = require('async'),
+    globalDeviceInfo,
     separator = '\n\n\t';
 
 function printObject(result) {
@@ -86,11 +87,41 @@ function list() {
     });
 }
 
+function handleWrite(objectType, objectId, resourceId, value, callback) {
+    console.log('\Value written:\n--------------------------------\n');
+    console.log('-> ObjectType: %s', objectType);
+    console.log('-> ObjectId: %s', objectId);
+    console.log('-> ResourceId: %s', resourceId);
+    console.log('-> Written value: %s', value);
+    clUtils.prompt();
+
+    callback(null);
+}
+
+function handleRead(objectType, objectId, resourceId, value, callback) {
+    console.log('\Value read:\n--------------------------------\n');
+    console.log('-> ObjectType: %s', objectType);
+    console.log('-> ObjectId: %s', objectId);
+    console.log('-> ResourceId: %s', resourceId);
+    console.log('-> Read Value: %s', value);
+    clUtils.prompt();
+
+    callback(null);
+}
+
+function setHandlers(deviceInfo) {
+    lwm2mClient.setHandler(deviceInfo.serverInfo, 'write', handleWrite);
+    lwm2mClient.setHandler(deviceInfo.serverInfo, 'read', handleRead);
+}
+
 function connect(command) {
+    console.log('\nConnecting to the server. This may take a while\n.');
     lwm2mClient.register(command[0], command[1], command[2], function (error, deviceInfo) {
         if (error) {
             clUtils.handleError(error);
         } else {
+            globalDeviceInfo = deviceInfo;
+            setHandlers(deviceInfo);
             console.log('\nConnected:\n--------------------------------\nDevice location: %s', deviceInfo.location);
             clUtils.prompt();
         }

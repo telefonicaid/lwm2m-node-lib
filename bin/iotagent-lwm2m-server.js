@@ -27,6 +27,7 @@ var config = require('../config'),
     lwm2mServer = require('../').server,
     async = require('async'),
     clUtils = require('../lib/commandLineUtils'),
+    globalServerInfo,
     separator = '\n\n\t';
 
 function handleResult(message) {
@@ -54,21 +55,91 @@ function unregistrationHandler(device, callback) {
     callback();
 }
 
-function setHandlers(callback) {
-    lwm2mServer.setHandler('registration', registrationHandler);
-    lwm2mServer.setHandler('unregistration', unregistrationHandler);
+function setHandlers(serverInfo, callback) {
+    globalServerInfo = serverInfo;
+    lwm2mServer.setHandler(serverInfo, 'registration', registrationHandler);
+    lwm2mServer.setHandler(serverInfo, 'unregistration', unregistrationHandler);
     callback();
 }
 
 function start() {
-    async.series([
-        async.apply(lwm2mServer.start, config),
+    async.waterfall([
+        async.apply(lwm2mServer.start, config.server),
         setHandlers
     ], handleResult('Lightweight M2M Server started'));
 }
 
 function stop() {
-    lwm2mServer.stop(handleResult('COAP Server stopped.'));
+    if (globalServerInfo) {
+        lwm2mServer.stop(globalServerInfo, handleResult('COAP Server stopped.'));
+    } else {
+        console.log('\nNo server was listening\n');
+    }
+}
+
+function parseResourceId(resourceId) {
+    var components = resourceId.split('/'),
+        parsed;
+
+    if (components.length === 4) {
+        parsed = {
+            objectType: components[1],
+            objectId: components[2],
+            resourceId: components[3]
+        };
+    }
+
+    return parsed;
+}
+
+function write(commands) {
+    var obj = parseResourceId(commands[1]);
+
+    if (obj) {
+        lwm2mServer.write(
+            commands[0],
+            obj.objectType,
+            obj.objectId,
+            obj.resourceId,
+            commands[2],
+            handleResult('Value written successfully'));
+    } else {
+        console.log('\nCouldn\'t parse resource URI: ' + commands[1]);
+    }
+}
+
+function read(commands) {
+    var obj = parseResourceId(commands[1]);
+
+    if (obj) {
+        lwm2mServer.read(commands[0], obj.objectType, obj.objectId, obj.resourceId, function (error, result) {
+            if (error) {
+                clUtils.handleError(error);
+            } else {
+                console.log('\nResource read:\n----------------------------\n');
+                console.log('Id: %s', commands[1]);
+                console.log('Value: %s', result);
+                clUtils.prompt();
+            }
+        });
+    } else {
+        console.log('\nCouldn\'t parse resource URI: ' + commands[1]);
+    }
+}
+
+function listClients(commands) {
+    lwm2mServer.listDevices(function (error, deviceList) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            console.log('\nDevice list:\n----------------------------\n');
+
+            for (var i=0; i < deviceList.length; i++) {
+                console.log('-> Device Id "%s"', deviceList[i].id);
+                console.log('\n%s\n', JSON.stringify(deviceList[i], null, 4));
+            }
+        }
+    });
 }
 
 var commands = {
@@ -85,18 +156,18 @@ var commands = {
     'list': {
         parameters: [],
         description: '\tList all the devices connected to the server.',
-        handler: clUtils.printName('list')
+        handler: listClients
     },
     'write': {
         parameters: ['deviceId', 'resourceId', 'resourceValue'],
         description: '\tWrites the given value to the resource indicated by the URI (in LWTM2M format) in the given' +
             'device.',
-        handler: clUtils.printName('write')
+        handler: write
     },
-    'unset': {
+    'read': {
         parameters: ['deviceId', 'resourceId'],
         description: '\tReads the value of the resource indicated by the URI (in LWTM2M format) in the given device.',
-        handler: clUtils.printName('read')
+        handler: read
     },
     'discover': {
         parameters: ['deviceId', 'resourceId'],
