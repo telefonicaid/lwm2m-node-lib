@@ -115,6 +115,7 @@ describe('Device management interface' , function() {
             'with the Accept: application/link-format header');
     });
     describe('When the user invokes the Write Attributes operation on an attribute', function() {
-        it('should send a COAP PUT Operation on the selected attribute with the appropriate parameters');
+        it('should send a COAP PUT Operation on the selected attribute ' +
+            'with the given parameters and without payload');
     });
 });
