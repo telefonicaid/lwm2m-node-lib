@@ -154,7 +154,35 @@ describe('Device management interface' , function() {
         });
     });
     describe('When the user invokes the Write Attributes operation with unsupported attributes', function() {
-        it('should fail with an UNRECOGNIZED_ATTRIBUTE error');
+        it('should fail with an UNRECOGNIZED_ATTRIBUTE error', function() {
+            it('should send a COAP PUT Operation on the selected attribute ' +
+                'with the given parameters and without payload', function (done) {
+                var attributes= {
+                        pmin: 5000,
+                        unexistentAttribute1: 20000,
+                        unexistentAttribute2: 14.5,
+                        lt: 3.1,
+                        st: 2000,
+                        cancel: false
+                    },
+                    requestSent = false;
+
+                server.on('request', function (req, res) {
+                    requestSent = true;
+
+                    req.method.should.equal('PUT');
+                    res.code = '2.04';
+                    res.end('The content');
+                });
+
+                libLwm2m2.writeAttributes(deviceLocation.split('/')[2], '6', '2', '5', attributes, function (error) {
+                    should.exist(error);
+                    error.name.should.equal('UNRECOGNIZED_ATTRIBUTE');
+                    requestSent.should.equal(false);
+                    done();
+                });
+            });
+        });
     });
     describe('When the user invokes the Create operation on an instance', function() {
         it('should send a COAP POST Operation to the selected Object ID and Instance ID');
