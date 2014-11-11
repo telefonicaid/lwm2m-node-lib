@@ -172,13 +172,13 @@ var commands = {
     'discover': {
         parameters: ['deviceId', 'resourceId'],
         description: '\tSends a discover order for the given resource (defined with a LWTM2M URI) to the given device.',
-        handler: clUtils.printName('discover')
+        handler: clUtils.notImplemented
     },
     'cancel': {
         parameters: ['deviceId', 'resourceId'],
         description: '\tCancel the discover order for the given resource (defined with a LWTM2M URI) ' +
             'to the given device.',
-        handler: clUtils.printName('cancel')
+        handler: clUtils.notImplemented
     },
     'config': {
         parameters: [],

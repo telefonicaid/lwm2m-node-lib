@@ -164,10 +164,15 @@ var commands = {
         description: '\tConnect to the server in the selected host and port, using the selected endpointName.',
         handler: connect
     },
+    'updateConnection': {
+        parameters: [],
+        description: '\tUpdates the current connection to a server.',
+        handler: clUtils.notImplemented
+    },
     'disconnect': {
         parameters: [],
         description: '\tDisconnect from the current server.',
-        handler: clUtils.printName('disconnecting')
+        handler: clUtils.notImplemented
     },
     'config': {
         parameters: [],
