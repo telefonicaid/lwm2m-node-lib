@@ -174,14 +174,6 @@ The following table lists the current supported events along with the expected s
 
 The meaning of each parameter should be clear reading the operation description in OMA's documentation.
 
-### Configuration
-The configuration object should contain the following fields:
-* `server.port`: port where the server's COAP server will start listening.
-* `client.port`: port where the client's COAP server will start listening.
-* `client.lifetime`: lifetime in miliseconds of the client registration. After that lifetime, the registration will be dismissed.
-* `client.version`: version of the Lightweight M2M protocol. Currently `1.0` is the only valid option.
-* `client.observe`: default parameters for resource observation (they can be overwritten from the server). 
-
 ### Server features (server -> client)
 Each writing feature is modelled as a function in the LWTM2M module. The following sections describe the implemented features, identified by its Interface and name of the operation.
 
@@ -198,6 +190,51 @@ Signature:
 function read(deviceId, objectType, objectId, resourceId, callback)
 ```
 Execute a read operation for the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId. The device id can be found from the register, based on the name or listing all the available ones.
+
+### Client features 
+
+#### Registration
+Before making any interaction with a Lightweight M2M server, a client must register to it. This registration can be done with the following function:
+```
+    lwm2mClient.register(host, port, endpointName, function (error, deviceInfo) {
+	...
+    });
+```
+The registration process needs the host and port of the destination server and an endpointName for the device (that must be unique for that server). The server will keep the client's IP in order to send the server-initiated requests. 
+
+The callback of the register function returns all the information about the created connection. There are two important pieces of information in this object:
+* `serverInfo`: includes all the information about the listening socket created in the client to attend server calls. It will be needed to stop the client completely.
+* `location`: indicates the URL the client should use to communicate with the server (includes its client ID in the server).
+
+When the client register to a server, it also opens a socket for listening in its machine, so to receive server-initiated requests (the port for listening can be configured in the `config` object).
+
+The connection to the server can be closed using the following function:
+```
+    lwm2mClient.unregister(deviceInformation, function (error) {
+	...
+    })
+```
+If the client changes its IP for whatever reason, it must updates its registration in the server, by using the following function:
+```
+    lwm2mClient.update(deviceInformation, function (error) {
+	...
+    })
+```
+
+#### Object repository
+All the information in a Lightweight M2M client is organized in objects and resources of those objects. To assist the client with the management of this information, the library provides a object repository (currently a in-memory transient repository only). This repository can be accessed in the `lwm2mClient.registry` attribute. 
+
+The repository offers the standard CRUD operations over objects, and methods to set and unset resource values inside the objects. 
+
+All the objects are identified by a URI that is composed of an Object ID and an Object Instance sepparated by slashes, as specified by the Lightweight M2M specification (e.g.: /1/3).
+
+### Configuration
+The configuration object should contain the following fields:
+* `server.port`: port where the server's COAP server will start listening.
+* `client.port`: port where the client's COAP server will start listening.
+* `client.lifetime`: lifetime in miliseconds of the client registration. After that lifetime, the registration will be dismissed.
+* `client.version`: version of the Lightweight M2M protocol. Currently `1.0` is the only valid option.
+* `client.observe`: default parameters for resource observation (they can be overwritten from the server). 
 
 ## Development documentation
 ### Project build
