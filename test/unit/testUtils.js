@@ -38,7 +38,7 @@ function checkCode(testInfo, requestUrl, payload, code) {
             rs = new Readable();
 
         libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
-            function(endpoint, lifetime, version, binding, callback) {
+            function(endpoint, lifetime, version, binding, payload, callback) {
                 callback();
             });
 
