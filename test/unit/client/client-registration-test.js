@@ -24,6 +24,7 @@
 'use strict';
 
 var should = require('should'),
+    async = require('async'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
     config = require('../../../config'),
@@ -44,16 +45,32 @@ describe('Client-initiated registration', function() {
     describe('When the client tries to register in an existent LWTM2M server', function() {
         var deviceInformation;
 
+        beforeEach(function (done) {
+            async.series([
+                async.apply(lwm2mClient.registry.create, '/0/1'),
+                async.apply(lwm2mClient.registry.create, '/3/14'),
+                async.apply(lwm2mClient.registry.create, '/2/9'),
+            ], done);
+        });
+
         afterEach(function (done) {
-            if (deviceInformation) {
-                lwm2mClient.unregister(deviceInformation, done);
-            }
+            async.series([
+                async.apply(lwm2mClient.registry.remove, '/0/1'),
+                async.apply(lwm2mClient.registry.remove, '/3/14'),
+                async.apply(lwm2mClient.registry.remove, '/2/9'),
+            ], function (error) {
+                if (deviceInformation) {
+                    lwm2mClient.unregister(deviceInformation, done);
+                } else {
+                    done();
+                }
+            });
         });
         it('should send a COAP POST Message with the required parameters', function(done) {
             var handlerCalled = false;
 
             lwm2mServer.setHandler(testInfo.serverInfo, 'registration',
-                function (endpoint, lifetime, version, binding, callback) {
+                function (endpoint, lifetime, version, binding, payload, callback) {
                     should.exist(endpoint);
                     should.exist(lifetime);
                     should.exist(binding);
@@ -73,7 +90,23 @@ describe('Client-initiated registration', function() {
                 });
         });
         it('should pass the returned location to the callback if there is no error');
-        it('should send the complete set of supported objects');
+        it('should send the complete set of supported objects', function(done) {
+            var handlerCalled = false;
+
+            lwm2mServer.setHandler(testInfo.serverInfo, 'registration',
+                function (endpoint, lifetime, version, binding, payload, callback) {
+                    handlerCalled = true;
+                    payload.should.equal('</0/1>,</3/14>,</2/9>');
+                    callback(null);
+                });
+
+            lwm2mClient.register('localhost', config.server.port, 'testEndpoint',
+                function (error, info) {
+                    handlerCalled.should.equal(true);
+                    deviceInformation = info;
+                    done();
+                });
+        });
     });
     describe('When the client tries to register in an unexistent server', function() {
         var deviceInformation;
@@ -89,7 +122,7 @@ describe('Client-initiated registration', function() {
             var handlerCalled = false;
 
             lwm2mServer.setHandler(testInfo.serverInfo, 'registration',
-                function (endpoint, lifetime, version, binding, callback) {
+                function (endpoint, lifetime, version, binding, payload, callback) {
                     handlerCalled = true;
                     callback(null);
                 });
@@ -108,21 +141,26 @@ describe('Client-initiated registration', function() {
 
         beforeEach(function(done) {
             lwm2mServer.setHandler(testInfo.serverInfo, 'registration',
-                function (endpoint, lifetime, version, binding, callback) {
+                function (endpoint, lifetime, version, binding, payload, callback) {
                     callback(null);
                 });
+
+            lwm2mServer.setHandler(testInfo.serverInfo, 'unregistration', function (device, callback) {
+                callback(null);
+            });
 
             lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });
-            lwm2mServer.setHandler(testInfo.serverInfo, 'unregistration', function (device, callback) {
-                callback(null);
-            });
         });
 
-        afterEach(function(done) {
-            lwm2mClient.unregister(deviceInformation, done);
+        afterEach(function (done) {
+            if (deviceInformation) {
+                lwm2mClient.unregister(deviceInformation, done);
+            } else {
+                done();
+            }
         });
 
         it('should send a COAP UPDATE Message with the required parameters', function(done) {
@@ -148,7 +186,7 @@ describe('Client-initiated registration', function() {
 
         beforeEach(function(done) {
             lwm2mServer.setHandler(testInfo.serverInfo, 'registration',
-                function (endpoint, lifetime, version, binding, callback) {
+                function (endpoint, lifetime, version, binding, payload, callback) {
                     callback(null);
                 });
 

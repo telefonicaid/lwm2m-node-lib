@@ -99,15 +99,17 @@ describe('Client registration interface', function() {
                 handlerCalled = false;
 
             libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
-                function(endpoint, lifetime, version, binding, callback) {
+                function(endpoint, lifetime, version, binding, payload, callback) {
                     should.exist(endpoint);
                     should.exist(lifetime);
                     should.exist(version);
                     should.exist(binding);
+                    should.exist(payload);
                     endpoint.should.equal('ROOM001');
                     lifetime.should.equal('86400');
                     version.should.equal('1.0');
                     binding.should.equal('U');
+                    payload.should.equal('</1>, </2>, </3>, </4>, </5>');
                     handlerCalled = true;
 
                     callback();
@@ -127,7 +129,7 @@ describe('Client registration interface', function() {
                 rs = new Readable();
 
             libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
-                function(endpoint, lifetime, version, binding, callback) {
+                function(endpoint, lifetime, version, binding, payload, callback) {
                     callback();
                 });
 

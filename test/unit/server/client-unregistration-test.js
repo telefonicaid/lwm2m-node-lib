@@ -36,7 +36,7 @@ describe('Client unregistration interface', function() {
 
     function registerHandlers(callback) {
         libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
-            function(endpoint, lifetime, version, binding, innerCb) {
+            function(endpoint, lifetime, version, binding, payload, innerCb) {
                 innerCb();
             });
 
