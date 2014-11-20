@@ -68,7 +68,7 @@ describe('MongoDB Device registry', function() {
 
     afterEach(function(done) {
         delete config.server.deviceRegistry;
-        
+
         iotAgentDb.collection('devices').remove(function(error) {
             iotAgentDb.close(function(error) {
                 libLwm2m2.stop(testInfo.serverInfo, done);
