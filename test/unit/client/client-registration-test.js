@@ -61,6 +61,8 @@ describe('Client-initiated registration', function() {
             ], function (error) {
                 if (deviceInformation) {
                     lwm2mClient.unregister(deviceInformation, done);
+                } else {
+                    done();
                 }
             });
         });
@@ -143,17 +145,22 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
+            lwm2mServer.setHandler(testInfo.serverInfo, 'unregistration', function (device, callback) {
+                callback(null);
+            });
+
             lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });
-            lwm2mServer.setHandler(testInfo.serverInfo, 'unregistration', function (device, callback) {
-                callback(null);
-            });
         });
 
-        afterEach(function(done) {
-            lwm2mClient.unregister(deviceInformation, done);
+        afterEach(function (done) {
+            if (deviceInformation) {
+                lwm2mClient.unregister(deviceInformation, done);
+            } else {
+                done();
+            }
         });
 
         it('should send a COAP UPDATE Message with the required parameters', function(done) {
