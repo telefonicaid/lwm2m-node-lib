@@ -33,6 +33,7 @@ var libLwm2m2 = require('../../../').server,
 
 describe('Client registration interface', function() {
     beforeEach(function (done) {
+        config.server.type = 'mongodb';
         libLwm2m2.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
             done();
@@ -40,6 +41,7 @@ describe('Client registration interface', function() {
     });
 
     afterEach(function(done) {
+        delete config.server.type;
         libLwm2m2.stop(testInfo.serverInfo, done);
     });
 
