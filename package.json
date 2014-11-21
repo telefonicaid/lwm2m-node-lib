@@ -28,7 +28,8 @@
     "should": "*",
     "underscore": "*",
     "mongodb": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "mongoose-auto-increment": "*"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
