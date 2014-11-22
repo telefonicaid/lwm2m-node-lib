@@ -33,6 +33,7 @@ var libLwm2m2 = require('../../../').server,
 describe('Multiple southbound interfaces', function() {
     beforeEach(function (done) {
         config.server.baseRoot = '/theBaseUrl';
+        config.server.defaultType = 'Device';
         config.server.types = [
             {
                 name: 'Light',
@@ -124,7 +125,36 @@ describe('Multiple southbound interfaces', function() {
         });
     });
     describe('When a registration targets an unexistent type', function() {
-        it('should return an TYPE_NOT_FOUND error');
+        var requestUrl =  {
+                host: 'localhost',
+                port: config.server.port,
+                method: 'POST',
+                pathname: '/pressure/rd',
+                query: 'ep=ROOM001&lt=86400&lwm2m=1.0&b=U'
+            },
+            payload = '</1>, </2>, </3>, </4>, </5>';
+
+        it('should return the Location-info URL with the prefixed type URL', function (done) {
+            var req = coap.request(requestUrl),
+                rs = new Readable();
+
+            libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+                function(endpoint, lifetime, version, binding, payload, callback) {
+                    callback();
+                });
+
+            rs.push(payload);
+            rs.push(null);
+            rs.pipe(req);
+
+            req.on('response', function(res) {
+                res.code.should.equal('4.00');
+                should.exist(res.payload);
+                res.payload.toString('utf8').should.equal('TYPE_NOT_FOUND');
+
+                done();
+            });
+        });
     });
     describe('When a registration targets a type and there is not a type array configured', function() {
         it('should return an TYPE_NOT_FOUND error');
