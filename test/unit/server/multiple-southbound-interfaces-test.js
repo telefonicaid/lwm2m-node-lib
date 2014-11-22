@@ -31,7 +31,7 @@ var libLwm2m2 = require('../../../').server,
     testInfo = {};
 
 describe('Multiple southbound interfaces', function() {
-    beforeEach(function (done) {
+    function initializeServer(done) {
         config.server.baseRoot = '/theBaseUrl';
         config.server.defaultType = 'Device';
         config.server.types = [
@@ -44,7 +44,9 @@ describe('Multiple southbound interfaces', function() {
             testInfo.serverInfo = srvInfo;
             done();
         });
-    });
+    }
+
+    beforeEach(initializeServer);
 
     afterEach(function(done) {
         delete config.server.types;
@@ -160,9 +162,64 @@ describe('Multiple southbound interfaces', function() {
         it('should return an TYPE_NOT_FOUND error');
     });
     describe('When a registration targets the default URL and there is not a default type configured', function() {
-        it('should return a TYPE_NOT_FOUND error');
+        var requestUrl =  {
+                host: 'localhost',
+                port: config.server.port,
+                method: 'POST',
+                pathname: '/rd',
+                query: 'ep=ROOM001&lt=86400&lwm2m=1.0&b=U'
+            },
+            payload = '</1>, </2>, </3>, </4>, </5>';
+
+        beforeEach(function() {
+            delete config.server.defaultType;
+        });
+
+        afterEach(function() {
+            config.server.defaultType = 'Device';
+        });
+
+        it('should return a TYPE_NOT_FOUND error', function (done) {
+            var req = coap.request(requestUrl),
+                rs = new Readable();
+
+            libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+                function(endpoint, lifetime, version, binding, payload, callback) {
+                    callback();
+                });
+
+            rs.push(payload);
+            rs.push(null);
+            rs.pipe(req);
+
+            req.on('response', function(res) {
+                res.code.should.equal('4.00');
+                should.exist(res.payload);
+                res.payload.toString('utf8').should.equal('TYPE_NOT_FOUND');
+
+                done();
+            });
+        });
     });
     describe('When a server is started with a type url of "/rd"', function() {
-        it('should raise an ILLEGAL_TYPE_URL exception');
+        beforeEach(function(done) {
+            config.server.types = [
+                {
+                    name: 'Reductioner',
+                    url: '/rd'
+                }
+            ];
+            libLwm2m2.stop(testInfo.serverInfo, done);
+        });
+
+        afterEach(initializeServer);
+
+        it('should raise an ILLEGAL_TYPE_URL exception', function(done) {
+            libLwm2m2.start(config.server, function (error, srvInfo) {
+                should.exist(error);
+                error.name.should.equal('ILLEGAL_TYPE_URL');
+                done();
+            });
+        });
     });
 });
