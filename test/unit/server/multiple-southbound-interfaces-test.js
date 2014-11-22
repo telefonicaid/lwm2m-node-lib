@@ -27,13 +27,18 @@ var libLwm2m2 = require('../../../').server,
     coap = require('coap'),
     Readable = require('stream').Readable,
     config = require('../../../config'),
-    utils = require('./../testUtils'),
     should = require('should'),
     testInfo = {};
 
 describe('Multiple southbound interfaces', function() {
     beforeEach(function (done) {
         config.server.baseRoot = '/theBaseUrl';
+        config.server.types = [
+            {
+                name: 'Light',
+                url: '/light'
+            }
+        ];
         libLwm2m2.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
             done();
@@ -41,11 +46,12 @@ describe('Multiple southbound interfaces', function() {
     });
 
     afterEach(function(done) {
-        delete config.server.type;
+        delete config.server.types;
+        delete config.server.baseRoot;
         libLwm2m2.stop(testInfo.serverInfo, done);
     });
 
-    describe.only('When a client registration request arrives to a server with a customized Base URL', function() {
+    describe('When a client registration request arrives to a server with a customized Base URL', function() {
         var requestUrl =  {
                 host: 'localhost',
                 port: config.server.port,
@@ -55,7 +61,7 @@ describe('Multiple southbound interfaces', function() {
             },
             payload = '</1>, </2>, </3>, </4>, </5>';
 
-        it('should return the response URL with the prefixed Base URL', function (done) {
+        it('should return the  Location-info URL with the prefixed Base URL', function (done) {
             var req = coap.request(requestUrl),
                 rs = new Readable(),
                 found = false;
@@ -81,5 +87,52 @@ describe('Multiple southbound interfaces', function() {
                 done();
             });
         });
+    });
+    describe('When a registration targets a type URL', function() {
+        var requestUrl =  {
+                host: 'localhost',
+                port: config.server.port,
+                method: 'POST',
+                pathname: '/light/rd',
+                query: 'ep=ROOM001&lt=86400&lwm2m=1.0&b=U'
+            },
+            payload = '</1>, </2>, </3>, </4>, </5>';
+
+        it('should return the Location-info URL with the prefixed type URL', function (done) {
+            var req = coap.request(requestUrl),
+                rs = new Readable();
+
+            libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+                function(endpoint, lifetime, version, binding, payload, callback) {
+                    callback();
+                });
+
+            rs.push(payload);
+            rs.push(null);
+            rs.pipe(req);
+
+            req.on('response', function(res) {
+                res.code.should.equal('2.01');
+
+                libLwm2m2.getRegistry().getByName('ROOM001', function(error, device) {
+                    should.not.exist(error);
+                    should.exist(device.type);
+                    device.type.should.equal('Light');
+                    done();
+                });
+            });
+        });
+    });
+    describe('When a registration targets an unexistent type', function() {
+        it('should return an TYPE_NOT_FOUND error');
+    });
+    describe('When a registration targets a type and there is not a type array configured', function() {
+        it('should return an TYPE_NOT_FOUND error');
+    });
+    describe('When a registration targets the default URL and there is not a default type configured', function() {
+        it('should return a TYPE_NOT_FOUND error');
+    });
+    describe('When a server is started with a type url of "/rd"', function() {
+        it('should raise an ILLEGAL_TYPE_URL exception');
     });
 });
