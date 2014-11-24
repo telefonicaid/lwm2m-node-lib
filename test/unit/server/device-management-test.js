@@ -78,7 +78,6 @@ describe('Device management interface' , function() {
                 req.method.should.equal('GET');
                 res.code = '2.05';
                 res.end('The Read content');
-
             });
 
             libLwm2m2.read(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
