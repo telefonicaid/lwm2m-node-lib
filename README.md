@@ -1,7 +1,7 @@
 # iotagent-lwm2m-lib
 
 
-![Alt text](https://david-dm.org/telefonicaid/iotagent-lwm2m-lib "Dependencies")
+![Alt text](https://david-dm.org/telefonicaid/iotagent-lwm2m-lib.png "Dependencies")
 
 ## Overview
 The [Open Mobile Alliance Lightweight M2M protocol](http://openmobilealliance.org/about-oma/work-program/m2m-enablers/) is a machine to machine communication protocol built over [COAP](https://tools.ietf.org/html/draft-ietf-core-coap), and meant to
