@@ -116,7 +116,7 @@ function setHandlers(deviceInfo) {
 
 function connect(command) {
     console.log('\nConnecting to the server. This may take a while\n.');
-    lwm2mClient.register(command[0], command[1], command[2], function (error, deviceInfo) {
+    lwm2mClient.register(command[0], command[1], command[3], command[2], function (error, deviceInfo) {
         if (error) {
             clUtils.handleError(error);
         } else {
@@ -160,8 +160,9 @@ var commands = {
         handler: list
     },
     'connect': {
-        parameters: ['host', 'port', 'endpointName'],
-        description: '\tConnect to the server in the selected host and port, using the selected endpointName.',
+        parameters: ['host', 'url', 'endpointName', 'url'],
+        description: '\tConnect to the server in the selected host and port, using the selected endpointName. An ' +
+        'optional url can be specified',
         handler: connect
     },
     'updateConnection': {

@@ -39,7 +39,7 @@ describe('Client-side information management', function() {
         lwm2mServer.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
 
-            lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, result) {
+            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, result) {
                 deviceInformation = result;
                 deviceId = deviceInformation.location.split('/')[2];
                 lwm2mClient.registry.create('/3/6', done);
