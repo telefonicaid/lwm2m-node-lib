@@ -115,7 +115,7 @@ function setHandlers(deviceInfo) {
 }
 
 function connect(command) {
-    console.log('\nConnecting to the server. This may take a while\n.');
+    console.log('\nConnecting to the server. This may take a while.\n');
     lwm2mClient.register(command[0], command[1], command[3], command[2], function (error, deviceInfo) {
         if (error) {
             clUtils.handleError(error);
