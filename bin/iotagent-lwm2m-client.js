@@ -160,7 +160,7 @@ var commands = {
         handler: list
     },
     'connect': {
-        parameters: ['host', 'url', 'endpointName', 'url'],
+        parameters: ['host', 'port', 'endpointName', 'url'],
         description: '\tConnect to the server in the selected host and port, using the selected endpointName. An ' +
         'optional url can be specified',
         handler: connect
