@@ -82,7 +82,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, 'testEndpoint',
+            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -100,7 +100,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, 'testEndpoint',
+            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -127,7 +127,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('http://unexistent.com', 12345, 'testEndpoint',
+            lwm2mClient.register('http://unexistent.com', 12345, null, 'testEndpoint',
                 function (error, info) {
                     should.exist(error);
                     error.name.should.equal('SERVER_NOT_FOUND');
@@ -149,7 +149,7 @@ describe('Client-initiated registration', function() {
                 callback(null);
             });
 
-            lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, info) {
+            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });
@@ -190,7 +190,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, 'testEndpoint', function (error, info) {
+            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });
