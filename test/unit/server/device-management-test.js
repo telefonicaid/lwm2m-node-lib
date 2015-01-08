@@ -80,13 +80,16 @@ describe('Device management interface' , function() {
                 res.end('The Read content');
             });
 
-            libLwm2m2.read(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+            libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 result.should.equal('The Read content');
                 done();
             });
         });
+    });
+    describe('When the user invokes the Read operation on an instance', function() {
+        it('should send a COAP GET Operation to the instance URI');
     });
     describe('When the user invokes the Write operation on an attribute', function() {
         it('should send a COAP PUT Operation on the selected attribute', function (done) {
@@ -106,6 +109,9 @@ describe('Device management interface' , function() {
                 done();
             });
         });
+    });
+    describe('When the user invokes the Write operation for an instance without specifiying an attribute', function() {
+        it('should send a COAP PUT Operation with the full description of the instance as the payload to the instance');
     });
     describe('When the user invokes the Execute operation on an attribute', function() {
         it('should send a COAP POST Operation on the selected attribute');

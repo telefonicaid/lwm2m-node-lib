@@ -23,14 +23,91 @@
 
 'use strict';
 
+var libLwm2m2 = require('../../../').server,
+    utils = require('./../testUtils'),
+    config = require('../../../config'),
+    libcoap = require('coap'),
+    should = require('should'),
+    server = libcoap.createServer(),
+    async = require('async'),
+    testInfo = {};
+
 describe('Information reporting interface', function() {
-    describe('When the user invokes the Observe operation on an attribute', function() {
-        it('should send a COAP GET Request with a generated Observe Token');
+    var deviceLocation;
+
+    function registerHandlers(callback) {
+        libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
+            function(endpoint, lifetime, version, binding, payload, innerCb) {
+                innerCb();
+            });
+
+        libLwm2m2.setHandler(testInfo.serverInfo, 'updateRegistration', function(object, innerCb) {
+            innerCb();
+        });
+
+        callback();
+    }
+
+
+    beforeEach(function (done) {
+        libLwm2m2.start(config.server, function (error, srvInfo){
+            testInfo.serverInfo = srvInfo;
+
+            async.series([
+                registerHandlers,
+                async.apply(utils.registerClient, 'ROOM001')
+            ], function (error, results) {
+                server.listen(function (error) {
+                    deviceLocation = results[1];
+                    done();
+                });
+            });
+        });
     });
-    describe('When a message arrives with a Observe Token', function() {
+
+    afterEach(function(done) {
+        libLwm2m2.stop(testInfo.serverInfo, function (error) {
+            server.removeAllListeners('request');
+            server.close(done);
+        });
+    });
+
+    describe('When the user invokes the Observe operation on an object', function() {
+        it('should send a COAP GET Request with a generated Observe Token for all the instances of the object',
+            function (done) {
+                server.on('request', function (req, res) {
+                    req.method.should.equal('GET');
+                    req.options.should.containDeep([{name: 'Observe'}]);
+                    res.code = '2.05';
+                    res.setOption('Observe', 1);
+                    res.end('The Read content');
+                });
+
+                libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+                    should.not.exist(error);
+                    should.exist(result);
+                    result.should.equal('The Read content');
+                    done();
+                });
+        });
+        it('should store the subscription to the value');
+    });
+    describe('When the user invokes the Observe operation on an object instance', function() {
+        it('should send a COAP GET Request with a generated Observe Token for the selected instance');
+    });
+    describe('When the user invokes the Observe operation on a resource', function() {
+        it('should send a COAP GET Request with a generated Observe Token for the particular resource');
+    });
+    describe('When a Notify message arrives with an Observe Token', function() {
         it('should invoke the user notification handler');
     });
-    describe('When the user invokes the Cancel operation on an attribute', function() {
-        it('should send a COAP Reset message to the client with the last response ID');
+    describe('When the user invokes the Cancel operation on an object', function() {
+        it('should send a COAP Reset message to the client with the last response ID for that object');
+    });
+    describe('When the user invokes the Cancel operation on an resource', function() {
+        it('should send a COAP Reset message to the client with the last response ID for that resource');
+    });
+    describe('When the user invokes the Cancel operation on an instance', function() {
+        it('should send a COAP Reset message to the client with the last response ID for that instance');
     });
 });
