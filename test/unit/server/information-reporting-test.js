@@ -146,6 +146,42 @@ describe('Information reporting interface', function() {
         });
     });
     describe('When the user invokes the Cancel operation on an resource', function() {
-        it('should send a COAP Reset message to the client with the last response ID for that resource');
+        beforeEach(function () {
+            server.on('request', function (req, res) {
+                function notify(msg) {
+                    res.write(msg);
+                }
+                res.code = '2.05';
+                res.setOption('Observe', 1);
+
+                res.write('The First content');
+                setTimeout(notify.bind(null, 'The Second content'), 100);
+                setTimeout(notify.bind(null, 'The Third content'), 200);
+                setTimeout(notify.bind(null, 'The Fourth content'), 300);
+                setTimeout(notify.bind(null, 'The Fifth content'), 400);
+            });
+        });
+
+        it('should stop sending updates for the resource value', function (done) {
+            var handlerInvokedTimes = 0,
+                maxTestDuration = 1500;
+
+            function userHandler(data) {
+                handlerInvokedTimes++;
+
+                if (handlerInvokedTimes === 1) {
+                    libLwm2m2.cancelObserver(deviceLocation.split('/')[2], '6', '2', '5', function () {
+                        setTimeout(function () {
+                            handlerInvokedTimes.should.equal(1);
+                            done();
+                        }, maxTestDuration);
+                    });
+                }
+            }
+
+            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
+                should.not.exist(error);
+            });
+        });
     });
 });
