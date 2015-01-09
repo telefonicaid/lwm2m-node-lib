@@ -48,6 +48,9 @@ describe('Information reporting interface', function() {
         callback();
     }
 
+    function emptyHandler(data, callback) {
+        callback(null);
+    }
 
     beforeEach(function (done) {
         libLwm2m2.start(config.server, function (error, srvInfo){
@@ -66,13 +69,16 @@ describe('Information reporting interface', function() {
     });
 
     afterEach(function(done) {
-        libLwm2m2.stop(testInfo.serverInfo, function (error) {
+        async.series([
+            libLwm2m2.cleanObservers,
+            async.apply(libLwm2m2.stop, testInfo.serverInfo)
+        ], function (error) {
             server.removeAllListeners('request');
             server.close(done);
         });
     });
 
-    describe('When the user invokes the Observe operation on an object', function() {
+    describe.only('When the user invokes the Observe operation on an object', function() {
         it('should send a COAP GET Request with a generated Observe Token for all the instances of the object',
             function (done) {
                 server.on('request', function (req, res) {
@@ -83,14 +89,32 @@ describe('Information reporting interface', function() {
                     res.end('The Read content');
                 });
 
-                libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+                libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', emptyHandler, function (error, result) {
                     should.not.exist(error);
                     should.exist(result);
                     result.should.equal('The Read content');
                     done();
                 });
         });
-        it('should store the subscription to the value');
+        it('should store the subscription to the value ', function (done) {
+            server.on('request', function (req, res) {
+                res.code = '2.05';
+                res.setOption('Observe', 1);
+                res.end('The Read content');
+            });
+
+            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', emptyHandler, function (error, result) {
+                should.not.exist(error);
+
+                libLwm2m2.listObservers(function (error, result) {
+                    should.not.exist(error);
+                    result.length.should.equal(1);
+                    result[0].resource.should.equal('/6/2/5');
+                    result[0].deviceId.should.equal(deviceLocation.split('/')[2]);
+                    done();
+                });
+            });
+        });
     });
     describe('When the user invokes the Observe operation on an object instance', function() {
         it('should send a COAP GET Request with a generated Observe Token for the selected instance');
