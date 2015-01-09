@@ -48,8 +48,8 @@ describe('Information reporting interface', function() {
         callback();
     }
 
-    function emptyHandler(data, callback) {
-        callback(null);
+    function emptyHandler(data) {
+
     }
 
     beforeEach(function (done) {
@@ -78,8 +78,8 @@ describe('Information reporting interface', function() {
         });
     });
 
-    describe.only('When the user invokes the Observe operation on an object', function() {
-        it('should send a COAP GET Request with a generated Observe Token for all the instances of the object',
+    describe('When the user invokes the Observe operation on a resource', function() {
+        it('should send a COAP GET Request with a generated Observe Option for the resource',
             function (done) {
                 server.on('request', function (req, res) {
                     req.method.should.equal('GET');
@@ -96,7 +96,7 @@ describe('Information reporting interface', function() {
                     done();
                 });
         });
-        it('should store the subscription to the value ', function (done) {
+        it('should store the subscription to the value', function (done) {
             server.on('request', function (req, res) {
                 res.code = '2.05';
                 res.setOption('Observe', 1);
@@ -116,22 +116,36 @@ describe('Information reporting interface', function() {
             });
         });
     });
-    describe('When the user invokes the Observe operation on an object instance', function() {
-        it('should send a COAP GET Request with a generated Observe Token for the selected instance');
-    });
-    describe('When the user invokes the Observe operation on a resource', function() {
-        it('should send a COAP GET Request with a generated Observe Token for the particular resource');
-    });
-    describe('When a Notify message arrives with an Observe Token', function() {
-        it('should invoke the user notification handler');
-    });
-    describe('When the user invokes the Cancel operation on an object', function() {
-        it('should send a COAP Reset message to the client with the last response ID for that object');
+    describe('When a Notify message arrives with an Observe Option', function() {
+        beforeEach(function () {
+            server.on('request', function (req, res) {
+                res.code = '2.05';
+                res.setOption('Observe', 1);
+                res.write('The First content');
+                res.write('The Second content');
+                res.write('The Third content');
+                res.end('The final content');
+            });
+        });
+
+        it('should invoke the user notification handler once per notify message', function (done) {
+            var handlerInvokedTimes = 0;
+
+            function userHandler(data) {
+                handlerInvokedTimes++;
+
+                if (data === 'The final content') {
+                    handlerInvokedTimes.should.equal(3);
+                    done();
+                }
+            }
+
+            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
+                should.not.exist(error);
+            });
+        });
     });
     describe('When the user invokes the Cancel operation on an resource', function() {
         it('should send a COAP Reset message to the client with the last response ID for that resource');
-    });
-    describe('When the user invokes the Cancel operation on an instance', function() {
-        it('should send a COAP Reset message to the client with the last response ID for that instance');
     });
 });

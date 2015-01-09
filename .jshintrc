@@ -10,7 +10,7 @@
     "undef": true,
     "unused": true,
     "trailing": true,
-    "maxparams": 6,
+    "maxparams": 7,
     "maxdepth": 4,
     "camelcase": true,
     "maxlen": 120,
