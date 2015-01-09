@@ -25,7 +25,7 @@
     "async": "0.9.0",
     "coap-cli": "0.3.0",
     "coap": "0.8.0",
-    "logops": "*",
+    "logops": "0.2.0",
     "underscore": "1.7.0",
     "mongodb": "1.4.22",
     "mongoose": "3.8.19",
