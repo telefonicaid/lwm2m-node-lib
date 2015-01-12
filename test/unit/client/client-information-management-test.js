@@ -126,10 +126,6 @@ describe('Client-side information management', function() {
 
             function serverHandler() {
                 serverHandlerCalls++;
-
-                if (serverHandlerCalls === 3) {
-                    done();
-                }
             }
 
             lwm2mServer.observe(deviceId, obj.type, obj.id, obj.resource, serverHandler, function(error, result) {
@@ -141,11 +137,46 @@ describe('Client-side information management', function() {
                     async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
                 ], function (error) {
                     should.not.exist(error);
+
+                    setTimeout(function () {
+                        serverHandlerCalls.should.equal(3);
+                        done();
+                    }, 1000);
                 });
             });
         });
 
-        it('should appear in the list of observed values');
+        it('should only send updates for the selected resource', function(done) {
+            var serverHandlerCalls = 0;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    callback(null, resourceValue);
+                });
+
+            function serverHandler() {
+                serverHandlerCalls++;
+            }
+
+            lwm2mServer.observe(deviceId, obj.type, obj.id, obj.resource, serverHandler, function(error, result) {
+                should.not.exist(error);
+
+                async.series([
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 21),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '12', 408),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 89),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '28', 988),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
+                ], function (error) {
+                    should.not.exist(error);
+
+                    setTimeout(function () {
+                        serverHandlerCalls.should.equal(3);
+                        done();
+                    }, 1000);
+                });
+            });
+        });
     });
 
     describe('When the client cancels an observed value', function() {
