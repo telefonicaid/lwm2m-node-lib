@@ -62,7 +62,7 @@ describe('Client-side information management', function() {
         });
     });
 
-    describe.only('When a Read requests arrives to the client with the Observe Option for value changes', function () {
+    describe('When a Read requests arrives to the client with the Observe Option for value changes', function () {
         var obj = {
             type: '3',
             id: '6',
@@ -141,7 +141,7 @@ describe('Client-side information management', function() {
                     async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
                 ], function (error) {
                     should.not.exist(error);
-                })
+                });
             });
         });
 
