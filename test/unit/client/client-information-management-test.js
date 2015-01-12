@@ -261,6 +261,52 @@ describe('Client-side information management', function() {
     });
 
     describe('When the client cancels an observed value', function() {
-        it('should cease sending messages to the remote server');
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+        });
+
+        it('should cease sending messages to the remote server', function(done) {
+            var serverHandlerCalls = 0;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    callback(null, resourceValue);
+                });
+
+            function serverHandler() {
+                serverHandlerCalls++;
+            }
+
+            lwm2mServer.observe(deviceId, obj.type, obj.id, obj.resource, serverHandler, function(error, result) {
+                should.not.exist(error);
+
+                async.series([
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 21),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '12', 408),
+                    async.apply(lwm2mClient.cancelObserver, obj.uri, obj.resource),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 89),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '28', 988),
+                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
+                ], function (error) {
+                    should.not.exist(error);
+
+                    setTimeout(function () {
+                        serverHandlerCalls.should.equal(1);
+                        done();
+                    }, 1000);
+                });
+            });
+        });
     });
 });
