@@ -179,6 +179,87 @@ describe('Client-side information management', function() {
         });
     });
 
+    describe('When two observers are created for resources of the same object and one of them is updated', function () {
+        var obj = {
+            type: '3',
+            id: '6',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+        });
+
+        it('should create two different observers, one for each resource', function(done) {
+            var server1Calls = 0,
+                server2Calls = 0;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    callback(null, resourceValue);
+                });
+
+            function server1() {
+                server1Calls++;
+            }
+
+            function server2() {
+                server2Calls++;
+            }
+
+            lwm2mServer.observe(deviceId, obj.type, obj.id, '1', server1, function(error, result) {
+                lwm2mServer.observe(deviceId, obj.type, obj.id, '2', server2, function(error, result) {
+                    lwm2mClient.listObservers(function (error, observerList) {
+                        observerList.length.should.equal(2);
+                        done();
+                    });
+                });
+            });
+        });
+
+        it('should call only the handler of the updated resource', function(done) {
+            var server1Calls = 0,
+                server2Calls = 0;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    callback(null, resourceValue);
+                });
+
+            function server1() {
+                server1Calls++;
+            }
+
+            function server2() {
+                server2Calls++;
+            }
+
+            lwm2mServer.observe(deviceId, obj.type, obj.id, '1', server1, function(error, result) {
+                lwm2mServer.observe(deviceId, obj.type, obj.id, '2', server2, function(error, result) {
+                    async.series([
+                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '1', 21),
+                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '1', 408),
+                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '2', 89),
+                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '1', 988),
+                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '2', 7)
+                    ], function (error) {
+                        should.not.exist(error);
+
+                        setTimeout(function () {
+                            server1Calls.should.equal(3);
+                            server2Calls.should.equal(2);
+                            done();
+                        }, 1000);
+                    });
+                });
+            });
+        });
+    });
+
     describe('When the client cancels an observed value', function() {
         it('should cease sending messages to the remote server');
     });
