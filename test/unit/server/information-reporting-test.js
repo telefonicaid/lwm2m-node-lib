@@ -183,5 +183,7 @@ describe('Information reporting interface', function() {
                 should.not.exist(error);
             });
         });
+
+        it('should remove the listener from the observers list');
     });
 });

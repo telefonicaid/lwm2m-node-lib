@@ -31,7 +31,7 @@ var should = require('should'),
     config = require('../../../config'),
     testInfo = {};
 
-describe('Client-side information management', function() {
+describe('Client-side device management', function() {
     var deviceInformation,
         deviceId;
 
