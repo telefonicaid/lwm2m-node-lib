@@ -27,19 +27,24 @@ var should = require('should'),
     async = require('async'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
+    memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     config = require('../../../config'),
     testInfo = {};
 
 
 describe('Client-initiated registration', function() {
     beforeEach(function(done) {
-        lwm2mServer.start(config.server, function (error, srvInfo) {
-            testInfo.serverInfo = srvInfo;
-            done();
+        memoryRegistry.clean(function () {
+            lwm2mServer.start(config.server, function (error, srvInfo) {
+                testInfo.serverInfo = srvInfo;
+                done();
+            });
         });
     });
     afterEach(function(done) {
-        lwm2mServer.stop(testInfo.serverInfo, done);
+        memoryRegistry.clean(function() {
+            lwm2mServer.stop(testInfo.serverInfo, done);
+        });
     });
 
     describe('When the client tries to register in an existent LWTM2M server', function() {

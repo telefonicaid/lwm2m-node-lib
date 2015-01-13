@@ -26,6 +26,7 @@
 var libLwm2m2 = require('../../../').server,
     utils = require('./../testUtils'),
     config = require('../../../config'),
+    memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     libcoap = require('coap'),
     should = require('should'),
     server = libcoap.createServer(),
@@ -53,16 +54,18 @@ describe('Information reporting interface', function() {
     }
 
     beforeEach(function (done) {
-        libLwm2m2.start(config.server, function (error, srvInfo){
-            testInfo.serverInfo = srvInfo;
+        memoryRegistry.clean(function () {
+            libLwm2m2.start(config.server, function (error, srvInfo){
+                testInfo.serverInfo = srvInfo;
 
-            async.series([
-                registerHandlers,
-                async.apply(utils.registerClient, 'ROOM001')
-            ], function (error, results) {
-                server.listen(function (error) {
-                    deviceLocation = results[1];
-                    done();
+                async.series([
+                    registerHandlers,
+                    async.apply(utils.registerClient, 'ROOM001')
+                ], function (error, results) {
+                    server.listen(function (error) {
+                        deviceLocation = results[1];
+                        done();
+                    });
                 });
             });
         });
