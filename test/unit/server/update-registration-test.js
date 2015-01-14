@@ -38,7 +38,7 @@ describe('Client update registration interface', function() {
                 innerCb();
             });
 
-        libLwm2m2.setHandler(testInfo.serverInfo, 'updateRegistration', function(object, innerCb) {
+        libLwm2m2.setHandler(testInfo.serverInfo, 'updateRegistration', function(object, payload, innerCb) {
             innerCb();
         });
 
