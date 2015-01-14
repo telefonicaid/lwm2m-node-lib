@@ -165,7 +165,7 @@ describe('Information reporting interface', function() {
             });
         });
 
-        xit('should stop sending updates for the resource value', function (done) {
+        it('should stop sending updates for the resource value', function (done) {
             var handlerInvokedTimes = 0,
                 maxTestDuration = 1500;
 
@@ -188,8 +188,7 @@ describe('Information reporting interface', function() {
         });
 
         it('should remove the listener from the observers list', function (done) {
-            var handlerInvokedTimes = 0,
-                maxTestDuration = 1500;
+            var handlerInvokedTimes = 0;
 
             function userHandler(data) {
                 handlerInvokedTimes++;
@@ -198,15 +197,13 @@ describe('Information reporting interface', function() {
             libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
                 should.not.exist(error);
 
-                //setTimeout(function() {
-                    libLwm2m2.cancelObserver(deviceLocation.split('/')[2], '6', '2', '5', function () {
-                            libLwm2m2.listObservers(function (error, result) {
-                                should.not.exist(error);
-                                result.length.should.equal(0);
-                                done();
-                            });
-                    });
-                //}, 0);
+                libLwm2m2.cancelObserver(deviceLocation.split('/')[2], '6', '2', '5', function () {
+                        libLwm2m2.listObservers(function (error, result) {
+                            should.not.exist(error);
+                            result.length.should.equal(0);
+                            done();
+                        });
+                });
             });
         });
     });
