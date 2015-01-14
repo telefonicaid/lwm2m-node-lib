@@ -187,6 +187,24 @@ describe('Information reporting interface', function() {
             });
         });
 
-        it('should remove the listener from the observers list');
+        it('should remove the listener from the observers list', function (done) {
+            var handlerInvokedTimes = 0;
+
+            function userHandler(data) {
+                handlerInvokedTimes++;
+            }
+
+            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
+                should.not.exist(error);
+
+                libLwm2m2.cancelObserver(deviceLocation.split('/')[2], '6', '2', '5', function () {
+                        libLwm2m2.listObservers(function (error, result) {
+                            should.not.exist(error);
+                            result.length.should.equal(0);
+                            done();
+                        });
+                });
+            });
+        });
     });
 });
