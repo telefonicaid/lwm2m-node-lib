@@ -154,25 +154,49 @@ describe('Client-initiated registration', function() {
                 callback(null);
             });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
-                deviceInformation = info;
-                done();
+            lwm2mClient.registry.create('/3/14', function (error) {
+                lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
+                    deviceInformation = info;
+                    lwm2mClient.registry.create('/7/5', done);
+                });
             });
         });
 
         afterEach(function (done) {
-            if (deviceInformation) {
-                lwm2mClient.unregister(deviceInformation, done);
-            } else {
-                done();
-            }
+            async.series([
+                async.apply(lwm2mClient.registry.remove, '/3/14'),
+                async.apply(lwm2mClient.registry.remove, '/7/5')
+            ], function (error) {
+                if (deviceInformation) {
+                    lwm2mClient.unregister(deviceInformation, done);
+                } else {
+                    done();
+                }
+            });
         });
 
         it('should send a COAP UPDATE Message with the required parameters', function(done) {
             var handlerCalled = false;
 
-            lwm2mServer.setHandler(testInfo.serverInfo, 'updateRegistration', function (device, callback) {
+            lwm2mServer.setHandler(testInfo.serverInfo, 'updateRegistration', function (device, payload, callback) {
                 should.exist(device);
+                handlerCalled = true;
+                callback(null);
+            });
+
+            lwm2mClient.update(deviceInformation, function (error) {
+                handlerCalled.should.equal(true);
+                done();
+            });
+        });
+
+        it('should update the set of supported objects', function(done) {
+            var handlerCalled = false;
+
+            lwm2mServer.setHandler(testInfo.serverInfo, 'updateRegistration', function (device, payload, callback) {
+                should.exist(device);
+                should.exist(payload);
+                payload.should.equal('</3/14>,</7/5>');
                 handlerCalled = true;
                 callback(null);
             });
@@ -183,8 +207,6 @@ describe('Client-initiated registration', function() {
             });
 
         });
-
-        it('should update the set of supported objects');
     });
     describe('When the client unregistration method is executed', function() {
         var deviceInformation;
