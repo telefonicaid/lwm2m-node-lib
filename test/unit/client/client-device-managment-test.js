@@ -191,27 +191,29 @@ describe('Client-side device management', function() {
             });
         });
     });
-
-    describe('When a Discover request arrives targeting an existent resource ID', function() {
-        it('should return all the attributes of the selected resource ID');
+    describe('When a Discover request arrives targeting an existent Object ID', function() {
+        it('should return all the resources supported by the selected Object ID');
     });
-    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
-        it('should overwrite the given attributes in the selected resource ID');
+    describe.skip('When a Discover request arrives targeting an existent Object instance ID', function() {
+        it('should return all the resources of the selected Object instance ID');
     });
     describe('When a Discover request arrives targeting an unexistent resource ID', function() {
-        it('should raise a RESOURCE_NOT_FOUND error');
-    });
-    describe('When a Write attributes request arrives targeting an unexistent resource ID', function() {
         it('should raise a RESOURCE_NOT_FOUND error');
     });
     describe('When a Discover request arrives targeting an existent object ID', function() {
         it('should return all the attributes of the selected object ID');
     });
-    describe('When a Write attributes request arrives targeting an existent object ID', function() {
-        it('should overwrite the given attributes in the selected object ID');
-    });
     describe('When a Discover request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
+    });
+    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
+        it('should overwrite the given attributes in the selected resource ID');
+    });
+    describe('When a Write attributes request arrives targeting an unexistent resource ID', function() {
+        it('should raise a RESOURCE_NOT_FOUND error');
+    });
+    describe('When a Write attributes request arrives targeting an existent object ID', function() {
+        it('should overwrite the given attributes in the selected object ID');
     });
     describe('When a Write attributes request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
