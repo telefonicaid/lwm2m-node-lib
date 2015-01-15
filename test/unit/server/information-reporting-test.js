@@ -151,8 +151,14 @@ describe('Information reporting interface', function() {
     describe('When the user invokes the Cancel operation on a resource', function() {
         beforeEach(function () {
             server.on('request', function (req, res) {
+                var finished = false;
+
                 function notify(msg) {
-                    res.write(msg);
+                    try {
+                        res.write(msg);
+                    } catch(e) {
+                        // Expected to throw an error if the server closes the connection first.
+                    }
                 }
                 res.code = '2.05';
                 res.setOption('Observe', 1);
