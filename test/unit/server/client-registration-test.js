@@ -147,4 +147,7 @@ describe('Client registration interface', function() {
             });
         });
     });
+    describe('When a client registration expires (due to its lifetime)', function(done) {
+        it('should reject every subsequent operation with that device ID');
+    });
 });
