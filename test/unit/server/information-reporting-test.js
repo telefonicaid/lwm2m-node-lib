@@ -151,8 +151,6 @@ describe('Information reporting interface', function() {
     describe('When the user invokes the Cancel operation on a resource', function() {
         beforeEach(function () {
             server.on('request', function (req, res) {
-                var finished = false;
-
                 function notify(msg) {
                     try {
                         res.write(msg);
