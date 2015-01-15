@@ -192,16 +192,60 @@ describe('Client-side device management', function() {
         });
     });
     describe('When a Discover request arrives targeting an existent Object ID', function() {
-        it('should return all the resources supported by the selected Object ID');
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+        });
+
+        it('should return all the instances of the selected Object ID', function(done) {
+            lwm2mServer.discover(deviceId, obj.type, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</3>,</3/6>');
+                done();
+            });
+        });
     });
-    describe.skip('When a Discover request arrives targeting an existent Object instance ID', function() {
-        it('should return all the resources of the selected Object instance ID');
-    });
-    describe('When a Discover request arrives targeting an unexistent resource ID', function() {
-        it('should raise a RESOURCE_NOT_FOUND error');
+    describe('When a Discover request arrives targeting an existent Object instance ID', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+        });
+
+        it('should return all the resources of the selected Object instance ID', function(done) {
+            lwm2mServer.discover(deviceId, obj.type, obj.id, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</3/6>,</3/6/2>');
+                done();
+            });
+        });
     });
     describe('When a Discover request arrives targeting an existent object ID', function() {
         it('should return all the attributes of the selected object ID');
+    });
+    describe('When a Discover request arrives targeting an unexistent resource ID', function() {
+        it('should raise a RESOURCE_NOT_FOUND error');
     });
     describe('When a Discover request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
