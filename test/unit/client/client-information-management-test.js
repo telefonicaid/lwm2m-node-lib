@@ -309,4 +309,11 @@ describe('Client-side information management', function() {
             });
         });
     });
+
+    describe('When a Read requests arrives to the client with the Observe Option with a 100ms frequency', function () {
+        it('should update the value each when the specified time lapse has passed');
+        it('should only send updates for the selected resource');
+        it('should not send updates before the minimum time span selected');
+        it('should send an update when the maximum elapsed time has passed');
+    });
 });
