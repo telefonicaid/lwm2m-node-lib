@@ -90,7 +90,7 @@ describe('Client registry', function() {
         beforeEach(function(done) {
             async.series([
                 apply(objectRegistry.create, '/1/3'),
-                apply(objectRegistry.setAttribute, '/1/3', '5', '123')
+                apply(objectRegistry.setResource, '/1/3', '5', '123')
             ], done);
         });
         afterEach(function(done) {
@@ -110,8 +110,8 @@ describe('Client registry', function() {
         beforeEach(function(done) {
             async.series([
                 apply(objectRegistry.create, '/1/3'),
-                apply(objectRegistry.setAttribute, '/1/3', '5', '123'),
-                apply(objectRegistry.unsetAttribute, '/1/3', '5')
+                apply(objectRegistry.setResource, '/1/3', '5', '123'),
+                apply(objectRegistry.unsetResource, '/1/3', '5')
             ], done);
         });
         afterEach(function(done) {
