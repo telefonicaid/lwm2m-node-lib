@@ -343,4 +343,4 @@ var commands = {
     }
 };
 
-clUtils.initialize(commands, '\033[36mLWM2M-Server> \033[0m');
+clUtils.initialize(commands, 'LWM2M-Server> ');
