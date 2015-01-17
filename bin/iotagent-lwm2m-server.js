@@ -235,6 +235,38 @@ function observe(commands) {
     });
 }
 
+function parseAttributes(payload) {
+    function split(pair) {
+        return pair.split('=');
+    }
+
+    function group(previous, current) {
+        if (current && current.length === 2) {
+            previous[current[0]] = current[1];
+        }
+
+        return previous;
+    }
+
+    return payload.split(',').map(split).reduce(group, {});
+}
+
+function writeAttributes(commands) {
+    var attributes = parseAttributes(commands[4]);
+
+    if (attributes) {
+        lwm2mServer.observe(commands[0], commands[1], commands[2], commands[3], attributes, function handleObserve(error) {
+            if (error) {
+                clUtils.handleError(error);
+            } else {
+                console.log('\nAttributes wrote to resource [/%s/%s/%s]\n', commands[1], commands[2], commands[3]);
+            }
+        });
+    } else {
+        console.log('\nAttributes [%s] written for resource [/%s/%s/%s]\n', commands[4], commands[1], commands[2], commands[3]);
+    }
+}
+
 var commands = {
     'start': {
         parameters: [],
@@ -281,6 +313,12 @@ var commands = {
         parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
         description: '\tStablish an observation over the selected resource.',
         handler: observe
+    },
+    'writeAttr': {
+        parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId', 'attributes'],
+        description: '\tWrite a new set of observation attributes to the selected resource. The attributes should be\n\t ' +
+            'in the following format: name=value(,name=value)*. E.g.: pmin=1,pmax=2.',
+        handler: writeAttributes
     },
     'cancel': {
         parameters: ['deviceId', 'resourceId'],
