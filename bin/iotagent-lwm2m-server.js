@@ -77,11 +77,19 @@ function stop() {
     }
 }
 
-function parseResourceId(resourceId) {
+/**
+ * Parses a string representing a Resource ID (representing a complete resource ID or a partial one: either the ID of
+ * an Object Type or an Object Instance).
+ *
+ * @param {String} resourceId       Id of the resource.
+ * @param {Boolean} incomplete      If present and true, return incomplete resources (Object Type or Instance).
+ * @returns {*}
+ */
+function parseResourceId(resourceId, incomplete) {
     var components = resourceId.split('/'),
         parsed;
 
-    if (components.length === 4) {
+    if (incomplete || components.length === 4) {
         parsed = {
             objectType: components[1],
             objectId: components[2],
@@ -93,7 +101,7 @@ function parseResourceId(resourceId) {
 }
 
 function write(commands) {
-    var obj = parseResourceId(commands[1]);
+    var obj = parseResourceId(commands[1], false);
 
     if (obj) {
         lwm2mServer.write(
@@ -108,8 +116,79 @@ function write(commands) {
     }
 }
 
+function discover(commands) {
+    lwm2mServer.discover(commands[0], commands[1], commands[2], commands[3], function handleDiscover(error, payload) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            console.log('\nResource attributes:\n----------------------------\n');
+            console.log('%s', payload);
+            clUtils.prompt();
+        }
+    });
+}
+
+function parseDiscoveredInstance(payload) {
+    var resources = payload.substr(payload.indexOf(',') + 1).replace(/<|>/g, '').split(','),
+        instance = {
+            resources: resources
+        };
+
+    return instance;
+}
+
+function parseDiscoveredType(payload) {
+    var instances = payload.substr(payload.indexOf(',') + 1).replace(/<|>/g, '').split(','),
+        type = {
+            instances: instances
+        };
+
+    return type;
+}
+
+function discoverObj(commands) {
+    lwm2mServer.discover(commands[0], commands[1], commands[2], function handleDiscover(error, payload) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            var parseLoad = parseDiscoveredInstance(payload);
+
+            console.log('\nObject instance\n----------------------------\n');
+            console.log('* Resources:')
+
+            for (var i = 0; i < parseLoad.resources.length; i++) {
+                console.log('\t- %s', parseLoad.resources[i]);
+            }
+
+            console.log('\n');
+            clUtils.prompt();
+        }
+    });
+}
+
+function discoverType(commands) {
+    lwm2mServer.discover(commands[0], commands[1], function handleDiscover(error, payload) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            var parseLoad = parseDiscoveredType(payload);
+
+            console.log('\nObject type attributes:\n----------------------------\n');
+            console.log('* Instances:')
+
+            for (var i = 0; i < parseLoad.instances.length; i++) {
+                console.log('\t- %s', parseLoad.instances[i]);
+            }
+
+            console.log('\n');
+            clUtils.prompt();
+        }
+    });
+}
+
+
 function read(commands) {
-    var obj = parseResourceId(commands[1]);
+    var obj = parseResourceId(commands[1], false);
 
     if (obj) {
         lwm2mServer.read(commands[0], obj.objectType, obj.objectId, obj.resourceId, function (error, result) {
@@ -170,13 +249,23 @@ var commands = {
         handler: read
     },
     'discover': {
-        parameters: ['deviceId', 'resourceId'],
-        description: '\tSends a discover order for the given resource (defined with a LWTM2M URI) to the given device.',
-        handler: clUtils.notImplemented
+        parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
+        description: '\tSends a discover order for the given resource to the given device.',
+        handler: discover
+    },
+    'discoverObj': {
+        parameters: ['deviceId', 'objTypeId', 'objInstanceId'],
+        description: '\tSends a discover order for the given instance to the given device.',
+        handler: discoverObj
+    },
+    'discoverType': {
+        parameters: ['deviceId', 'objTypeId'],
+        description: '\tSends a discover order for the given resource to the given device.',
+        handler: discoverType
     },
     'cancel': {
         parameters: ['deviceId', 'resourceId'],
-        description: '\tCancel the discover order for the given resource (defined with a LWTM2M URI) ' +
+        description: '\tCancel the observation order for the given resource (defined with a LWTM2M URI) ' +
             'to the given device.',
         handler: clUtils.notImplemented
     },
