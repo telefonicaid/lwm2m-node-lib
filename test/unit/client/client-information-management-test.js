@@ -55,7 +55,9 @@ describe('Client-side information management', function() {
         async.series([
             apply(lwm2mClient.registry.remove, '/3/6'),
             apply(lwm2mClient.unregister, deviceInformation),
-            apply(lwm2mServer.stop, testInfo.serverInfo)
+            apply(lwm2mServer.stop, testInfo.serverInfo),
+            lwm2mClient.registry.reset,
+            lwm2mClient.cancellAllObservers
         ], function() {
             lwm2mClient.registry.bus.removeAllListeners();
             done();
@@ -72,10 +74,10 @@ describe('Client-side information management', function() {
         };
 
         beforeEach(function(done) {
-            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
         });
         afterEach(function(done) {
-            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
 
         it('should call the read handler once with the original value', function(done) {
@@ -132,9 +134,9 @@ describe('Client-side information management', function() {
                 should.not.exist(error);
 
                 async.series([
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 21),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 89),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 21),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 89),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 7)
                 ], function (error) {
                     should.not.exist(error);
 
@@ -162,11 +164,11 @@ describe('Client-side information management', function() {
                 should.not.exist(error);
 
                 async.series([
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 21),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '12', 408),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 89),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '28', 988),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 21),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, '12', 408),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 89),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, '28', 988),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 7)
                 ], function (error) {
                     should.not.exist(error);
 
@@ -188,10 +190,10 @@ describe('Client-side information management', function() {
         };
 
         beforeEach(function(done) {
-            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
         });
         afterEach(function(done) {
-            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
 
         it('should create two different observers, one for each resource', function(done) {
@@ -241,11 +243,11 @@ describe('Client-side information management', function() {
             lwm2mServer.observe(deviceId, obj.type, obj.id, '1', server1, function(error, result) {
                 lwm2mServer.observe(deviceId, obj.type, obj.id, '2', server2, function(error, result) {
                     async.series([
-                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '1', 21),
-                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '1', 408),
-                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '2', 89),
-                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '1', 988),
-                        async.apply(lwm2mClient.registry.setAttribute, obj.uri, '2', 7)
+                        async.apply(lwm2mClient.registry.setResource, obj.uri, '1', 21),
+                        async.apply(lwm2mClient.registry.setResource, obj.uri, '1', 408),
+                        async.apply(lwm2mClient.registry.setResource, obj.uri, '2', 89),
+                        async.apply(lwm2mClient.registry.setResource, obj.uri, '1', 988),
+                        async.apply(lwm2mClient.registry.setResource, obj.uri, '2', 7)
                     ], function (error) {
                         should.not.exist(error);
 
@@ -270,10 +272,10 @@ describe('Client-side information management', function() {
         };
 
         beforeEach(function(done) {
-            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
         });
         afterEach(function(done) {
-            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
 
         it('should cease sending messages to the remote server', function(done) {
@@ -292,12 +294,12 @@ describe('Client-side information management', function() {
                 should.not.exist(error);
 
                 async.series([
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 21),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '12', 408),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 21),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, '12', 408),
                     async.apply(lwm2mClient.cancelObserver, obj.uri, obj.resource),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 89),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, '28', 988),
-                    async.apply(lwm2mClient.registry.setAttribute, obj.uri, obj.resource, 7)
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 89),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, '28', 988),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 7)
                 ], function (error) {
                     should.not.exist(error);
 
@@ -308,5 +310,63 @@ describe('Client-side information management', function() {
                 });
             });
         });
+    });
+
+    describe('When a Read requests arrives to the client with an Maximum Period attribute of 100ms', function () {
+        var obj = {
+                type: '3',
+                id: '6',
+                resource: '2',
+                value: 'ValueToBeRead',
+                uri: '/3/6'
+            },
+            attributes = {
+                pmax: 100
+            };
+
+        beforeEach(function(done) {
+            async.series([
+                apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, obj.value),
+                apply(lwm2mServer.writeAttributes, deviceId, obj.type, obj.id, obj.resource, attributes)
+            ], done);
+        });
+
+        afterEach(function(done) {
+            async.series([
+                lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done)
+            ], done);
+        });
+
+        it('should update the value when the specified time lapse has passed', function(done) {
+            var serverHandlerCalls = 0;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'read',
+                function (objectType, objectId, resourceId, resourceValue, callback) {
+                    callback(null, resourceValue);
+                });
+
+            function serverHandler() {
+                serverHandlerCalls++;
+            }
+
+            lwm2mServer.observe(deviceId, obj.type, obj.id, obj.resource, serverHandler, function(error, result) {
+                should.not.exist(error);
+
+                async.series([
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 21),
+                    async.apply(lwm2mClient.registry.setResource, obj.uri, obj.resource, 89)
+                ], function (error) {
+                    should.not.exist(error);
+
+                    setTimeout(function () {
+                        serverHandlerCalls.should.above(8);
+                        done();
+                    }, 1000);
+                });
+            });
+        });
+        it('should only send updates for the selected resource');
+        it('should not send updates before the minimum time span selected');
+        it('should send an update when the maximum elapsed time has passed');
     });
 });

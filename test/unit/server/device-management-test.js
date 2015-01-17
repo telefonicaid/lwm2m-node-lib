@@ -113,26 +113,70 @@ describe('Device management interface' , function() {
     describe('When the user invokes the Write operation for an instance without specifiying an attribute', function() {
         it('should send a COAP PUT Operation with the full description of the instance as the payload to the instance');
     });
-    describe('When the user invokes the Execute operation on an attribute', function() {
-        it('should send a COAP POST Operation on the selected attribute');
+    describe('When the user invokes the Execute operation on a resource', function() {
+        it('should send a COAP POST Operation on the selected resource');
     });
-    describe('When the user invokes the Discovery operation on an attribute', function() {
-        it('should send a COAP GET Operation on the selected attributes ' +
+    describe('When the user invokes the Discovery operation on a resource', function() {
+        it('should send a COAP GET Operation on the selected resource ' +
             'with the Accept: application/link-format header', function (done) {
             server.on('request', function (req, res) {
+                should.exist(req.headers['Accept']);
+                req.headers['Accept'].should.equal('application/link-format');
                 req.method.should.equal('GET');
                 res.code = '2.05';
-                res.end('</3/2/1>;pmin=10;pmax=60;lt=42.2');
+                req.url.should.equal('/6/2/5');
+                res.end('</6/2/5>;pmin=10;pmax=60;lt=42.2');
             });
 
             libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
                 should.not.exist(error);
                 should.exist(result);
-                result.should.equal('</3/2/1>;pmin=10;pmax=60;lt=42.2');
+                result.should.equal('</6/2/5>;pmin=10;pmax=60;lt=42.2');
                 done();
             });
         });
     });
+    describe('When the user invokes the Discovery operation on an object instance', function() {
+        it('should send a COAP GET Operation on the selected object instance ' +
+        'with the Accept: application/link-format header', function (done) {
+            server.on('request', function (req, res) {
+                should.exist(req.headers['Accept']);
+                req.headers['Accept'].should.equal('application/link-format');
+                req.method.should.equal('GET');
+                res.code = '2.05';
+                req.url.should.equal('/6/2');
+                res.end('</6/2>;pmin=10;pmax=60;lt=42.2,</6/2/1>');
+            });
+
+            libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', function (error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</6/2>;pmin=10;pmax=60;lt=42.2,</6/2/1>');
+                done();
+            });
+        });
+    });
+    describe('When the user invokes the Discovery operation on an object type', function() {
+        it('should send a COAP GET Operation on the selected object type ' +
+        'with the Accept: application/link-format header', function (done) {
+            server.on('request', function (req, res) {
+                should.exist(req.headers['Accept']);
+                req.headers['Accept'].should.equal('application/link-format');
+                req.method.should.equal('GET');
+                req.url.should.equal('/6');
+                res.code = '2.05';
+                res.end('</6>;pmin=10;pmax=60;lt=42.2,</6//1>');
+            });
+
+            libLwm2m2.discover(deviceLocation.split('/')[2], '6', function (error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</6>;pmin=10;pmax=60;lt=42.2,</6//1>');
+                done();
+            });
+        });
+    });
+
     describe('When the user invokes the Write Attributes operation over a resource', function() {
         it('should send a COAP PUT Operation on the selected attribute ' +
             'with the given parameters and without payload', function (done) {

@@ -17,6 +17,7 @@
     "node": true,
     "expr": true,
     "unused": "vars",
+    "sub": true,
     "globals": {
         "describe":true,
         "it": true,

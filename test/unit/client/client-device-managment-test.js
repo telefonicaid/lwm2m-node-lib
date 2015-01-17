@@ -51,6 +51,7 @@ describe('Client-side device management', function() {
         async.series([
             apply(lwm2mClient.registry.remove, '/3/6'),
             apply(lwm2mClient.unregister, deviceInformation),
+            lwm2mClient.registry.reset,
             apply(lwm2mServer.stop, testInfo.serverInfo)
         ], done);
     });
@@ -97,10 +98,10 @@ describe('Client-side device management', function() {
         };
 
         beforeEach(function(done) {
-            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
         });
         afterEach(function(done) {
-            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
         it('should send a response with the required object value', function(done) {
             var handlerCalled = false;
@@ -136,10 +137,10 @@ describe('Client-side device management', function() {
         };
 
         beforeEach(function(done) {
-            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
         });
         afterEach(function(done) {
-            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
         it('should raise a 4.04 OBJECT_NOT_FOUND error', function (done) {
             var handlerCalled = false;
@@ -168,10 +169,10 @@ describe('Client-side device management', function() {
         };
 
         beforeEach(function(done) {
-            lwm2mClient.registry.setAttribute(obj.uri, obj.resource, obj.value, done);
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
         });
         afterEach(function(done) {
-            lwm2mClient.registry.unsetAttribute(obj.uri, obj.resource, done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
         it('should raise a 4.04 RESOURCE_NOT_FOUND error', function(done) {
             var handlerCalled = false;
@@ -191,27 +192,196 @@ describe('Client-side device management', function() {
             });
         });
     });
+    describe('When a Discover request arrives targeting an existent Object ID', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
 
-    describe('When a Discover request arrives targeting an existent resource ID', function() {
-        it('should return all the attributes of the selected resource ID');
+        beforeEach(function(done) {
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
+        });
+
+        it('should return all the instances of the selected Object ID', function(done) {
+            lwm2mServer.discover(deviceId, obj.type, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</3>,</3/6>');
+                done();
+            });
+        });
     });
-    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
-        it('should overwrite the given attributes in the selected resource ID');
+    describe('When a Discover request arrives targeting an existent Object instance ID', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+        };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
+        });
+
+        it('should return all the resources of the selected Object instance ID', function(done) {
+            lwm2mServer.discover(deviceId, obj.type, obj.id, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                result.should.equal('</3/6>,</3/6/2>');
+                done();
+            });
+        });
     });
     describe('When a Discover request arrives targeting an unexistent resource ID', function() {
         it('should raise a RESOURCE_NOT_FOUND error');
     });
+    describe('When a Discover request arrives targeting an unexistent object type ID', function() {
+        it('should raise a OBJECT_NOT_FOUND error');
+    });
+    describe('When a Discover request arrives targeting an unexistent object instance ID', function() {
+        it('should raise a OBJECT_NOT_FOUND error');
+    });
+    describe('When a Write attributes request arrives targeting an existent resource ID', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '2',
+            value: 'ValueToBeRead',
+            uri: '/3/6'
+            },
+            attributes = {
+                pmin: 5000,
+                pmax: 20000,
+                gt: 14.5,
+                lt: 3.1,
+                st: 2000,
+                cancel: false
+            };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
+        });
+
+        it('should overwrite the given attributes in the selected resource ID', function(done) {
+            lwm2mServer.writeAttributes(
+                deviceId,
+                obj.type,
+                obj.id,
+                obj.resource,
+                attributes,
+                function(error) {
+                    should.not.exist(error);
+
+                    lwm2mServer.discover(deviceId, obj.type, obj.id, obj.resource, function(error, result) {
+                        should.not.exist(error);
+                        should.exist(result);
+                        result.should.equal('</3/6/2>;pmin=5000;pmax=20000;gt=14.5;lt=3.1;st=2000;cancel=false');
+                        done();
+                    });
+                });
+        });
+    });
+    describe('When a Write attributes request arrives targeting an existent object type ID', function() {
+        var obj = {
+                type: '3',
+                id: '6',
+                resource: '2',
+                value: 'ValueToBeRead',
+                uri: '/3/6'
+            },
+            attributes = {
+                pmin: 5000,
+                pmax: 20000,
+                gt: 14.5,
+                lt: 3.1,
+                st: 2000,
+                cancel: false
+            };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
+        });
+
+        it('should overwrite the given attributes in the selected object type ID', function(done) {
+            lwm2mServer.writeAttributes(
+                deviceId,
+                obj.type,
+                null,
+                null,
+                attributes,
+                function(error) {
+                    should.not.exist(error);
+
+                    lwm2mServer.discover(deviceId, obj.type, function(error, result) {
+                        should.not.exist(error);
+                        should.exist(result);
+                        result.should.equal('</3>;pmin=5000;pmax=20000;gt=14.5;lt=3.1;st=2000;cancel=false,</3/6>');
+                        done();
+                    });
+                });
+        });
+    });
+    describe('When a Write attributes request arrives targeting an existent object instance ID', function() {
+        var obj = {
+                type: '3',
+                id: '6',
+                resource: '2',
+                value: 'ValueToBeRead',
+                uri: '/3/6'
+            },
+            attributes = {
+                pmin: 5000,
+                pmax: 20000,
+                gt: 14.5,
+                lt: 3.1,
+                st: 2000,
+                cancel: false
+            };
+
+        beforeEach(function(done) {
+            lwm2mClient.registry.setResource(obj.uri, obj.resource, obj.value, done);
+        });
+        afterEach(function(done) {
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
+        });
+
+        it('should overwrite the given attributes in the selected object instance ID', function(done) {
+            lwm2mServer.writeAttributes(
+                deviceId,
+                obj.type,
+                obj.id,
+                null,
+                attributes,
+                function(error) {
+                    should.not.exist(error);
+
+                    lwm2mServer.discover(deviceId, obj.type, obj.id, function(error, result) {
+                        should.not.exist(error);
+                        should.exist(result);
+                        result.should.equal('</3/6>;pmin=5000;pmax=20000;gt=14.5;lt=3.1;st=2000;cancel=false,</3/6/2>');
+                        done();
+                    });
+                });
+        });
+    });
     describe('When a Write attributes request arrives targeting an unexistent resource ID', function() {
         it('should raise a RESOURCE_NOT_FOUND error');
-    });
-    describe('When a Discover request arrives targeting an existent object ID', function() {
-        it('should return all the attributes of the selected object ID');
-    });
-    describe('When a Write attributes request arrives targeting an existent object ID', function() {
-        it('should overwrite the given attributes in the selected object ID');
-    });
-    describe('When a Discover request arrives targeting an unexistent object ID', function() {
-        it('should raise a OBJECT_NOT_FOUND error');
     });
     describe('When a Write attributes request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
