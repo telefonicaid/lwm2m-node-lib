@@ -65,11 +65,11 @@ function remove(command) {
 }
 
 function set(command) {
-    lwm2mClient.registry.setAttribute(command[0], command[1], command[2], handleObjectFunction);
+    lwm2mClient.registry.setResource(command[0], command[1], command[2], handleObjectFunction);
 }
 
 function unset(command) {
-    lwm2mClient.registry.unsetAttribute(command[0], command[1], handleObjectFunction);
+    lwm2mClient.registry.unsetResource(command[0], command[1], handleObjectFunction);
 }
 
 function list() {
