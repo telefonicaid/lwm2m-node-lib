@@ -267,6 +267,16 @@ function writeAttributes(commands) {
     }
 }
 
+function cancelObservation(commands) {
+    lwm2mServer.cancelObserver(commands[0], commands[1], commands[2], commands[3], function handleCancel(error) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            console.log('\nObservation cancelled for resource [/%s/%s/%s]\n', commands[1], commands[2], commands[3]);
+        }
+    });
+}
+
 var commands = {
     'start': {
         parameters: [],
@@ -321,10 +331,10 @@ var commands = {
         handler: writeAttributes
     },
     'cancel': {
-        parameters: ['deviceId', 'resourceId'],
+        parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
         description: '\tCancel the observation order for the given resource (defined with a LWTM2M URI) ' +
             'to the given device.',
-        handler: clUtils.notImplemented
+        handler: cancelObservation
     },
     'config': {
         parameters: [],
