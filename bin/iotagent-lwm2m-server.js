@@ -122,7 +122,7 @@ function discover(commands) {
             clUtils.handleError(error);
         } else {
             console.log('\nResource attributes:\n----------------------------\n');
-            console.log('%s', payload);
+            console.log('%s', payload.substr(payload.indexOf(';')).replace(/;/g, '\n').replace('=', ' = '));
             clUtils.prompt();
         }
     });
@@ -255,7 +255,7 @@ function writeAttributes(commands) {
     var attributes = parseAttributes(commands[4]);
 
     if (attributes) {
-        lwm2mServer.observe(commands[0], commands[1], commands[2], commands[3], attributes, function handleObserve(error) {
+        lwm2mServer.writeAttributes(commands[0], commands[1], commands[2], commands[3], attributes, function handleObserve(error) {
             if (error) {
                 clUtils.handleError(error);
             } else {
