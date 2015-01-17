@@ -186,7 +186,6 @@ function discoverType(commands) {
     });
 }
 
-
 function read(commands) {
     var obj = parseResourceId(commands[1], false);
 
@@ -217,6 +216,21 @@ function listClients(commands) {
                 console.log('-> Device Id "%s"', deviceList[i].id);
                 console.log('\n%s\n', JSON.stringify(deviceList[i], null, 4));
             }
+        }
+    });
+}
+
+function handleValues(value) {
+    console.log('\nGot new value: %s\n', value);
+    clUtils.prompt();
+}
+
+function observe(commands) {
+    lwm2mServer.observe(commands[0], commands[1], commands[2], commands[3], handleValues, function handleObserve(error) {
+        if (error) {
+            clUtils.handleError(error);
+        } else {
+            console.log('\nObserver stablished over resource [/%s/%s/%s]\n', commands[1], commands[2], commands[3]);
         }
     });
 }
@@ -262,6 +276,11 @@ var commands = {
         parameters: ['deviceId', 'objTypeId'],
         description: '\tSends a discover order for the given resource to the given device.',
         handler: discoverType
+    },
+    'observe': {
+        parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
+        description: '\tStablish an observation over the selected resource.',
+        handler: observe
     },
     'cancel': {
         parameters: ['deviceId', 'resourceId'],
