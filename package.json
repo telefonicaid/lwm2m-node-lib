@@ -1,7 +1,7 @@
 {
   "name": "iotagent-lwm2m-lib",
   "description": "Library for Lightweight M2M IoT Agents.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/telefonicaid/iotagent-lwm2m-lib",
   "author": {
     "name": "Daniel Moran",
