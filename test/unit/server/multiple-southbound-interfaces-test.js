@@ -150,7 +150,7 @@ describe('Multiple southbound interfaces', function() {
             rs.pipe(req);
 
             req.on('response', function(res) {
-                res.code.should.equal('4.00');
+                res.code.should.equal('4.04');
                 should.exist(res.payload);
                 res.payload.toString('utf8').should.equal('TYPE_NOT_FOUND');
 
@@ -193,7 +193,7 @@ describe('Multiple southbound interfaces', function() {
             rs.pipe(req);
 
             req.on('response', function(res) {
-                res.code.should.equal('4.00');
+                res.code.should.equal('4.04');
                 should.exist(res.payload);
                 res.payload.toString('utf8').should.equal('TYPE_NOT_FOUND');
 
