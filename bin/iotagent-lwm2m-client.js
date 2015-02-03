@@ -188,4 +188,4 @@ var commands = {
     }
 };
 
-clUtils.initialize(commands, 'LWM2M-Client>');
+clUtils.initialize(commands, 'LWM2M-Client> ');
