@@ -140,7 +140,8 @@ module.exports = function(grunt) {
             unit: {
                 options: {
                     ui: 'bdd',
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 200000
                 },
                 src: [
                     'tools/mocha-globals.js',
