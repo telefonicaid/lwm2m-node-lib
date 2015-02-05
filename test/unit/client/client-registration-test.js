@@ -145,7 +145,7 @@ describe('Client-initiated registration', function() {
                 });
         });
     });
-    describe.skip('When the client update method is executed', function() {
+    describe('When the client update method is executed', function() {
         var deviceInformation;
 
         beforeEach(function(done) {
