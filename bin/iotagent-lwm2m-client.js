@@ -135,6 +135,26 @@ function connect(command) {
     });
 }
 
+function disconnect(command) {
+    if (globalDeviceInfo) {
+        lwm2mClient.unregister(globalDeviceInfo, function(error) {
+            if (error) {
+                clUtils.handleError(error);
+            } else {
+                console.log('\nDisconnected:\n--------------------------------\n');
+                clUtils.prompt();
+            }
+        });
+    } else {
+        console.error('\nCouldn\'t find device information (the connection may have not been completed).');
+    }
+}
+
+function quit(command) {
+    console.log('\nExiting client\n--------------------------------\n');
+    process.exit();
+}
+
 var commands = {
     'create': {
         parameters: ['objectUri'],
@@ -179,12 +199,17 @@ var commands = {
     'disconnect': {
         parameters: [],
         description: '\tDisconnect from the current server.',
-        handler: clUtils.notImplemented
+        handler: disconnect
     },
     'config': {
         parameters: [],
         description: '\tPrint the current config.',
         handler: clUtils.showConfig(config, 'client')
+    },
+    'quit': {
+        parameters: [],
+        description: '\tExit the client.',
+        handler: quit
     }
 };
 
