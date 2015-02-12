@@ -1,0 +1,6 @@
+- Documentation improvements
+- Add 'disconnect' and 'quit' commands for the command line client
+- Add support for LWM2M Client scritp in the command line client
+- Add error handlers for COAP errors
+- Add Cancel Observation features for the LWM2M Client
+- Add extended debug traces
