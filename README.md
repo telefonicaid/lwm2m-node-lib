@@ -86,6 +86,20 @@ All the client configuration is read from the `config.js` file in the root of th
 
 To exit the command line client, use `CTRL-C`.
 
+The command line client can also be used to execute scripts. Each line of the script is interpreted as a line in the command line. You have to take two things into account:
+* The script is executed as an input to the client, line by line, and it will not end unless a `quit` command is explicitly issued. In that case, the client will end up in a prepaired state, with the prompt available to receive further commands.
+* Currently, all the commands are executed asynchronously, so actions like connection and discconnection may rise errors if executed in the same script (as the disconnection could be exectued before the connection is completed).
+
+The following is an example of script:
+````
+create /75001/2
+create /75002/2
+set /75001/2 0 440.81
+set /75002/2 1 Connected
+connect localhost 60001 PruebasDuplex /
+quit
+```
+
 #### Command reference
 ```
 create <objectUri>  
