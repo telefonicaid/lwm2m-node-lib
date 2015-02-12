@@ -2,21 +2,41 @@
 
 [![Dependency Status](https://david-dm.org/telefonicaid/iotagent-lwm2m-lib.png)](https://david-dm.org/telefonicaid/iotagent-lwm2m-lib)
 
-## Overview
+## Index
+
+* [Overview](#overview)
+* [Command line applications](#commandline)
+* [Usage](#usage)
+* [Configuration](#configuration)
+* [Development Documentation](#development)
+ 
+## <a name="overview"/> Overview
 The [Open Mobile Alliance Lightweight M2M protocol](http://openmobilealliance.org/about-oma/work-program/m2m-enablers/) is a machine to machine communication protocol built over [COAP](https://tools.ietf.org/html/draft-ietf-core-coap), and meant to
 communicate resource constrained devices. The protocol defines two roles for the devices: a Lightweight M2M Client (the constrained device) and a Lightweight M2M Server (meant to consume the device data and control its execution).
 
-This library aims to provide a simple way to build Lightweight M2M Servers and Clients with Node.js, giving an abstraction over the COAP Protocol based on function calls and handlers. The provided features are:
-* Creation of a server listening to Client calls for the LWTM2M Interfaces, linked to handlers defined by the user.
-* Registry of devices connected to the server (in-memory registry for the first version).
-* Server calls to the registered devices in the registry (for Device Management Interface mostly) to retrieve information.
+This library aims to provide a simple way to build Lightweight M2M Servers and Clients with Node.js, giving an abstraction over the COAP Protocol based on function calls and handlers. 
+
+Features provided by the server library:
+* Creation of a COAP server listening for Client calls for the LWTM2M Interfaces, linked to handlers defined by the user.
+* Registry of devices connected to the server (transient in-memory registry and persistent MongoDB based one).
+* Server calls to the registered devices in the registry (Device Management Interface) to retrieve and write resource information and entity attributes.
+* Subscriptions to changes in resource values (Information Management Interface), on change or timed (and subscription management).
+
+Features provided by the client library:
+* Functions for connecting and disconnecting from remote servers.
+* Creation of a COAP server listening for commands issued from the LWM2M Server side linked to handlers defined by the user.
+* Transient in-memory object registry, to store the current objects and instances along with their resource values and attributes. 
+* Support for subscriptions from the server (using COAP Observe) both timed and on-change (both of them based in the values of the resources currently available in the registry).
 
 The library also provides command line clients to test both its client and server capabilities.
 
-## Command line applications
+## <a name="commandline"/> Command line applications
 The library provides two command line applications in order to help developing both Lightweight M2M clients and/or servers. This applications can be used to simulate the behavior of one of the peers of the communication. Both of them use the iotagent-lwm2m-lib library to serve all the LWTM2M requests. The following sections explain the basic features of each one.
 
-To use any of the applications you need to clone the project in your computer, and execute `npm install` from the root of the project, in order to download the dependencies. You can start both applications from the same folder using different console windows.
+There are multiple ways of using the applications:
+
+* You may clone the project in your computer, and execute `npm install` from the root of the project, in order to download the dependencies. You can start both applications from the same folder using different console windows.
+* Another option is to install directly with `npm install -g iotagent-lwm2m-lib`. This will install the library in the global `node_modules`.
 
 Take into account that all the information loaded or registered by any of the applications is transient, so it will be lost once the processes have been stopped.
 
@@ -57,13 +77,30 @@ read <deviceId> <resourceId>
 
 	Reads the value of the resource indicated by the URI (in LWTM2M format) in the given device.
 
-discover <deviceId> <resourceId>  
+discover <deviceId> <objTypeId> <objInstanceId> <resourceId>  
 
-	Sends a discover order for the given resource (defined with a LWTM2M URI) to the given device.
+	Sends a discover order for the given resource to the given device.
 
-cancel <deviceId> <resourceId>  
+discoverObj <deviceId> <objTypeId> <objInstanceId>  
 
-	Cancel the discover order for the given resource (defined with a LWTM2M URI) to the given device.
+	Sends a discover order for the given instance to the given device.
+
+discoverType <deviceId> <objTypeId>  
+
+	Sends a discover order for the given resource to the given device.
+
+observe <deviceId> <objTypeId> <objInstanceId> <resourceId>  
+
+	Stablish an observation over the selected resource.
+
+writeAttr <deviceId> <objTypeId> <objInstanceId> <resourceId> <attributes>  
+
+	Write a new set of observation attributes to the selected resource. The attributes should be
+	 in the following format: name=value(,name=value)*. E.g.: pmin=1,pmax=2.
+
+cancel <deviceId> <objTypeId> <objInstanceId> <resourceId>  
+
+	Cancel the observation order for the given resource (defined with a LWTM2M URI) to the given device.
 
 config  
 
@@ -84,7 +121,7 @@ You can type `help` in the command line at any moment to get a full list of the 
 
 All the client configuration is read from the `config.js` file in the root of the project. You can print the configuration that is actually being used using the `config` command.
 
-To exit the command line client, use `CTRL-C`.
+To exit the command line client, use `CTRL-C` or the `quit` command.
 
 The command line client can also be used to execute scripts. Each line of the script is interpreted as a line in the command line. You have to take two things into account:
 * The script is executed as an input to the client, line by line, and it will not end unless a `quit` command is explicitly issued. In that case, the client will end up in a prepaired state, with the prompt available to receive further commands.
@@ -126,7 +163,7 @@ list
 
 	List all the available objects along with its resource names and values.
 
-connect <host> <port> <endpointName>  
+connect <host> <port> <endpointName> <url>  
 
 	Connect to the server in the selected host and port, using the selected endpointName.
 
@@ -141,9 +178,13 @@ disconnect
 config  
 
 	Print the current config.
+
+quit  
+
+	Exit the client.
 ```
 
-## Usage
+## <a name="usage"/> Usage
 Note: as it is not yet published in npm repositories, this module has to be currently used as a github dependency in the package.json. To do so, add the following dependency to your package.json file, indicating the commit you want to use:
 
 ```
@@ -244,7 +285,7 @@ The repository offers the standard CRUD operations over objects, and methods to 
 
 All the objects are identified by a URI that is composed of an Object ID and an Object Instance sepparated by slashes, as specified by the Lightweight M2M specification (e.g.: /1/3).
 
-### Configuration
+## <a name="configuration"/> Configuration
 The configuration object should contain the following fields:
 * `server.port`: port where the server's COAP server will start listening.
 * `client.port`: port where the client's COAP server will start listening.
@@ -252,7 +293,7 @@ The configuration object should contain the following fields:
 * `client.version`: version of the Lightweight M2M protocol. Currently `1.0` is the only valid option.
 * `client.observe`: default parameters for resource observation (they can be overwritten from the server). 
 
-## Development documentation
+## <a name="development"/> Development documentation
 ### Project build
 The project is managed using Grunt Task Runner.
 
