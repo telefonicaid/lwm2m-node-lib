@@ -6,7 +6,7 @@
 
 * [Overview](#overview)
 * [Command line applications](#commandline)
-* [Usage](#usage)
+* [Usage](#libraryusage)
 * [Configuration](#configuration)
 * [Development Documentation](#development)
  
@@ -184,7 +184,7 @@ quit
 	Exit the client.
 ```
 
-## <a name="usage"/> Usage
+## <a name="libraryusage"/> Usage
 Note: as it is not yet published in npm repositories, this module has to be currently used as a github dependency in the package.json. To do so, add the following dependency to your package.json file, indicating the commit you want to use:
 
 ```
