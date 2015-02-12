@@ -288,10 +288,22 @@ All the objects are identified by a URI that is composed of an Object ID and an 
 ## <a name="configuration"/> Configuration
 The configuration object should contain the following fields:
 * `server.port`: port where the server's COAP server will start listening.
+* `server.defaultType`: type that will be assigned to a device registering in the server if there is no other.
+* `server.logLevel`: log level for the internal logger (could have any of the following values: DEBUG, INFO, ERROR, FATAL).
+* `server.types`: in the case of multiple URLs, mapping between URL and type (see bellow [Configuring multiple southbound interfaces](#multipleinterfaces).
 * `client.port`: port where the client's COAP server will start listening.
 * `client.lifetime`: lifetime in miliseconds of the client registration. After that lifetime, the registration will be dismissed.
 * `client.version`: version of the Lightweight M2M protocol. Currently `1.0` is the only valid option.
 * `client.observe`: default parameters for resource observation (they can be overwritten from the server). 
+
+### <a name="multipleinterfaces"/> Configuring multiple southbound interfaces
+The Lightweight M2M Server library can be configured to accept registrations in multiple southbound paths (all of them sharing IP and Port). In this case, each device will be assigned a different root base for its requests (that will be returned in the `Location-path` option), and will be assigned a device type, that can be used to group devices.
+
+The southbound interfaces can be configured in the `server.types` configuration parameter. This parameter is a list of objects composed of two attributes:
+* `name`: name of the type that will be assigned to the device.
+* `url`: url prefix used to identify the devices (take into account that the registration URL will be the concatenation of this value with the `/rd` standard registration path).
+
+Devices that arrive to the global `/rd` registration path will be assigned the default type instead (configured in `server.defaultType` configuration attribute).
 
 ## <a name="development"/> Development documentation
 ### Project build
