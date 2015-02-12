@@ -185,10 +185,10 @@ quit
 ```
 
 ## <a name="libraryusage"/> Usage
-Note: as it is not yet published in npm repositories, this module has to be currently used as a github dependency in the package.json. To do so, add the following dependency to your package.json file, indicating the commit you want to use:
+In order to use the library, add the following dependency to your package.json file:
 
 ```
-"iotagent-lwm2m-lib": "https://github.com/dmoranj/iotagent-lwm2m-lib/tarball/43664dd4b011673dd56d52b00d825cc3cf2ef679"
+"iotagent-lwm2m-lib": "*"
 ```
 
 In order to use this library, first you must require it:
