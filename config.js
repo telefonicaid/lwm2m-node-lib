@@ -12,7 +12,6 @@ config.server = {
 // Configuration of the LWTM2M Client
 //--------------------------------------------------
 config.client = {
-    port: 5683,                          // Port where the client will be listening
     lifetime: '85671',
     version: '1.0',
     logLevel: 'FATAL',
