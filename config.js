@@ -4,6 +4,7 @@ var config = {};
 //--------------------------------------------------
 config.server = {
     port: 60001,                         // Port where the server will be listening
+    udpWindow: 100,
     defaultType: 'Device',
     logLevel: 'FATAL'
 };
