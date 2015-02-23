@@ -123,7 +123,7 @@ describe('Client-initiated registration', function() {
         });
     });
     // TODO: this raises the problem addressed in issue #15 of node-coap
-    describe.skip('When the client tries to register in an unexistent server', function() {
+    describe('When the client tries to register in an unexistent server', function() {
         var deviceInformation;
 
         afterEach(function (done) {
