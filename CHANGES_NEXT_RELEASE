@@ -1,0 +1,1 @@
+- ADD Change the LWM2M Server to capture the port used in the registration as the client port.
