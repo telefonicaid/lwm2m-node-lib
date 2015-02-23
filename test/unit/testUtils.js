@@ -77,7 +77,7 @@ function registerClient(deviceName, callback) {
             }
         }
 
-        callback(null, deviceLocation);
+        callback(null, deviceLocation, res.outSocket.port);
     });
 }
 

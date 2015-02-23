@@ -45,8 +45,13 @@ describe('Client-initiated registration', function() {
     });
     afterEach(function(done) {
         memoryRegistry.clean(function() {
-            lwm2mServer.stop(testInfo.serverInfo, function() {
-                lwm2mClient.registry.reset(done);
+            async.series([
+                async.apply(lwm2mServer.stop, testInfo.serverInfo),
+                lwm2mClient.registry.reset,
+                lwm2mClient.cancellAllObservers
+            ], function() {
+                lwm2mClient.registry.bus.removeAllListeners();
+                done();
             });
         });
     });
@@ -58,7 +63,7 @@ describe('Client-initiated registration', function() {
             async.series([
                 async.apply(lwm2mClient.registry.create, '/0/1'),
                 async.apply(lwm2mClient.registry.create, '/3/14'),
-                async.apply(lwm2mClient.registry.create, '/2/9'),
+                async.apply(lwm2mClient.registry.create, '/2/9')
             ], done);
         });
 
@@ -66,7 +71,7 @@ describe('Client-initiated registration', function() {
             async.series([
                 async.apply(lwm2mClient.registry.remove, '/0/1'),
                 async.apply(lwm2mClient.registry.remove, '/3/14'),
-                async.apply(lwm2mClient.registry.remove, '/2/9'),
+                async.apply(lwm2mClient.registry.remove, '/2/9')
             ], function (error) {
                 if (deviceInformation) {
                     lwm2mClient.unregister(deviceInformation, done);
@@ -117,6 +122,7 @@ describe('Client-initiated registration', function() {
                 });
         });
     });
+    // TODO: this raises the problem addressed in issue #15 of node-coap
     describe('When the client tries to register in an unexistent server', function() {
         var deviceInformation;
 
