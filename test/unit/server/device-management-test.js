@@ -57,8 +57,9 @@ describe('Device management interface' , function() {
                 registerHandlers,
                 async.apply(utils.registerClient, 'ROOM001')
             ], function (error, results) {
-                server.listen(function (error) {
-                    deviceLocation = results[1];
+                deviceLocation = results[1][0];
+
+                server.listen(results[1][1], function (error) {
                     done();
                 });
             });

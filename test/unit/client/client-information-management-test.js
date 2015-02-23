@@ -53,8 +53,8 @@ describe('Client-side information management', function() {
 
     afterEach(function(done) {
         async.series([
-            apply(lwm2mClient.registry.remove, '/3/6'),
             apply(lwm2mClient.unregister, deviceInformation),
+            apply(lwm2mClient.registry.remove, '/3/6'),
             apply(lwm2mServer.stop, testInfo.serverInfo),
             lwm2mClient.registry.reset,
             lwm2mClient.cancellAllObservers
