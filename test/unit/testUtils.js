@@ -77,7 +77,7 @@ function registerClient(deviceName, callback) {
             }
         }
 
-        callback(null, deviceLocation, res._rsinfo.localAddress.port);
+        callback(null, deviceLocation, res.outSocket.port);
     });
 }
 
