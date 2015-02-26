@@ -68,7 +68,7 @@ describe('Client registration interface', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00 Bad Request', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
+        it('should return a 2.01 OK (as it is optional)', utils.checkCode(testInfo, requestUrl, payload, '2.01'));
     });
     describe('When a client registration requests doesn\'t indicate a binding arrives', function () {
         var requestUrl =  {
@@ -81,7 +81,7 @@ describe('Client registration interface', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
+        it('should return a 2.01 OK (as it is optional)', utils.checkCode(testInfo, requestUrl, payload, '2.01'));
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
