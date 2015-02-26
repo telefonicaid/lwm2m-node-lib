@@ -24,7 +24,7 @@
   "dependencies": {
     "async": "0.9.0",
     "coap-cli": "0.3.0",
-    "coap": "https://github.com/mcollina/node-coap/tarball/master",
+    "coap": "0.9.0",
     "logops": "0.2.0",
     "underscore": "1.7.0",
     "mongodb": "1.4.22",
