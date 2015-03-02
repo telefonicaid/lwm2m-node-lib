@@ -150,6 +150,21 @@ function disconnect(command) {
     }
 }
 
+function updateConnection(command) {
+    if (globalDeviceInfo) {
+        lwm2mClient.update(globalDeviceInfo, function(error) {
+            if (error) {
+                clUtils.handleError(error);
+            } else {
+                console.log('\Information updated:\n--------------------------------\n');
+                clUtils.prompt();
+            }
+        });
+    } else {
+        console.error('\nCouldn\'t find device information (the connection may have not been completed).');
+    }
+}
+
 function quit(command) {
     console.log('\nExiting client\n--------------------------------\n');
     process.exit();
@@ -194,7 +209,7 @@ var commands = {
     'updateConnection': {
         parameters: [],
         description: '\tUpdates the current connection to a server.',
-        handler: clUtils.notImplemented
+        handler: updateConnection
     },
     'disconnect': {
         parameters: [],
