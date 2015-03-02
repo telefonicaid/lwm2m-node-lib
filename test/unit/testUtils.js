@@ -32,9 +32,9 @@ var libLwm2m2 = require('../..').server,
     should = require('should');
 
 function checkCode(testInfo, requestUrl, payload, code) {
-
     return function (done) {
-        var req = coap.request(requestUrl),
+        var agent = new coap.Agent({type: 'udp6'}),
+            req = agent.request(requestUrl),
             rs = new Readable();
 
         libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
@@ -56,14 +56,15 @@ function checkCode(testInfo, requestUrl, payload, code) {
 function registerClient(deviceName, callback) {
     var rs = new Readable(),
         creationRequest =  {
-            host: 'localhost',
+            host: '::1',
             port: config.server.port,
             method: 'POST',
             pathname: '/rd',
             query: 'ep=' +  deviceName + '&lt=86400&lwm2m=1.0&b=U'
         },
         payload = '</1>, </2>, </3>, </4>, </5>',
-        req = coap.request(creationRequest),
+        agent = new coap.Agent({type: 'udp6'}),
+        req = agent.request(creationRequest),
         deviceLocation;
 
     rs.push(payload);
