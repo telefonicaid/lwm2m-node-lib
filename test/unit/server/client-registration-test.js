@@ -85,7 +85,7 @@ describe('Client registration interface', function() {
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
-                host: 'localhost',
+                host: '::1',
                 port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
