@@ -1,1 +1,3 @@
 - ADD Change the LWM2M Server to capture the port used in the registration as the client port.
+- ADD Ping service for the router.
+- FIX Problems with compatibility with other LWM2M implementations.
