@@ -81,7 +81,7 @@ describe('Device management interface' , function() {
                 res.end('The Read content');
             });
 
-            libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+            libLwm2m2.discover(deviceLocation.split('/')[1], '6', '2', '5', function (error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 result.should.equal('The Read content');
@@ -104,7 +104,7 @@ describe('Device management interface' , function() {
                 res.end('The content');
             });
 
-            libLwm2m2.write(deviceLocation.split('/')[2], '6', '2', '5', 'The value', function (error) {
+            libLwm2m2.write(deviceLocation.split('/')[1], '6', '2', '5', 'The value', function (error) {
                 should.not.exist(error);
                 data.should.equal('The value');
                 done();
@@ -129,7 +129,7 @@ describe('Device management interface' , function() {
                 res.end('</6/2/5>;pmin=10;pmax=60;lt=42.2');
             });
 
-            libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', '5', function (error, result) {
+            libLwm2m2.discover(deviceLocation.split('/')[1], '6', '2', '5', function (error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 result.should.equal('</6/2/5>;pmin=10;pmax=60;lt=42.2');
@@ -149,7 +149,7 @@ describe('Device management interface' , function() {
                 res.end('</6/2>;pmin=10;pmax=60;lt=42.2,</6/2/1>');
             });
 
-            libLwm2m2.discover(deviceLocation.split('/')[2], '6', '2', function (error, result) {
+            libLwm2m2.discover(deviceLocation.split('/')[1], '6', '2', function (error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 result.should.equal('</6/2>;pmin=10;pmax=60;lt=42.2,</6/2/1>');
@@ -169,7 +169,7 @@ describe('Device management interface' , function() {
                 res.end('</6>;pmin=10;pmax=60;lt=42.2,</6//1>');
             });
 
-            libLwm2m2.discover(deviceLocation.split('/')[2], '6', function (error, result) {
+            libLwm2m2.discover(deviceLocation.split('/')[1], '6', function (error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 result.should.equal('</6>;pmin=10;pmax=60;lt=42.2,</6//1>');
@@ -209,7 +209,7 @@ describe('Device management interface' , function() {
                 res.end('The content');
             });
 
-            libLwm2m2.writeAttributes(deviceLocation.split('/')[2], '6', '2', '5', attributes, function (error) {
+            libLwm2m2.writeAttributes(deviceLocation.split('/')[1], '6', '2', '5', attributes, function (error) {
                 should.not.exist(error);
                 requestSent.should.equal(true);
                 done();
@@ -238,7 +238,7 @@ describe('Device management interface' , function() {
                     res.end('The content');
                 });
 
-                libLwm2m2.writeAttributes(deviceLocation.split('/')[2], '6', '2', '5', attributes, function (error) {
+                libLwm2m2.writeAttributes(deviceLocation.split('/')[1], '6', '2', '5', attributes, function (error) {
                     should.exist(error);
                     error.name.should.equal('UNRECOGNIZED_ATTRIBUTE');
                     requestSent.should.equal(false);
@@ -259,7 +259,7 @@ describe('Device management interface' , function() {
                 res.end('The Read content');
             });
 
-            libLwm2m2.create(deviceLocation.split('/')[2], '6', '3', function (error) {
+            libLwm2m2.create(deviceLocation.split('/')[1], '6', '3', function (error) {
                 should.not.exist(error);
                 requestArrived.should.equal(true);
                 done();

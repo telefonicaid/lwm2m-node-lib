@@ -142,7 +142,7 @@ describe('Client registration interface', function() {
             req.on('response', function(res) {
                 res.options.length.should.equal(1);
                 res.options[0].name.should.equal('Location-Path');
-                res.options[0].value.should.match(/\/rd\/.*/);
+                res.options[0].value.should.match(/rd\/.*/);
                 done();
             });
         });
