@@ -45,7 +45,7 @@ describe('Client-side information management', function() {
 
             lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, result) {
                 deviceInformation = result;
-                deviceId = deviceInformation.location.split('/')[2];
+                deviceId = deviceInformation.location.split('/')[1];
                 lwm2mClient.registry.create('/3/6', done);
             });
         });
