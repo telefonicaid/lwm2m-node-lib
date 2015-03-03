@@ -13,8 +13,7 @@ config.server = {
 // Configuration of the LWTM2M Client
 //--------------------------------------------------
 config.client = {
-    //lifetime: '85671',
-    lifetime: '60',
+    lifetime: '85671',
     version: '1.0',
     logLevel: 'FATAL',
     observe: {
