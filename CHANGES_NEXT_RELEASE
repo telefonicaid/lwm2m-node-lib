@@ -2,3 +2,4 @@
 - ADD Ping service for the router.
 - FIX Problems with compatibility with other LWM2M implementations.
 - ADD Update connection in the command line tool.
+- FIX Remove initial slash from Location-path to conform to COAP standard.
