@@ -22,6 +22,4 @@ config.client = {
     ipProtocol: 'udp6'
 };
 
-config.clientProtocol = 'udp6';
-
 module.exports = config;
