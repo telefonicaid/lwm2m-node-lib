@@ -96,7 +96,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint',
+            lwm2mClient.register('::1', config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -114,7 +114,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint',
+            lwm2mClient.register('::1', config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -164,7 +164,7 @@ describe('Client-initiated registration', function() {
             });
 
             lwm2mClient.registry.create('/3/14', function (error) {
-                lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
+                lwm2mClient.register('::1', config.server.port, null, 'testEndpoint', function (error, info) {
                     deviceInformation = info;
                     lwm2mClient.registry.create('/7/5', done);
                 });
@@ -226,7 +226,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
+            lwm2mClient.register('::1', config.server.port, null, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });

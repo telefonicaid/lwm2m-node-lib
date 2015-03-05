@@ -7,6 +7,7 @@ config.server = {
     udpWindow: 100,
     defaultType: 'Device',
     logLevel: 'FATAL',
+    ipProtocol: 'udp6',
     serverProtocol: 'udp6'
 };
 
@@ -19,7 +20,8 @@ config.client = {
     observe: {
         period: 3000
     },
-    ipProtocol: 'udp6'
+    ipProtocol: 'udp6',
+    serverProtocol: 'udp6'
 };
 
 module.exports = config;
