@@ -29,13 +29,20 @@ var libLwm2m2 = require('../..').server,
     coap = require('coap'),
     Readable = require('stream').Readable,
     config = require('../../config'),
-    should = require('should');
+    should = require('should'),
+    localhost;
 
 function checkCode(testInfo, requestUrl, payload, code) {
     return function (done) {
-        var agent = new coap.Agent({type: 'udp6'}),
+        var agent = new coap.Agent({type: config.server.ipProtocol}),
             req = agent.request(requestUrl),
             rs = new Readable();
+
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
 
         libLwm2m2.setHandler(testInfo.serverInfo, 'registration',
             function(endpoint, lifetime, version, binding, payload, callback) {
@@ -56,14 +63,14 @@ function checkCode(testInfo, requestUrl, payload, code) {
 function registerClient(deviceName, callback) {
     var rs = new Readable(),
         creationRequest =  {
-            host: '::1',
+            host: localhost,
             port: config.server.port,
             method: 'POST',
             pathname: '/rd',
             query: 'ep=' +  deviceName + '&lt=86400&lwm2m=1.0&b=U'
         },
         payload = '</1>, </2>, </3>, </4>, </5>',
-        agent = new coap.Agent({type: 'udp6'}),
+        agent = new coap.Agent({type: config.server.ipProtocol}),
         req = agent.request(creationRequest),
         deviceLocation;
 

@@ -7,8 +7,8 @@ config.server = {
     udpWindow: 100,
     defaultType: 'Device',
     logLevel: 'FATAL',
-    ipProtocol: 'udp6',
-    serverProtocol: 'udp6'
+    ipProtocol: 'udp4',
+    serverProtocol: 'udp4'
 };
 
 // Configuration of the LWTM2M Client
@@ -20,8 +20,8 @@ config.client = {
     observe: {
         period: 3000
     },
-    ipProtocol: 'udp6',
-    serverProtocol: 'udp6'
+    ipProtocol: 'udp4',
+    serverProtocol: 'udp4'
 };
 
 module.exports = config;

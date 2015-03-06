@@ -29,7 +29,7 @@ var libLwm2m2 = require('../../../').server,
     memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     libcoap = require('coap'),
     should = require('should'),
-    server = libcoap.createServer({type: 'udp6'}),
+    server = libcoap.createServer({type: config.server.ipProtocol}),
     async = require('async'),
     testInfo = {};
 

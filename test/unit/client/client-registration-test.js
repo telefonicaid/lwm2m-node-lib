@@ -29,11 +29,18 @@ var should = require('should'),
     lwm2mClient = require('../../../').client,
     memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     config = require('../../../config'),
+    localhost,
     testInfo = {};
 
 
 describe('Client-initiated registration', function() {
     beforeEach(function(done) {
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
+
         lwm2mClient.registry.reset(function() {
             memoryRegistry.clean(function () {
                 lwm2mServer.start(config.server, function (error, srvInfo) {
@@ -96,7 +103,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('::1', config.server.port, null, 'testEndpoint',
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -114,7 +121,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('::1', config.server.port, null, 'testEndpoint',
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -164,7 +171,7 @@ describe('Client-initiated registration', function() {
             });
 
             lwm2mClient.registry.create('/3/14', function (error) {
-                lwm2mClient.register('::1', config.server.port, null, 'testEndpoint', function (error, info) {
+                lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, info) {
                     deviceInformation = info;
                     lwm2mClient.registry.create('/7/5', done);
                 });
@@ -226,7 +233,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('::1', config.server.port, null, 'testEndpoint', function (error, info) {
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });

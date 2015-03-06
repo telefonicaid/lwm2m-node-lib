@@ -29,10 +29,17 @@ var libLwm2m2 = require('../../../').server,
     config = require('../../../config'),
     utils = require('./../testUtils'),
     should = require('should'),
+    localhost,
     testInfo = {};
 
 describe('Client registration interface', function() {
     beforeEach(function (done) {
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
+
         config.server.type = 'mongodb';
         libLwm2m2.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
@@ -85,7 +92,7 @@ describe('Client registration interface', function() {
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
-                host: '::1',
+                host: localhost,
                 port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
