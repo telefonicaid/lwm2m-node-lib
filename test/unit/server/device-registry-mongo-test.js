@@ -88,6 +88,20 @@ describe('MongoDB Device registry', function() {
                 });
             });
         });
+        it('should store the device with all its attributes', function(done) {
+            utils.registerClient('ROOM001', function (error) {
+                iotAgentDb.collection('devices').find({}).toArray(function(err, docs) {
+                    should.exist(docs[0]);
+                    should.exist(docs[0].path);
+                    should.exist(docs[0].lifetime);
+                    should.exist(docs[0].type);
+                    docs[0].path.should.equal('/rd');
+                    docs[0].lifetime.should.equal('86400');
+                    docs[0].type.should.equal('Device');
+                    done();
+                });
+            });
+        });
     });
 
     describe('When a user executes the List operation of the library on a registry with two records', function () {
