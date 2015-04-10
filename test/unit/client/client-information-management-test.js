@@ -29,6 +29,7 @@ var should = require('should'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
     config = require('../../../config'),
+    localhost,
     testInfo = {};
 
 function emptyHandler(data) {
@@ -40,12 +41,18 @@ describe('Client-side information management', function() {
         deviceId;
 
     beforeEach(function(done) {
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
+
         lwm2mServer.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, result) {
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, result) {
                 deviceInformation = result;
-                deviceId = deviceInformation.location.split('/')[2];
+                deviceId = deviceInformation.location.split('/')[1];
                 lwm2mClient.registry.create('/3/6', done);
             });
         });
@@ -53,8 +60,8 @@ describe('Client-side information management', function() {
 
     afterEach(function(done) {
         async.series([
-            apply(lwm2mClient.registry.remove, '/3/6'),
             apply(lwm2mClient.unregister, deviceInformation),
+            apply(lwm2mClient.registry.remove, '/3/6'),
             apply(lwm2mServer.stop, testInfo.serverInfo),
             lwm2mClient.registry.reset,
             lwm2mClient.cancellAllObservers

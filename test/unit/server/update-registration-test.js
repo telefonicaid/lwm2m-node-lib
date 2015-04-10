@@ -53,7 +53,8 @@ describe('Client update registration interface', function() {
                 registerHandlers,
                 async.apply(utils.registerClient, 'ROOM001')
             ], function (error, results) {
-                deviceLocation = results[1];
+                deviceLocation = results[1][0];
+
                 done();
             });
         });

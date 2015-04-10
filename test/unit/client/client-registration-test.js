@@ -29,11 +29,18 @@ var should = require('should'),
     lwm2mClient = require('../../../').client,
     memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     config = require('../../../config'),
+    localhost,
     testInfo = {};
 
 
 describe('Client-initiated registration', function() {
     beforeEach(function(done) {
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
+
         lwm2mClient.registry.reset(function() {
             memoryRegistry.clean(function () {
                 lwm2mServer.start(config.server, function (error, srvInfo) {
@@ -45,8 +52,13 @@ describe('Client-initiated registration', function() {
     });
     afterEach(function(done) {
         memoryRegistry.clean(function() {
-            lwm2mServer.stop(testInfo.serverInfo, function() {
-                lwm2mClient.registry.reset(done);
+            async.series([
+                async.apply(lwm2mServer.stop, testInfo.serverInfo),
+                lwm2mClient.registry.reset,
+                lwm2mClient.cancellAllObservers
+            ], function() {
+                lwm2mClient.registry.bus.removeAllListeners();
+                done();
             });
         });
     });
@@ -58,7 +70,7 @@ describe('Client-initiated registration', function() {
             async.series([
                 async.apply(lwm2mClient.registry.create, '/0/1'),
                 async.apply(lwm2mClient.registry.create, '/3/14'),
-                async.apply(lwm2mClient.registry.create, '/2/9'),
+                async.apply(lwm2mClient.registry.create, '/2/9')
             ], done);
         });
 
@@ -66,7 +78,7 @@ describe('Client-initiated registration', function() {
             async.series([
                 async.apply(lwm2mClient.registry.remove, '/0/1'),
                 async.apply(lwm2mClient.registry.remove, '/3/14'),
-                async.apply(lwm2mClient.registry.remove, '/2/9'),
+                async.apply(lwm2mClient.registry.remove, '/2/9')
             ], function (error) {
                 if (deviceInformation) {
                     lwm2mClient.unregister(deviceInformation, done);
@@ -91,7 +103,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint',
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -109,7 +121,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint',
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint',
                 function (error, info) {
                     handlerCalled.should.equal(true);
                     deviceInformation = info;
@@ -159,7 +171,7 @@ describe('Client-initiated registration', function() {
             });
 
             lwm2mClient.registry.create('/3/14', function (error) {
-                lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
+                lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, info) {
                     deviceInformation = info;
                     lwm2mClient.registry.create('/7/5', done);
                 });
@@ -221,7 +233,7 @@ describe('Client-initiated registration', function() {
                     callback(null);
                 });
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, info) {
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, info) {
                 deviceInformation = info;
                 done();
             });

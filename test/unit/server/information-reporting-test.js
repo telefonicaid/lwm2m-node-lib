@@ -29,7 +29,7 @@ var libLwm2m2 = require('../../../').server,
     memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     libcoap = require('coap'),
     should = require('should'),
-    server = libcoap.createServer(),
+    server = libcoap.createServer({type: config.server.ipProtocol}),
     async = require('async'),
     testInfo = {};
 
@@ -62,8 +62,9 @@ describe('Information reporting interface', function() {
                     registerHandlers,
                     async.apply(utils.registerClient, 'ROOM001')
                 ], function (error, results) {
-                    server.listen(function (error) {
-                        deviceLocation = results[1];
+                    deviceLocation = results[1][0];
+
+                    server.listen(results[1][1], function (error) {
                         done();
                     });
                 });
@@ -92,7 +93,7 @@ describe('Information reporting interface', function() {
                     res.end('The Read content');
                 });
 
-                libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', emptyHandler, function (error, result) {
+                libLwm2m2.observe(deviceLocation.split('/')[1], '6', '2', '5', emptyHandler, function (error, result) {
                     should.not.exist(error);
                     should.exist(result);
                     result.should.equal('The Read content');
@@ -106,14 +107,14 @@ describe('Information reporting interface', function() {
                 res.end('The Read content');
             });
 
-            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', emptyHandler, function (error, result) {
+            libLwm2m2.observe(deviceLocation.split('/')[1], '6', '2', '5', emptyHandler, function (error, result) {
                 should.not.exist(error);
 
                 libLwm2m2.listObservers(function (error, result) {
                     should.not.exist(error);
                     result.length.should.equal(1);
                     result[0].resource.should.equal('/6/2/5');
-                    result[0].deviceId.should.equal(deviceLocation.split('/')[2]);
+                    result[0].deviceId.should.equal(deviceLocation.split('/')[1]);
                     done();
                 });
             });
@@ -143,7 +144,7 @@ describe('Information reporting interface', function() {
                 }
             }
 
-            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
+            libLwm2m2.observe(deviceLocation.split('/')[1], '6', '2', '5', userHandler, function (error, result) {
                 should.not.exist(error);
             });
         });
@@ -177,7 +178,7 @@ describe('Information reporting interface', function() {
                 handlerInvokedTimes++;
 
                 if (handlerInvokedTimes === 1) {
-                    libLwm2m2.cancelObserver(deviceLocation.split('/')[2], '6', '2', '5', function () {
+                    libLwm2m2.cancelObserver(deviceLocation.split('/')[1], '6', '2', '5', function () {
                         setTimeout(function () {
                             handlerInvokedTimes.should.equal(1);
                             done();
@@ -186,7 +187,7 @@ describe('Information reporting interface', function() {
                 }
             }
 
-            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
+            libLwm2m2.observe(deviceLocation.split('/')[1], '6', '2', '5', userHandler, function (error, result) {
                 should.not.exist(error);
             });
         });
@@ -198,10 +199,10 @@ describe('Information reporting interface', function() {
                 handlerInvokedTimes++;
             }
 
-            libLwm2m2.observe(deviceLocation.split('/')[2], '6', '2', '5', userHandler, function (error, result) {
+            libLwm2m2.observe(deviceLocation.split('/')[1], '6', '2', '5', userHandler, function (error, result) {
                 should.not.exist(error);
 
-                libLwm2m2.cancelObserver(deviceLocation.split('/')[2], '6', '2', '5', function () {
+                libLwm2m2.cancelObserver(deviceLocation.split('/')[1], '6', '2', '5', function () {
                         libLwm2m2.listObservers(function (error, result) {
                             should.not.exist(error);
                             result.length.should.equal(0);

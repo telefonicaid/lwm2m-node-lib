@@ -29,6 +29,7 @@ var should = require('should'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
     config = require('../../../config'),
+    localhost,
     testInfo = {};
 
 describe('Client-side device management', function() {
@@ -36,12 +37,18 @@ describe('Client-side device management', function() {
         deviceId;
 
     beforeEach(function(done) {
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
+
         lwm2mServer.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
 
-            lwm2mClient.register('localhost', config.server.port, null, 'testEndpoint', function (error, result) {
+            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, result) {
                 deviceInformation = result;
-                deviceId = deviceInformation.location.split('/')[2];
+                deviceId = deviceInformation.location.split('/')[1];
                 lwm2mClient.registry.create('/3/6', done);
             });
         });
@@ -53,7 +60,9 @@ describe('Client-side device management', function() {
             apply(lwm2mClient.unregister, deviceInformation),
             lwm2mClient.registry.reset,
             apply(lwm2mServer.stop, testInfo.serverInfo)
-        ], done);
+        ], function (error) {
+            done();
+        });
     });
 
     describe('When a Write request arrives to the client', function() {

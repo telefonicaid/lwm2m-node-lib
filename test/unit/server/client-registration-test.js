@@ -29,10 +29,17 @@ var libLwm2m2 = require('../../../').server,
     config = require('../../../config'),
     utils = require('./../testUtils'),
     should = require('should'),
+    localhost,
     testInfo = {};
 
 describe('Client registration interface', function() {
     beforeEach(function (done) {
+        if (config.server.ipProtocol === 'udp6') {
+            localhost = '::1';
+        } else {
+            localhost = '127.0.0.1';
+        }
+
         config.server.type = 'mongodb';
         libLwm2m2.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
@@ -68,7 +75,7 @@ describe('Client registration interface', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00 Bad Request', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
+        it('should return a 2.01 OK (as it is optional)', utils.checkCode(testInfo, requestUrl, payload, '2.01'));
     });
     describe('When a client registration requests doesn\'t indicate a binding arrives', function () {
         var requestUrl =  {
@@ -81,11 +88,11 @@ describe('Client registration interface', function() {
             payload = '</1>, </2>, </3>, </4>, </5>';
 
 
-        it('should fail with a 4.00', utils.checkCode(testInfo, requestUrl, payload, '4.00'));
+        it('should return a 2.01 OK (as it is optional)', utils.checkCode(testInfo, requestUrl, payload, '2.01'));
     });
     describe('When a correct client registration requests arrives', function () {
         var requestUrl =  {
-                host: 'localhost',
+                host: localhost,
                 port: config.server.port,
                 method: 'POST',
                 pathname: '/rd',
@@ -142,7 +149,7 @@ describe('Client registration interface', function() {
             req.on('response', function(res) {
                 res.options.length.should.equal(1);
                 res.options[0].name.should.equal('Location-Path');
-                res.options[0].value.should.match(/\/rd\/.*/);
+                res.options[0].value.should.match(/rd\/.*/);
                 done();
             });
         });

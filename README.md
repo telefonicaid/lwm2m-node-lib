@@ -1,6 +1,6 @@
-# iotagent-lwm2m-lib
+# lwm2m-node-lib
 
-[![Dependency Status](https://david-dm.org/telefonicaid/iotagent-lwm2m-lib.png)](https://david-dm.org/telefonicaid/iotagent-lwm2m-lib)
+[![Dependency Status](https://david-dm.org/telefonicaid/lwm2m-node-lib.png)](https://david-dm.org/telefonicaid/lwm2m-node-lib)
 
 ## Index
 
