@@ -1,6 +1,0 @@
-- ADD Change the LWM2M Server to capture the port used in the registration as the client port.
-- ADD Ping service for the router.
-- FIX Problems with compatibility with other LWM2M implementations.
-- ADD Update connection in the command line tool.
-- FIX Remove initial slash from Location-path to conform to COAP standard.
-- ADD Make IPv6 the default option and change the tests to use it by default.
