@@ -29,6 +29,7 @@ var should = require('should'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
     config = require('../../../config'),
+    memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     localhost,
     testInfo = {};
 
@@ -42,14 +43,17 @@ describe('Client-side device management', function() {
         } else {
             localhost = '127.0.0.1';
         }
+        lwm2mClient.registry.reset(function() {
+            memoryRegistry.clean(function () {
+                lwm2mServer.start(config.server, function (error, srvInfo) {
+                    testInfo.serverInfo = srvInfo;
 
-        lwm2mServer.start(config.server, function (error, srvInfo) {
-            testInfo.serverInfo = srvInfo;
-
-            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, result) {
-                deviceInformation = result;
-                deviceId = deviceInformation.location.split('/')[1];
-                lwm2mClient.registry.create('/3/6', done);
+                    lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, result) {
+                        deviceInformation = result;
+                        deviceId = deviceInformation.location.split('/')[1];
+                        lwm2mClient.registry.create('/3/6', done);
+                    });
+                });
             });
         });
     });
