@@ -8,7 +8,14 @@ config.server = {
     defaultType: 'Device',
     logLevel: 'FATAL',
     ipProtocol: 'udp4',
-    serverProtocol: 'udp4'
+    serverProtocol: 'udp4',
+    formats: [
+        {
+            name: 'lightweightm2m/text',
+            value: 1541
+        }
+    ],
+    writeFormat: 'lightweightm2m/text'
 };
 
 // Configuration of the LWTM2M Client
