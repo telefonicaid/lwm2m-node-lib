@@ -11,11 +11,23 @@ config.server = {
     serverProtocol: 'udp4',
     formats: [
         {
-            name: 'lightweightm2m/text',
+            name: 'application-vnd-oma-lwm2m/text',
             value: 1541
+        },
+        {
+            name: 'application-vnd-oma-lwm2m/tlv',
+            value: 1542
+        },
+        {
+            name: 'application-vnd-oma-lwm2m/json',
+            value: 1543
+        },
+        {
+            name: 'application-vnd-oma-lwm2m/opaque',
+            value: 1544
         }
     ],
-    writeFormat: 'lightweightm2m/text'
+    writeFormat: 'application-vnd-oma-lwm2m/text'
 };
 
 // Configuration of the LWTM2M Client
@@ -28,7 +40,14 @@ config.client = {
         period: 3000
     },
     ipProtocol: 'udp4',
-    serverProtocol: 'udp4'
+    serverProtocol: 'udp4',
+    formats: [
+        {
+            name: 'lightweightm2m/text',
+            value: 1541
+        }
+    ],
+    writeFormat: 'lightweightm2m/text'
 };
 
 module.exports = config;
