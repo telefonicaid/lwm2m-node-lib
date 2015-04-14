@@ -1,0 +1,1 @@
+- Add a COAP proxy to use a single socket in the outer interactions.
