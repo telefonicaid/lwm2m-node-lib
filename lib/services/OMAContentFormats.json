@@ -1,0 +1,9 @@
+{
+  "formats": [
+    {
+      "name": "lightweightm2m/text",
+      "value": 1541
+    }
+  ],
+  "writeFormat": "lightweightm2m/text"
+}
