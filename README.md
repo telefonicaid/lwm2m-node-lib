@@ -73,6 +73,10 @@ write <deviceId> <resourceId> <resourceValue>
 
 	Writes the given value to the resource indicated by the URI (in LWTM2M format) in the givendevice.
 
+execute <deviceId> <resourceId> <executionArguments>  
+
+	Executes the selected resource with the given arguments.
+
 read <deviceId> <resourceId>  
 
 	Reads the value of the resource indicated by the URI (in LWTM2M format) in the given device.
@@ -240,6 +244,13 @@ Signature:
 function write(deviceId, objectType, objectId, resourceId, value, callback)
 ```
 Execute a Write operation over the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId, changing its value to the value passed as a parameter. The device id can be found from the register, based on the name or listing all the available ones.
+
+#### Device Management Interface: Execute
+Signature:
+```
+function execute(deviceId, objectType, objectId, resourceId, arguments, callback)
+```
+Executes the resource identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId, with the arguments passed as a parameter. The device id can be found from the register, based on the name or listing all the available ones.
 
 #### Device Management Interface: Read
 Signature:
