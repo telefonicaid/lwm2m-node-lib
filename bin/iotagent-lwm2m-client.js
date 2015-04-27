@@ -88,7 +88,7 @@ function list() {
 }
 
 function handleWrite(objectType, objectId, resourceId, value, callback) {
-    console.log('\Value written:\n--------------------------------\n');
+    console.log('\nValue written:\n--------------------------------\n');
     console.log('-> ObjectType: %s', objectType);
     console.log('-> ObjectId: %s', objectId);
     console.log('-> ResourceId: %s', resourceId);
@@ -98,8 +98,19 @@ function handleWrite(objectType, objectId, resourceId, value, callback) {
     callback(null);
 }
 
+function handleExecute(objectType, objectId, resourceId, value, callback) {
+    console.log('\nCommand executed:\n--------------------------------\n');
+    console.log('-> ObjectType: %s', objectType);
+    console.log('-> ObjectId: %s', objectId);
+    console.log('-> ResourceId: %s', resourceId);
+    console.log('-> Command arguments: %s', value);
+    clUtils.prompt();
+
+    callback(null);
+}
+
 function handleRead(objectType, objectId, resourceId, value, callback) {
-    console.log('\Value read:\n--------------------------------\n');
+    console.log('\nValue read:\n--------------------------------\n');
     console.log('-> ObjectType: %s', objectType);
     console.log('-> ObjectId: %s', objectId);
     console.log('-> ResourceId: %s', resourceId);
@@ -111,6 +122,7 @@ function handleRead(objectType, objectId, resourceId, value, callback) {
 
 function setHandlers(deviceInfo) {
     lwm2mClient.setHandler(deviceInfo.serverInfo, 'write', handleWrite);
+    lwm2mClient.setHandler(deviceInfo.serverInfo, 'execute', handleExecute);
     lwm2mClient.setHandler(deviceInfo.serverInfo, 'read', handleRead);
 }
 
