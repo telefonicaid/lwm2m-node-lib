@@ -1,1 +1,2 @@
 - Add a COAP proxy to use a single socket in the outer interactions.
+- Add Execute operation to the library.

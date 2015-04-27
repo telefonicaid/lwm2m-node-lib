@@ -399,4 +399,36 @@ describe('Client-side device management', function() {
     describe('When a Write attributes request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
     });
+    describe('When a Execute request arrives to the client', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '1',
+            value: 'TheValue'
+        };
+
+        it('should call the execution handler for the selected object', function (done) {
+            var handlerCalled = false;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'execute',
+                function (objectType, objectId, resourceId, args, callback) {
+                    should.exist(objectType);
+                    should.exist(objectId);
+                    should.exist(resourceId);
+                    should.exist(args);
+                    objectType.should.equal(obj.type);
+                    objectId.should.equal(obj.id);
+                    resourceId.should.equal(obj.resource);
+                    args.should.equal(obj.value);
+                    handlerCalled = true;
+                    callback();
+                });
+
+            lwm2mServer.execute(deviceId, obj.type, obj.id, obj.resource, obj.value, function(error) {
+                should.not.exist(error);
+                handlerCalled.should.equal(true);
+                done();
+            });
+        });
+    });
 });

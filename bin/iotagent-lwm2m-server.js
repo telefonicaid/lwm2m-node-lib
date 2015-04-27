@@ -116,6 +116,23 @@ function write(commands) {
     }
 }
 
+function execute(commands) {
+    var obj = parseResourceId(commands[1], false);
+
+    if (obj) {
+        lwm2mServer.execute(
+            commands[0],
+            obj.objectType,
+            obj.objectId,
+            obj.resourceId,
+            commands[2],
+            handleResult('Command executed successfully'));
+    } else {
+        console.log('\nCouldn\'t parse resource URI: ' + commands[1]);
+    }
+}
+
+
 function discover(commands) {
     lwm2mServer.discover(commands[0], commands[1], commands[2], commands[3], function handleDiscover(error, payload) {
         if (error) {
@@ -298,6 +315,11 @@ var commands = {
         description: '\tWrites the given value to the resource indicated by the URI (in LWTM2M format) in the given' +
             'device.',
         handler: write
+    },
+    'execute': {
+        parameters: ['deviceId', 'resourceId', 'executionArguments'],
+        description: '\tExecutes the selected resource with the given arguments.',
+        handler: execute
     },
     'read': {
         parameters: ['deviceId', 'resourceId'],

@@ -115,7 +115,55 @@ describe('Device management interface' , function() {
         it('should send a COAP PUT Operation with the full description of the instance as the payload to the instance');
     });
     describe('When the user invokes the Execute operation on a resource', function() {
-        it('should send a COAP POST Operation on the selected resource');
+        it('should send a COAP POST Operation on the selected resource', function(done) {
+            var data = '';
+
+            server.on('request', function (req, res) {
+                req.method.should.equal('POST');
+                res.code = '2.04';
+
+                data = res._request.payload.toString();
+                res.end('The content');
+            });
+
+            libLwm2m2.execute(deviceLocation.split('/')[1], '6', '2', '5', 'The Arguments', function (error) {
+                should.not.exist(error);
+                data.should.equal('The Arguments');
+                done();
+            });
+        });
+    });
+    describe('When the user invokes the Execute operation on an unexistent resource', function() {
+        it('should return a OBJECT_NOT_FOUND error to the caller', function(done) {
+            server.on('request', function (req, res) {
+                res.code = '4.04';
+
+                res.end('The content');
+            });
+
+            libLwm2m2.execute(deviceLocation.split('/')[1], '6', '2', '5', 'The Arguments', function (error) {
+                should.exist(error);
+                error.name.should.equal('OBJECT_NOT_FOUND');
+                error.code.should.equal('4.04');
+                done();
+            });
+        });
+    });
+    describe('When the user invokes the Execute and the server returns an unknown error', function() {
+        it('should return a CLIENT_ERROR error to the caller', function(done) {
+            server.on('request', function (req, res) {
+                res.code = '5.07';
+
+                res.end('The content');
+            });
+
+            libLwm2m2.execute(deviceLocation.split('/')[1], '6', '2', '5', 'The Arguments', function (error) {
+                should.exist(error);
+                error.name.should.equal('CLIENT_ERROR');
+                error.code.should.equal('5.07');
+                done();
+            });
+        });
     });
     describe('When the user invokes the Discovery operation on a resource', function() {
         it('should send a COAP GET Operation on the selected resource ' +
