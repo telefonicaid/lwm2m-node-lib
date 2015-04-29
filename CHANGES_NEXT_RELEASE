@@ -1,2 +1,3 @@
 - Add a COAP proxy to use a single socket in the outer interactions.
 - Add Execute operation to the library.
+- Add Command-node module for the command-line interpreters.
