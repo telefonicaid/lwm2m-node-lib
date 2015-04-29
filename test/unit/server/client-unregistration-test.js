@@ -31,7 +31,7 @@ var libLwm2m2 = require('../../../').server,
     should = require('should'),
     testInfo = {};
 
-describe('Client unregistration interface', function() {
+describe('Client unregistration tests', function() {
     var deviceLocation;
 
     function registerHandlers(callback) {
@@ -48,10 +48,11 @@ describe('Client unregistration interface', function() {
             testInfo.serverInfo = srvInfo;
 
             async.series([
+                libLwm2m2.getRegistry().clean,
                 registerHandlers,
                 async.apply(utils.registerClient, 'ROOM001')
             ], function (error, results) {
-                deviceLocation = results[1][0];
+                deviceLocation = results[2][0];
                 done();
             });
         });
