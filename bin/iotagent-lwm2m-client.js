@@ -24,7 +24,7 @@
  */
 
 var config = require('../config'),
-    clUtils = require('../lib/commandLineUtils'),
+    clUtils = require('command-node'),
     lwm2mClient = require('../').client,
     async = require('async'),
     globalDeviceInfo,

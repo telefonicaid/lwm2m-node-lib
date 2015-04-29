@@ -26,7 +26,7 @@
 var config = require('../config'),
     lwm2mServer = require('../').server,
     async = require('async'),
-    clUtils = require('../lib/commandLineUtils'),
+    clUtils = require('command-node'),
     globalServerInfo,
     separator = '\n\n\t';
 
