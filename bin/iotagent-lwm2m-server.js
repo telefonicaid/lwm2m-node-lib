@@ -250,6 +250,7 @@ function observe(commands) {
             clUtils.handleError(error);
         } else {
             console.log('\nObserver stablished over resource [/%s/%s/%s]\n', commands[1], commands[2], commands[3]);
+            clUtils.prompt();
         }
     });
 }
@@ -297,6 +298,19 @@ function cancelObservation(commands) {
     });
 }
 
+function testRunning(handler) {
+    return function(commands) {
+        if (lwm2mServer.isRunning()) {
+            handler(commands);
+        } else {
+            console.log('Couldn\'t list devices, as the server is not started. ' +
+            'Start the server before issuing any command.');
+
+            clUtils.prompt();
+        }
+    }
+}
+
 var commands = {
     'start': {
         parameters: [],
@@ -306,60 +320,60 @@ var commands = {
     'stop': {
         parameters: [],
         description: '\tStops the current LWTM2M Server running.',
-        handler: stop
+        handler: testRunning(stop)
     },
     'list': {
         parameters: [],
         description: '\tList all the devices connected to the server.',
-        handler: listClients
+        handler: testRunning(listClients)
     },
     'write': {
         parameters: ['deviceId', 'resourceId', 'resourceValue'],
         description: '\tWrites the given value to the resource indicated by the URI (in LWTM2M format) in the given' +
             'device.',
-        handler: write
+        handler: testRunning(write)
     },
     'execute': {
         parameters: ['deviceId', 'resourceId', 'executionArguments'],
         description: '\tExecutes the selected resource with the given arguments.',
-        handler: execute
+        handler: testRunning(execute)
     },
     'read': {
         parameters: ['deviceId', 'resourceId'],
         description: '\tReads the value of the resource indicated by the URI (in LWTM2M format) in the given device.',
-        handler: read
+        handler: testRunning(read)
     },
     'discover': {
         parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
         description: '\tSends a discover order for the given resource to the given device.',
-        handler: discover
+        handler: testRunning(discover)
     },
     'discoverObj': {
         parameters: ['deviceId', 'objTypeId', 'objInstanceId'],
         description: '\tSends a discover order for the given instance to the given device.',
-        handler: discoverObj
+        handler: testRunning(discoverObj)
     },
     'discoverType': {
         parameters: ['deviceId', 'objTypeId'],
         description: '\tSends a discover order for the given resource to the given device.',
-        handler: discoverType
+        handler: testRunning(discoverType)
     },
     'observe': {
         parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
         description: '\tStablish an observation over the selected resource.',
-        handler: observe
+        handler: testRunning(observe)
     },
     'writeAttr': {
         parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId', 'attributes'],
         description: '\tWrite a new set of observation attributes to the selected resource. The attributes should be\n\t ' +
             'in the following format: name=value(,name=value)*. E.g.: pmin=1,pmax=2.',
-        handler: writeAttributes
+        handler: testRunning(writeAttributes)
     },
     'cancel': {
         parameters: ['deviceId', 'objTypeId', 'objInstanceId', 'resourceId'],
         description: '\tCancel the observation order for the given resource (defined with a LWTM2M URI) ' +
             'to the given device.',
-        handler: cancelObservation
+        handler: testRunning(cancelObservation)
     },
     'config': {
         parameters: [],
