@@ -28,6 +28,29 @@ Features provided by the client library:
 * Transient in-memory object registry, to store the current objects and instances along with their resource values and attributes. 
 * Support for subscriptions from the server (using COAP Observe) both timed and on-change (both of them based in the values of the resources currently available in the registry).
 
+The following table shows what operations are implemented and what operations pending from the defined interfaces:
+
+| Interfaces                				| Operatio	   | Server status   |  Client status  |
+| ----------------------------------------------------- | ---------------- | --------------- | --------------- |
+| Bootstrap Interface       				| Any              | Not implemented | Not implemented |
+| Client Registration Interface 			| Register         | Implemented     | Implemented     |
+|        						| Update Register  | Implemented     | Implemented     |
+|        						| De-register      | Implemented     | Implemented     |
+| Device Management & Service Enablement Interface 	| Any         	   | Not implemented | Not implemented |
+|        						| Read             | Implemented     | Implemented     |
+|        						| Write            | Implemented     | Implemented     |
+|        						| Create /x        | Not implemented | Not implemented |
+|        						| Create /x/y      | Not implemented | Not implemented |
+|        						| Delete /x/y      | Not implemented | Not implemented |
+|        						| Discover /x      | Implemented     | Implemented     |
+|        						| Discover /x/y    | Implemented     | Implemented     |
+|        						| Discover /x/y/z  | Implemented     | Implemented     |
+|        						| Write Attributes | Implemented     | Implemented     |
+|        						| Execute          | Implemented     | Implemented     |
+| Information Reporting Interface       		| Observe          | Implemented     | Implemented     |
+|        						| Notify           | Implemented     | Implemented     |
+|        						| Cancel           | Implemented     | Implemented     |
+
 The library also provides command line clients to test both its client and server capabilities.
 
 ## <a name="commandline"/> Command line applications
