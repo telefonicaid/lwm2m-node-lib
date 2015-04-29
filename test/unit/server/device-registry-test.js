@@ -47,6 +47,7 @@ describe('Device registry', function() {
             testInfo.serverInfo = srvInfo;
 
             async.series([
+                libLwm2m2.getRegistry().clean,
                 registerHandlers,
                 async.apply(utils.registerClient, 'ROOM001'),
                 async.apply(utils.registerClient, 'ROOM002')

@@ -233,6 +233,8 @@ function listClients(commands) {
                 console.log('-> Device Id "%s"', deviceList[i].id);
                 console.log('\n%s\n', JSON.stringify(deviceList[i], null, 4));
             }
+
+            clUtils.prompt();
         }
     });
 }
