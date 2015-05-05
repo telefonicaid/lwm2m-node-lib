@@ -3,3 +3,4 @@
 - Add Command-node module for the command-line interpreters.
 - Fix MongoDB did not recover information at starting (#38).
 - Fix command line break when executing command before starting the server (#47).
+- FIX Client handler after connection update (#51)
