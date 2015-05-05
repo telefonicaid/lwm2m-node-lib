@@ -164,10 +164,12 @@ function disconnect(command) {
 
 function updateConnection(command) {
     if (globalDeviceInfo) {
-        lwm2mClient.update(globalDeviceInfo, function(error) {
+        lwm2mClient.update(globalDeviceInfo, function(error, deviceInfo) {
             if (error) {
                 clUtils.handleError(error);
             } else {
+                globalDeviceInfo = deviceInfo;
+                setHandlers(deviceInfo);
                 console.log('\Information updated:\n--------------------------------\n');
                 clUtils.prompt();
             }
