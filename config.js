@@ -9,6 +9,9 @@ config.server = {
     logLevel: 'FATAL',
     ipProtocol: 'udp4',
     serverProtocol: 'udp4',
+    deviceRegistry: {
+        lifetimeCheckInterval: 1000    // Minimum interval between lifetime checks in ms
+    },
     formats: [
         {
             name: 'application-vnd-oma-lwm2m/text',

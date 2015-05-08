@@ -13,7 +13,8 @@ config.server = {
         type: 'mongodb',
         host: 'localhost',
         port: '27017',
-        db: 'lwtm2m'
+        db: 'lwtm2m',
+        lifetimeCheckInterval: 1000    // Minimum interval between lifetime checks in ms
     },
     formats: [
         {
