@@ -4,14 +4,12 @@ var config = {};
 //--------------------------------------------------
 config.server = {
     port: 5683,                         // Port where the server will be listening
+    lifetimeCheckInterval: 1000,        // Minimum interval between lifetime checks in ms
     udpWindow: 100,
     defaultType: 'Device',
     logLevel: 'FATAL',
     ipProtocol: 'udp4',
     serverProtocol: 'udp4',
-    deviceRegistry: {
-        lifetimeCheckInterval: 1000    // Minimum interval between lifetime checks in ms
-    },
     formats: [
         {
             name: 'application-vnd-oma-lwm2m/text',

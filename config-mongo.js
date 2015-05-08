@@ -4,6 +4,7 @@ var config = {};
 //--------------------------------------------------
 config.server = {
     port: 5683,                         // Port where the server will be listening
+    lifetimeCheckInterval: 1000,        // Minimum interval between lifetime checks in ms
     udpWindow: 100,
     defaultType: 'Device',
     logLevel: 'FATAL',
@@ -13,8 +14,7 @@ config.server = {
         type: 'mongodb',
         host: 'localhost',
         port: '27017',
-        db: 'lwtm2m',
-        lifetimeCheckInterval: 1000    // Minimum interval between lifetime checks in ms
+        db: 'lwtm2m'
     },
     formats: [
         {
