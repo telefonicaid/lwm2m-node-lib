@@ -9,6 +9,7 @@ branches:
     - master
 
 services:
+ - mongodb
 
 install:
  - npm install
