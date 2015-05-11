@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+ - "0.10"
+
+branches:
+  only:
+    - develop
+    - master
+
+services:
+ - mongodb
+
+install:
+ - npm install
+
+before_install:
+ - npm install -g grunt-cli

@@ -19,7 +19,7 @@
     "node": ">=0.10.8"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt"
   },
   "dependencies": {
     "command-node": "0.1.1",
