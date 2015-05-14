@@ -7,3 +7,4 @@
 - FIX Remove old device registration on the new registration (#52)
 - Add Travis CI files and changes to enable it in the package.json (#55).
 - Add Check lifetime and unregister devices (#56)
+- Add Lifetime unregistration handler (#59)
