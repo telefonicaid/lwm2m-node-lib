@@ -10,6 +10,12 @@ config.server = {
     logLevel: 'FATAL',
     ipProtocol: 'udp4',
     serverProtocol: 'udp4',
+    deviceRegistry: {
+        type: 'mongodb',
+        host: 'localhost',
+        port: '27017',
+        db: 'lwtm2m'
+    },
     formats: [
         {
             name: 'application-vnd-oma-lwm2m/text',

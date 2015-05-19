@@ -28,6 +28,29 @@ Features provided by the client library:
 * Transient in-memory object registry, to store the current objects and instances along with their resource values and attributes. 
 * Support for subscriptions from the server (using COAP Observe) both timed and on-change (both of them based in the values of the resources currently available in the registry).
 
+The following table shows what operations are implemented and what operations pending from the defined interfaces:
+
+| Interfaces                				| Operatio	   | Server status   |  Client status  |
+| ----------------------------------------------------- | ---------------- | --------------- | --------------- |
+| Bootstrap Interface       				| Any              | Not implemented | Not implemented |
+| Client Registration Interface 			| Register         | Implemented     | Implemented     |
+|        						| Update Register  | Implemented     | Implemented     |
+|        						| De-register      | Implemented     | Implemented     |
+| Device Management & Service Enablement Interface 	| Any         	   | Not implemented | Not implemented |
+|        						| Read             | Implemented     | Implemented     |
+|        						| Write            | Implemented     | Implemented     |
+|        						| Create /x        | Not implemented | Not implemented |
+|        						| Create /x/y      | Not implemented | Not implemented |
+|        						| Delete /x/y      | Not implemented | Not implemented |
+|        						| Discover /x      | Implemented     | Implemented     |
+|        						| Discover /x/y    | Implemented     | Implemented     |
+|        						| Discover /x/y/z  | Implemented     | Implemented     |
+|        						| Write Attributes | Implemented     | Implemented     |
+|        						| Execute          | Implemented     | Implemented     |
+| Information Reporting Interface       		| Observe          | Implemented     | Implemented     |
+|        						| Notify           | Implemented     | Implemented     |
+|        						| Cancel           | Implemented     | Implemented     |
+
 The library also provides command line clients to test both its client and server capabilities.
 
 ## <a name="commandline"/> Command line applications
@@ -72,6 +95,10 @@ list
 write <deviceId> <resourceId> <resourceValue>  
 
 	Writes the given value to the resource indicated by the URI (in LWTM2M format) in the givendevice.
+
+execute <deviceId> <resourceId> <executionArguments>  
+
+	Executes the selected resource with the given arguments.
 
 read <deviceId> <resourceId>  
 
@@ -240,6 +267,13 @@ Signature:
 function write(deviceId, objectType, objectId, resourceId, value, callback)
 ```
 Execute a Write operation over the selected resource, identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId, changing its value to the value passed as a parameter. The device id can be found from the register, based on the name or listing all the available ones.
+
+#### Device Management Interface: Execute
+Signature:
+```
+function execute(deviceId, objectType, objectId, resourceId, arguments, callback)
+```
+Executes the resource identified following the LWTM2M conventions by its: deviceId, objectType, objectId and resourceId, with the arguments passed as a parameter. The device id can be found from the register, based on the name or listing all the available ones.
 
 #### Device Management Interface: Read
 Signature:

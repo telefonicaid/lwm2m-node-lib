@@ -29,6 +29,7 @@ var should = require('should'),
     lwm2mServer = require('../../../').server,
     lwm2mClient = require('../../../').client,
     config = require('../../../config'),
+    memoryRegistry = require('../../../lib/services/server/inMemoryDeviceRegistry'),
     localhost,
     testInfo = {};
 
@@ -42,14 +43,17 @@ describe('Client-side device management', function() {
         } else {
             localhost = '127.0.0.1';
         }
+        lwm2mClient.registry.reset(function() {
+            memoryRegistry.clean(function () {
+                lwm2mServer.start(config.server, function (error, srvInfo) {
+                    testInfo.serverInfo = srvInfo;
 
-        lwm2mServer.start(config.server, function (error, srvInfo) {
-            testInfo.serverInfo = srvInfo;
-
-            lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, result) {
-                deviceInformation = result;
-                deviceId = deviceInformation.location.split('/')[1];
-                lwm2mClient.registry.create('/3/6', done);
+                    lwm2mClient.register(localhost, config.server.port, null, 'testEndpoint', function (error, result) {
+                        deviceInformation = result;
+                        deviceId = deviceInformation.location.split('/')[1];
+                        lwm2mClient.registry.create('/3/6', done);
+                    });
+                });
             });
         });
     });
@@ -394,5 +398,37 @@ describe('Client-side device management', function() {
     });
     describe('When a Write attributes request arrives targeting an unexistent object ID', function() {
         it('should raise a OBJECT_NOT_FOUND error');
+    });
+    describe('When a Execute request arrives to the client', function() {
+        var obj = {
+            type: '3',
+            id: '6',
+            resource: '1',
+            value: 'TheValue'
+        };
+
+        it('should call the execution handler for the selected object', function (done) {
+            var handlerCalled = false;
+
+            lwm2mClient.setHandler(deviceInformation.serverInfo, 'execute',
+                function (objectType, objectId, resourceId, args, callback) {
+                    should.exist(objectType);
+                    should.exist(objectId);
+                    should.exist(resourceId);
+                    should.exist(args);
+                    objectType.should.equal(obj.type);
+                    objectId.should.equal(obj.id);
+                    resourceId.should.equal(obj.resource);
+                    args.should.equal(obj.value);
+                    handlerCalled = true;
+                    callback();
+                });
+
+            lwm2mServer.execute(deviceId, obj.type, obj.id, obj.resource, obj.value, function(error) {
+                should.not.exist(error);
+                handlerCalled.should.equal(true);
+                done();
+            });
+        });
     });
 });

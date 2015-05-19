@@ -55,6 +55,7 @@ describe('MongoDB Device registry', function() {
             testInfo.serverInfo = srvInfo;
 
             async.series([
+                libLwm2m2.getRegistry().clean,
                 registerHandlers
             ], function (error, results) {
                 deviceLocation = results[2];

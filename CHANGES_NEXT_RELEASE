@@ -1,6 +1,10 @@
-- ADD Change the LWM2M Server to capture the port used in the registration as the client port.
-- ADD Ping service for the router.
-- FIX Problems with compatibility with other LWM2M implementations.
-- ADD Update connection in the command line tool.
-- FIX Remove initial slash from Location-path to conform to COAP standard.
-- ADD Make IPv6 the default option and change the tests to use it by default.
+- Add a COAP proxy to use a single socket in the outer interactions.
+- Add Execute operation to the library.
+- Add Command-node module for the command-line interpreters.
+- Fix MongoDB did not recover information at starting (#38).
+- Fix command line break when executing command before starting the server (#47).
+- FIX Client handler after connection update (#51)
+- FIX Remove old device registration on the new registration (#52)
+- Add Travis CI files and changes to enable it in the package.json (#55).
+- Add Check lifetime and unregister devices (#56)
+- Add Lifetime unregistration handler (#59)

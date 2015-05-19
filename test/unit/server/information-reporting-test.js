@@ -149,7 +149,7 @@ describe('Information reporting interface', function() {
             });
         });
     });
-    describe('When the user invokes the Cancel operation on a resource', function() {
+    describe.skip('When the user invokes the Cancel operation on a resource', function() {
         beforeEach(function () {
             server.on('request', function (req, res) {
                 function notify(msg) {
