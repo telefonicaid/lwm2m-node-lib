@@ -1,7 +1,7 @@
 {
   "name": "lwm2m-node-lib",
   "description": "Library for developing servers and client of OMA Lightweight M2M",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "https://github.com/telefonicaid/lwm2m-node-lib",
   "author": {
     "name": "Daniel Moran",
@@ -20,6 +20,10 @@
   },
   "scripts": {
     "test": "grunt"
+  },
+  "bin": {
+    "iotagent-lwm2m-client": "bin/iotagent-lwm2m-client.js",
+    "iotagent-lwm2m-server": "bin/iotagent-lwm2m-server.js"
   },
   "dependencies": {
     "command-node": "0.1.1",

@@ -1,10 +1,1 @@
-- Add a COAP proxy to use a single socket in the outer interactions.
-- Add Execute operation to the library.
-- Add Command-node module for the command-line interpreters.
-- Fix MongoDB did not recover information at starting (#38).
-- Fix command line break when executing command before starting the server (#47).
-- FIX Client handler after connection update (#51)
-- FIX Remove old device registration on the new registration (#52)
-- Add Travis CI files and changes to enable it in the package.json (#55).
-- Add Check lifetime and unregister devices (#56)
-- Add Lifetime unregistration handler (#59)
+- ADD Package.json information to execute global commands.
