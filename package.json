@@ -21,6 +21,10 @@
   "scripts": {
     "test": "grunt"
   },
+  "bin": {
+    "iotagent-lwm2m-client": "bin/iotagent-lwm2m-client.js",
+    "iotagent-lwm2m-server": "bin/iotagent-lwm2m-server.js"
+  },
   "dependencies": {
     "command-node": "0.1.1",
     "async": "0.9.0",
