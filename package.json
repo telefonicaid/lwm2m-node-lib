@@ -1,7 +1,7 @@
 {
   "name": "lwm2m-node-lib",
   "description": "Library for developing servers and client of OMA Lightweight M2M",
-  "version": "0.4.1",
+  "version": "0.4.1-next",
   "homepage": "https://github.com/telefonicaid/lwm2m-node-lib",
   "author": {
     "name": "Daniel Moran",
