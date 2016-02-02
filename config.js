@@ -7,7 +7,7 @@ config.server = {
     lifetimeCheckInterval: 1000,        // Minimum interval between lifetime checks in ms
     udpWindow: 100,
     defaultType: 'Device',
-    logLevel: 'DEBUG',
+    logLevel: 'FATAL',
     ipProtocol: 'udp4',
     serverProtocol: 'udp4',
     formats: [
