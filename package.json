@@ -28,13 +28,13 @@
   "dependencies": {
     "command-node": "0.1.1",
     "async": "1.5.2",
-    "coap": "0.13.1C",
+    "coap": "0.13.1",
     "coap-cli": "0.4.0",
-    "logops": "0.2.0",
+    "logops": "0.5.0",
     "underscore": "1.7.0",
-    "mongodb": "1.4.22",
-    "mongoose": "3.8.19",
-    "mongoose-auto-increment": "3.2.0"
+    "mongodb": "2.1.7",
+    "mongoose": "4.4.3",
+    "mongoose-auto-increment": "5.0.1"
   },
   "devDependencies": {
     "should": "4.3.0",
