@@ -27,9 +27,9 @@
   },
   "dependencies": {
     "command-node": "0.1.1",
-    "async": "*",
-    "coap": "0.13.0",
-    "coap-cli": "0.3.0",
+    "async": "1.5.2",
+    "coap": "0.13.1C",
+    "coap-cli": "0.4.0",
     "logops": "0.2.0",
     "underscore": "1.7.0",
     "mongodb": "1.4.22",
