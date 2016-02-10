@@ -1,1 +1,4 @@
-- ADD Package.json information to execute global commands.
+- Fixed Wrong IPv6 coap:// uri (#72)
+- Fixed using wrong handler (write handler) for executions (#71).
+- Add contribution guidelines to the repository (#77).
+- Update versions of library dependencies (#75).

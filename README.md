@@ -54,12 +54,12 @@ The following table shows what operations are implemented and what operations pe
 The library also provides command line clients to test both its client and server capabilities.
 
 ## <a name="commandline"/> Command line applications
-The library provides two command line applications in order to help developing both Lightweight M2M clients and/or servers. This applications can be used to simulate the behavior of one of the peers of the communication. Both of them use the iotagent-lwm2m-lib library to serve all the LWTM2M requests. The following sections explain the basic features of each one.
+The library provides two command line applications in order to help developing both Lightweight M2M clients and/or servers. This applications can be used to simulate the behavior of one of the peers of the communication. Both of them use the lwm2m-node-lib library to serve all the LWTM2M requests. The following sections explain the basic features of each one.
 
 There are multiple ways of using the applications:
 
 * You may clone the project in your computer, and execute `npm install` from the root of the project, in order to download the dependencies. You can start both applications from the same folder using different console windows.
-* Another option is to install directly with `npm install -g iotagent-lwm2m-lib`. This will install the library in the global `node_modules`.
+* Another option is to install directly with `npm install -g lwm2m-node-lib`. This will install the library in the global `node_modules`.
 
 Take into account that all the information loaded or registered by any of the applications is transient, so it will be lost once the processes have been stopped.
 
@@ -215,12 +215,12 @@ quit
 In order to use the library, add the following dependency to your package.json file:
 
 ```
-"iotagent-lwm2m-lib": "*"
+"lwm2m-node-lib": "*"
 ```
 
 In order to use this library, first you must require it:
 ```
-var lwtm2m = require('iotagent-lwm2m-lib');
+var lwtm2m = require('lwm2m-node-lib');
 ```
 As a Lightweight M2M Server, the library supports four groups of features, one for each direction of the communication: client-to-server and server-to-client (and each flow both for the client and the server). Each feature set is defined in the following sections.
 
@@ -340,6 +340,9 @@ The southbound interfaces can be configured in the `server.types` configuration 
 Devices that arrive to the global `/rd` registration path will be assigned the default type instead (configured in `server.defaultType` configuration attribute).
 
 ## <a name="development"/> Development documentation
+### Contributions
+All contributions to this project are welcome. Developers planning to contribute should follow the [Contribution Guidelines](./docs/contribution.md) 
+
 ### Project build
 The project is managed using Grunt Task Runner.
 
