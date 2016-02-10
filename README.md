@@ -340,6 +340,9 @@ The southbound interfaces can be configured in the `server.types` configuration 
 Devices that arrive to the global `/rd` registration path will be assigned the default type instead (configured in `server.defaultType` configuration attribute).
 
 ## <a name="development"/> Development documentation
+### Contributions
+All contributions to this project are welcome. Developers planning to contribute should follow the [Contribution Guidelines](./docs/contribution.md) 
+
 ### Project build
 The project is managed using Grunt Task Runner.
 
