@@ -1,0 +1,2 @@
+- Fixed #72: wrong IPv6 coap:// uri
+- Fixed #71: using wrong handler (write handler) for executions.

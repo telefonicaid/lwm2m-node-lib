@@ -28,8 +28,8 @@
   "dependencies": {
     "command-node": "0.1.1",
     "async": "0.9.0",
+    "coap": "0.13.0",
     "coap-cli": "0.3.0",
-    "coap": "0.10.2",
     "logops": "0.2.0",
     "underscore": "1.7.0",
     "mongodb": "1.4.22",
