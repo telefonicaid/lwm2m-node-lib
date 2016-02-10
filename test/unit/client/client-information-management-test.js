@@ -339,9 +339,7 @@ describe('Client-side information management', function() {
         });
 
         afterEach(function(done) {
-            async.series([
-                lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done)
-            ], done);
+            lwm2mClient.registry.unsetResource(obj.uri, obj.resource, done);
         });
 
         it('should update the value when the specified time lapse has passed', function(done) {
