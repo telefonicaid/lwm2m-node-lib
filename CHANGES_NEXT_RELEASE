@@ -1,0 +1,2 @@
+- Retry connection of the client if there is any error.
+- Capture Coap Router errors.
