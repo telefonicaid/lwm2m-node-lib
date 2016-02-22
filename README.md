@@ -284,6 +284,11 @@ Execute a read operation for the selected resource, identified following the LWT
 
 ### Client features 
 
+#### Configuration
+The LWM2M Client library has to be configured before any interaction with the remote LWM2M server. This configuration is done through the use of the `init()` function.
+This function takes a configuration object (can be the same one passed to the server), that has a `client` attribute with the configuraiton for the client (as described
+in the configuration section). Failing to do so may lead to unexpected results.
+
 #### Registration
 Before making any interaction with a Lightweight M2M server, a client must register to it. This registration can be done with the following function:
 ```

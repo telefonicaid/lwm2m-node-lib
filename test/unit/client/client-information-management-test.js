@@ -47,6 +47,8 @@ describe('Client-side information management', function() {
             localhost = '127.0.0.1';
         }
 
+        lwm2mClient.init(config);
+
         lwm2mServer.start(config.server, function (error, srvInfo) {
             testInfo.serverInfo = srvInfo;
 

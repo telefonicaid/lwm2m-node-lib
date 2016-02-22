@@ -41,6 +41,8 @@ describe('Client-initiated registration', function() {
             localhost = '127.0.0.1';
         }
 
+        lwm2mClient.init(config);
+
         lwm2mClient.registry.reset(function() {
             memoryRegistry.clean(function () {
                 lwm2mServer.start(config.server, function (error, srvInfo) {
