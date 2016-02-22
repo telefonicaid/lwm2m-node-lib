@@ -242,4 +242,6 @@ var commands = {
     }
 };
 
+lwm2mClient.init(require('../config'));
+
 clUtils.initialize(commands, 'LWM2M-Client> ');
