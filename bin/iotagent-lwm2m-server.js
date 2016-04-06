@@ -239,8 +239,9 @@ function listClients(commands) {
     });
 }
 
-function handleValues(value) {
-    console.log('\nGot new value: %s\n', value);
+function handleValues(value, objectType, objectId, resourceId, deviceId) {
+    console.log('\nGot new value on resource /%s/%s/%s in device [%d]: %s\n',
+    objectType, objectId, resourceId, deviceId, value);
     clUtils.prompt();
 }
 
