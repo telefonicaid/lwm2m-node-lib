@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "async": "1.5.2",
-    "coap": "0.15.0",
+    "coap": "0.17.0",
     "coap-cli": "0.4.0",
     "command-node": "0.1.1",
     "mongodb": "2.1.7",
