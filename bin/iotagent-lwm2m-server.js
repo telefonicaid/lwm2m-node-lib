@@ -239,7 +239,7 @@ function listClients(commands) {
     });
 }
 
-function handleValues(value) {
+function handleValues(value, objectType, objectId, resourceId, deviceId) {
     console.log('\nGot new value: %s\n', value);
     clUtils.prompt();
 }

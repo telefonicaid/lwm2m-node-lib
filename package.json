@@ -1,7 +1,7 @@
 {
   "name": "lwm2m-node-lib",
   "description": "Library for developing servers and client of OMA Lightweight M2M",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/telefonicaid/lwm2m-node-lib",
   "author": {
     "name": "Daniel Moran",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "async": "1.5.2",
-    "coap": "0.13.1",
+    "coap": "0.17.0",
     "coap-cli": "0.4.0",
     "command-node": "0.1.1",
     "mongodb": "2.1.7",
