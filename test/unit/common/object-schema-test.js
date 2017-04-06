@@ -127,6 +127,44 @@ describe('LWM2M Object Schema', function() {
       
       validate.should.throw(TypeError);
     });
+
+    it('should throw when a value is not within bounds', function() {
+      var def = {
+        b: { type: Number, id: 1 },
+      };
+
+
+      var schema = new Schema('test', def);
+
+      schema.range('b', { 
+        min: 1, 
+        max: 10 
+      });
+
+      function validate() {
+        return schema.validate({ b: 11 });
+      }
+      
+      validate.should.throw(TypeError);
+
+    });
+
+    it('should throw when an enumerated resource is not match', function() {
+      var def = {
+        a: { type: String, id: 0 },
+      };
+
+      var schema = new Schema('test', def);
+
+      schema.enum('a', ['bar', 'baz', 'qux'])
+
+      function validate() {
+        return schema.validate({ a: 'foo' });
+      }
+      
+      validate.should.throw(TypeError);
+
+    });
   });
 });
 
