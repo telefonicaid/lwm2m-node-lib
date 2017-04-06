@@ -156,7 +156,7 @@ describe('LWM2M Object Schema', function() {
 
       var schema = new Schema('test', def);
 
-      schema.enum('a', ['bar', 'baz', 'qux'])
+      schema.enum('a', ['bar', 'baz', 'qux']);
 
       function validate() {
         return schema.validate({ a: 'foo' });
