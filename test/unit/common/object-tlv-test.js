@@ -47,7 +47,7 @@ var object = {
 
 // The total payload size with the TLV encoding is 121 bytes
 // Copied verbatim from the spec.
-var payload = Buffer.from([
+var payload = new Buffer([
   0xc8, 0x00, 0x14, 0x4f, 0x70, 0x65, 0x6e, 0x20, 0x4d, 0x6f,
   0x62, 0x69, 0x6c, 0x65, 0x20, 0x41, 0x6c, 0x6c, 0x69, 0x61, 
   0x6e, 0x63, 0x65, 0xc8, 0x01, 0x16, 0x4c, 0x69, 0x67, 0x68, 
@@ -68,7 +68,7 @@ describe('Marshalling LWM2M Objects into TLV', function() {
       var dev = tlv.serialize(object, deviceSchema);
 
       dev.should.be.an.instanceOf(Buffer);
-      dev.compare(payload).should.equal(0);
+      dev.toString('hex').should.equal(payload.toString('hex'));
     });
   });
 });
