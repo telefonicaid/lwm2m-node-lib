@@ -62,13 +62,21 @@ var payload = new Buffer([
   0xc6, 0x0e, 0x2b, 0x30, 0x32, 0x3a, 0x30, 0x30, 0xc1, 0x10,
   0x55 ]);
 
-describe('Marshalling LWM2M Objects into TLV', function() {
+describe('De/serializing LWM2M Objects from/into TLV', function() {
   describe('serialize', function() {
     it('should return a valid payload', function() {
       var dev = tlv.serialize(object, deviceSchema);
 
       dev.should.be.an.instanceOf(Buffer);
       dev.toString('hex').should.equal(payload.toString('hex'));
+    });
+  });
+
+  describe('parse', function() {
+    it('should return a valid object', function() {
+      var dev = tlv.parse(payload, deviceSchema);
+
+      dev.should.be.eql(object);
     });
   });
 });
