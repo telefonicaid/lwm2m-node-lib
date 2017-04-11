@@ -26,8 +26,8 @@
 'use strict';
 
 var should = require('should'), // jshint ignore:line
-    senml = require('../../../lib/services/object/senml'),
-    deviceSchema = require('../../../lib/services/object/device');
+    senml = require('../../../lib/services/shared/senml'),
+    deviceSchema = require('../../../lib/services/shared/device');
 
 var object = { 
   manufacturer: 'Open Mobile Alliance',
