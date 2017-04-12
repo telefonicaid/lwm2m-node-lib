@@ -26,7 +26,7 @@
 'use strict';
 
 var should = require('should'), // jshint ignore:line
-    senml = require('../../../lib/services/shared/senml'),
+    tlv = require('../../../lib/services/shared/tlv'),
     deviceSchema = require('../../../lib/services/shared/device');
 
 var object = { 
@@ -42,53 +42,43 @@ var object = {
   errorCode: [ 0 ],
   currentTime: 1367491215,
   utcOffset: '+02:00',
-  timeZone: 'U' 
+  binding: 'U' 
 };
 
-var payload = '{"e":[' +
-  '{"n":"0","sv":"Open Mobile Alliance"},' +
-  '{"n":"1","sv":"Lightweight M2M Client"},' +
-  '{"n":"2","sv":"345000123"},' +
-  '{"n":"3","sv":"1.0"},' +
-  '{"n":"6/0","v":1},' +
-  '{"n":"6/1","v":5},' +
-  '{"n":"7/0","v":3800},' +
-  '{"n":"7/1","v":5000},' +
-  '{"n":"8/0","v":125},' +
-  '{"n":"8/1","v":900},' +
-  '{"n":"9","v":100},' +
-  '{"n":"10","v":15},' +
-  '{"n":"11/0","v":0},' +
-  '{"n":"13","v":1367491215},' +
-  '{"n":"14","sv":"+02:00"},' +
-  '{"n":"15","sv":"U"}]}';
+// The total payload size with the TLV encoding is 121 bytes
+// Copied verbatim from the spec.
+var payload = new Buffer([
+  0xc8, 0x00, 0x14, 0x4f, 0x70, 0x65, 0x6e, 0x20, 0x4d, 0x6f,
+  0x62, 0x69, 0x6c, 0x65, 0x20, 0x41, 0x6c, 0x6c, 0x69, 0x61, 
+  0x6e, 0x63, 0x65, 0xc8, 0x01, 0x16, 0x4c, 0x69, 0x67, 0x68, 
+  0x74, 0x77, 0x65, 0x69, 0x67, 0x68, 0x74, 0x20, 0x4d, 0x32,
+  0x4d, 0x20, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0xc8, 0x02, 
+  0x09, 0x33, 0x34, 0x35, 0x30, 0x30, 0x30, 0x31, 0x32, 0x33, 
+  0xc3, 0x03, 0x31, 0x2e, 0x30, 0x86, 0x06, 0x41, 0x00, 0x01, 
+  0x41, 0x01, 0x05, 0x88, 0x07, 0x08, 0x42, 0x00, 0x0e, 0xd8, 
+  0x42, 0x01, 0x13, 0x88, 0x87, 0x08, 0x41, 0x00, 0x7d, 0x42, 
+  0x01, 0x03, 0x84, 0xc1, 0x09, 0x64, 0xc1, 0x0a, 0x0f, 0x83, 
+  0x0b, 0x41, 0x00, 0x00, 0xc4, 0x0d, 0x51, 0x82, 0x42, 0x8f, 
+  0xc6, 0x0e, 0x2b, 0x30, 0x32, 0x3a, 0x30, 0x30, 0xc1, 0x10,
+  0x55 ]);
 
-describe('De/serializing LWM2M Objects from/into JSON', function() {
-
+describe('De/serializing LWM2M Objects from/into TLV', function() {
   describe('serialize', function() {
     it('should return a valid payload', function() {
-      var dev = senml.serialize(object, deviceSchema);
+      var dev = tlv.serialize(object, deviceSchema);
 
-      dev.should.equal(payload);
+      dev.should.be.an.instanceOf(Buffer);
+      dev.toString('hex').should.equal(payload.toString('hex'));
     });
   });
 
   describe('parse', function() {
-    it('should return an object', function() {
-      var dev = senml.parse(payload, deviceSchema);
+    it('should return a valid object', function() {
+      var dev = tlv.parse(payload, deviceSchema);
 
-      dev.should.be.an.Object().and.not.empty();
-    });
-
-    it('should strictly return matching resources from schema', function() {
-      var dev = senml.parse(payload, deviceSchema),
-          keys = Object.keys(deviceSchema.resources);
-
-      Object.keys(dev).should.matchEach(function(it) { 
-        return it.should.be.oneOf(keys);
-      });
+      dev.should.be.eql(object);
     });
   });
-
 });
+
 
