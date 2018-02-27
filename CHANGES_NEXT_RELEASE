@@ -1,2 +1,4 @@
 - Most of the errors don't have an associated code (#91).
 - Update COAP librery to version 0.17.0
+- Fix: Active attributes not working since coap proxy is not being used for lwm2m observations so observations arrives to the device from a different port from the used in the rest of communications (#110)
+- Fix: Avoid faster libcoap response: libcoap is not waiting long enough for lightweight-iotagent and lwm2m-node-lib to send the response (#104)

@@ -68,7 +68,7 @@ describe('Client update registration interface', function() {
         var updateRequest = {
             host: 'localhost',
             port: config.server.port,
-            method: 'PUT',
+            method: 'POST',
             query: 'lt=86400&b=U'
         };
 
