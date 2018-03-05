@@ -30,7 +30,7 @@ Features provided by the client library:
 
 The following table shows what operations are implemented and what operations pending from the defined interfaces:
 
-| Interfaces                				| Operatio	   | Server status   |  Client status  |
+| Interfaces                				| Operation	   | Server status   |  Client status  |
 | ----------------------------------------------------- | ---------------- | --------------- | --------------- |
 | Bootstrap Interface       				| Any              | Not implemented | Not implemented |
 | Client Registration Interface 			| Register         | Implemented     | Implemented     |
@@ -155,7 +155,7 @@ The command line client can also be used to execute scripts. Each line of the sc
 * Currently, all the commands are executed asynchronously, so actions like connection and discconnection may rise errors if executed in the same script (as the disconnection could be exectued before the connection is completed).
 
 The following is an example of script:
-````
+```
 create /75001/2
 create /75002/2
 set /75001/2 0 440.81
