@@ -330,6 +330,32 @@ The configuration object should contain the following fields:
 * `server.defaultType`: type that will be assigned to a device registering in the server if there is no other.
 * `server.logLevel`: log level for the internal logger (could have any of the following values: DEBUG, INFO, ERROR, FATAL).
 * `server.types`: in the case of multiple URLs, mapping between URL and type (see bellow [Configuring multiple southbound interfaces](#multipleinterfaces).
+* `server.deviceRegistry.type`: type of Device Registry to create.
+    Currently, two values are supported: `memory` and `mongodb`. Mongodb
+    databases must be configured in the `mongob` section (as described below). 
+    E.g.:
+    ```
+    {
+      type: 'mongodb'
+    }
+    ```
+* `server.mongodb`: configures the MongoDB driver for those repositories with
+    'mongodb' type. If the `host` parameter is a list of comma-separated IPs,
+    they will be considered to be part of a Replica Set. In that case,
+    the optional property `replicaSet` should contain the Replica Set name.
+    The MongoBD driver will retry the connection at startup time `retries`
+    times, waiting `retryTime` seconds between attempts, if those attributes
+     are present (default values are 5 and 5 respectively). E.g.:
+    ```
+    {
+      host: 'localhost',
+      port: '27017',
+      db: 'iotagent',
+      retries: 5,
+      retryTime: 5
+
+    }
+    ```
 * `client.port`: port where the client's COAP server will start listening.
 * `client.lifetime`: lifetime in miliseconds of the client registration. After that lifetime, the registration will be dismissed.
 * `client.version`: version of the Lightweight M2M protocol. Currently `1.0` is the only valid option.
@@ -343,6 +369,21 @@ The southbound interfaces can be configured in the `server.types` configuration 
 * `url`: url prefix used to identify the devices (take into account that the registration URL will be the concatenation of this value with the `/rd` standard registration path).
 
 Devices that arrive to the global `/rd` registration path will be assigned the default type instead (configured in `server.defaultType` configuration attribute).
+
+### Configuration with environment variables
+Some of the more common variables can be configured using environment variables.
+
+| Environment variable      | Configuration attribute             |
+|:------------------------- |:----------------------------------- |
+| LWM2M_PORT                | port                                |
+| LWM2M_PROTOCOL            | serverProtocol                      |
+| LWM2M_REGISTRY_TYPE       | deviceRegistry.type                 |
+| LWM2M_LOG_LEVEL           | mqtt.password                       |
+| LWM2M_MONGO_HOST          | mongodb.host                        |
+| LWM2M_MONGO_PORT          | mongodb.port                        |
+| LWM2M_MONGO_DB            | mongodb.db                          |
+| LWM2M_MONGO_REPLICASET    | mongodb.replicaSet                  |
+
 
 ## <a name="development"/> Development documentation
 ### Contributions
