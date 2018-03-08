@@ -11,7 +11,9 @@ config.server = {
     ipProtocol: 'udp4',
     serverProtocol: 'udp4',
     deviceRegistry: {
-        type: 'mongodb',
+        type: 'mongodb'
+    },
+    mongodb:{
         host: 'localhost',
         port: '27017',
         db: 'lwtm2m'

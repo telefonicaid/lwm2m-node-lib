@@ -46,7 +46,9 @@ describe('MongoDB Device registry', function() {
 
     beforeEach(function (done) {
         config.server.deviceRegistry = {
-            type: 'mongodb',
+            type: 'mongodb'
+        };
+        config.server.mongodb = {
             host: 'localhost',
             port: '27017',
             db: 'lwtm2m'
@@ -69,6 +71,7 @@ describe('MongoDB Device registry', function() {
 
     afterEach(function(done) {
         delete config.server.deviceRegistry;
+        delete config.server.mongodb;
 
         iotAgentDb.collection('devices').remove(function(error) {
             iotAgentDb.close(function(error) {
