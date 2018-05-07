@@ -16,7 +16,7 @@
   },
   "main": "lib/lwm2m-node-lib",
   "engines": {
-    "node": ">=0.10.8"
+    "node": ">=4.8.4"      
   },
   "scripts": {
     "test": "grunt"
@@ -30,8 +30,8 @@
     "coap": "0.21.0",
     "coap-cli": "0.4.0",
     "command-node": "0.1.1",
-    "mongodb": "2.1.7",
-    "mongoose": "4.4.3",
+    "mongodb": "2.2.35",
+    "mongoose": "4.13.12",
     "mongoose-auto-increment": "5.0.1",
     "logops": "0.5.0",
     "underscore": "1.7.0"
