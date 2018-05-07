@@ -16,7 +16,7 @@
   },
   "main": "lib/lwm2m-node-lib",
   "engines": {
-    "node": ">=4.8.4"      
+    "node": ">=4.8.4"
   },
   "scripts": {
     "test": "grunt"
