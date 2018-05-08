@@ -1,3 +1,4 @@
+- Update NodeJS engine to 4.8.4
 - Update MongoDB and Mongoose version to 2.2.35 and 4.13.12 respectively
 - Most of the errors don't have an associated code (#91).
 - Update COAP librery to version 0.17.0
