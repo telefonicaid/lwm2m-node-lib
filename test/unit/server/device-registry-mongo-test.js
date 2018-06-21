@@ -88,6 +88,11 @@ describe('MongoDB Device registry', function() {
                     should.exist(docs);
                     should.exist(docs.length);
                     docs.length.should.equal(1);
+                    should.exist(docs[0]);
+                    should.exist(docs[0].path);
+                    should.exist(docs[0].lifetime);
+                    should.exist(docs[0].type);
+                    should.exist(docs[0].id);
                     done();
                 });
             });
@@ -99,6 +104,7 @@ describe('MongoDB Device registry', function() {
                     should.exist(docs[0].path);
                     should.exist(docs[0].lifetime);
                     should.exist(docs[0].type);
+                    should.exist(docs[0].id);
                     docs[0].path.should.equal('/rd');
                     docs[0].lifetime.should.equal('86400');
                     docs[0].type.should.equal('Device');
