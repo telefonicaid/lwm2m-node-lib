@@ -5,4 +5,5 @@
 - Fix: Avoid faster libcoap response: libcoap is not waiting long enough for lightweight-iotagent and lwm2m-node-lib to send the response (#104)
 - Fix: cannot handle update registration from a Wakaama client (#106)
 - Update COAP librery to version 0.21.0
+- Using precise dependencies (~=) in packages.json
 - Update MongoDB to 2.2.35
