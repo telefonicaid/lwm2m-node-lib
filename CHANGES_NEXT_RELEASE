@@ -7,3 +7,24 @@
 - Update COAP librery to version 0.21.0
 - Using precise dependencies (~=) in packages.json
 - Update MongoDB to 2.2.35
+- Fix: updating dependencies due to known vulnerabilities in the previous ones
+	async: 1.5.2 -> 2.6.1
+    underscore: 1.7.0 -> 1.9.1
+    logops: 0.5.0 -> 1.0.0
+    coap: 0.5.0 -> 1.0.0
+    coap-cli: 0.5.0 -> 1.0.0
+    mongodb: 2.2.35 -> 3.1.8
+    mongoose: 4.4.3 -> 5.3.9
+- Remove: unmaintained dependency with mongoose-auto-increment
+- Add: use of mongoose-plugin-autoinc
+- Fix: updating development dependencies due to known vulnerabilities in the previous ones
+	mocha: 2.4.5 -> 5.2.0
+    should: 8.2.2 -> 13.2.3
+    istanbul: ~0.1.34 -> ~0.4.5
+    proxyquire: 0.5.1 -> 2.1.0
+- Remove: old unused development dependencies
+	sinon-chai
+	sinon
+	chai
+	grunt and grunt related modules
+- Add: npm scripts to execute tests, coverage, watch and clean
