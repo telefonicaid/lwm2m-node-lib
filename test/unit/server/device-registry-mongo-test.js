@@ -84,7 +84,6 @@ describe('MongoDB Device registry', function() {
         it('should insert a new device in the "devices" collection', function(done) {
             utils.registerClient('ROOM001', function (error) {
                 iotAgentDb.db().collection('devices').find({}).toArray(function(err, docs) {
-                    console.log(JSON.stringify(docs));
                     should.not.exist(err);
                     should.exist(docs);
                     should.exist(docs.length);
@@ -101,7 +100,6 @@ describe('MongoDB Device registry', function() {
         it('should store the device with all its attributes', function(done) {
             utils.registerClient('ROOM001', function (error) {
                 iotAgentDb.db().collection('devices').find({}).toArray(function(err, docs) {
-                    console.log(JSON.stringify(docs));
                     should.exist(docs[0]);
                     should.exist(docs[0].path);
                     should.exist(docs[0].lifetime);
