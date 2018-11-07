@@ -22,7 +22,7 @@
     "clean": "rm -rf package-lock.json && rm -rf node_modules && rm -rf coverage",
     "test": "mocha --recursive 'test/**/*.js' --reporter spec --timeout 3000 --ui bdd --exit",
     "test:watch": "npm run test -- -w ./lib",
-    "lint": "jshint lib/**/*.js test/**/*.js --config .jshintrc",
+    "lint": "jshint lib/ --config .jshintrc && jshint test/ --config test/.jshintrc",
     "test:coverage": "istanbul cover _mocha -- --recursive 'test/**/*.js' --reporter spec --exit",
     "watch": "watch 'npm test && npm run lint' ./lib ./test"
   },
