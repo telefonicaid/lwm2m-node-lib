@@ -8,7 +8,7 @@ not maintained or evolved any longer. In particular:
     as soon as they are spotted).
 -   Documentation on deprecated features is removed from the repository documentation.
     Documentation is still available in the documentation set associated to older versions
-    (either in the repository release branches or the pre-0.23.0 documentation in the FIWARE wiki).
+    (in the repository release branches).
 -   Deprecated functionality is eventually removed from lwm2m-node-lib. Thus you
     are strongly encouraged to change your implementations using lwm2m-node-lib
     in order not rely on deprecated functionality.
