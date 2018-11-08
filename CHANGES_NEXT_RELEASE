@@ -10,11 +10,11 @@
 - Fix: updating dependencies due to known vulnerabilities in the previous ones
 	async: 1.5.2 -> 2.6.1
     underscore: 1.7.0 -> 1.9.1
-    logops: 0.5.0 -> 1.0.0
+    logops: 0.5.0 -> 2.1.0
     coap: 0.5.0 -> 1.0.0
     coap-cli: 0.5.0 -> 1.0.0
-    mongodb: 2.2.35 -> 3.1.8
-    mongoose: 4.4.3 -> 5.3.9
+    mongodb: 2.2.35 -> 3.1.0
+    mongoose: 4.4.3 -> 5.3.10
 - Replace mongoose-auto-increment dependency (unmantained) with mongoose-plugin-autoinc
 - Fix: updating development dependencies due to known vulnerabilities in the previous ones
 	mocha: 2.4.5 -> 5.2.0

@@ -35,9 +35,9 @@
     "coap": "0.22.0",
     "coap-cli": "0.5.1",
     "command-node": "0.1.1",
-    "logops": "1.0.0",
-    "mongodb": "3.1.8",
-    "mongoose": "5.3.9",
+    "logops": "2.1.0",
+    "mongodb": "3.1.9",
+    "mongoose": "5.3.10",
     "mongoose-plugin-autoinc": "1.1.9",
     "underscore": "1.9.1"
   },
