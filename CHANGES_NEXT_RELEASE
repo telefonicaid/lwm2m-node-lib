@@ -28,3 +28,4 @@
 	grunt and grunt related modules
     closure-linter-wrapper)
 - Add: npm scripts to execute tests, coverage, watch and clean
+- Remove: support to Node.js v4
