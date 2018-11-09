@@ -15,5 +15,5 @@ services:
 install:
  - npm install
 
- before_script:
-  - npm run lint
+before_script:
+ - npm run lint
