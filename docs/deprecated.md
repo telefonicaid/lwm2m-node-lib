@@ -34,3 +34,4 @@ The following table provides information about the last lwm2m-node-lib version s
 | **Removed feature**                                                        | **Last lwm2m-node-lib version supporting feature** | **That version release date**   |
 |----------------------------------------------------------------------------|-------------------------------------------|---------------------------------|
 | Support to Node.js v4                                                      | 1.0.0                                     | July 12th, 2018                  |
+| Support to Node.js v6                    | Not yet defined                 | Not yet defined               
