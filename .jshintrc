@@ -25,7 +25,6 @@
         "after": true,
         "beforeEach": true,
         "afterEach": true,
-        "mock": true,
-        "sinon": true
+        "mock": true
     }
 }

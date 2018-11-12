@@ -73,7 +73,7 @@ describe('MongoDB Device registry', function() {
         delete config.server.deviceRegistry;
         delete config.server.mongodb;
 
-        iotAgentDb.collection('devices').remove(function(error) {
+        iotAgentDb.db().collection('devices').remove(function(error) {
             iotAgentDb.close(function(error) {
                 libLwm2m2.stop(testInfo.serverInfo, done);
             });
@@ -83,7 +83,7 @@ describe('MongoDB Device registry', function() {
     describe('When a registration request arrives to the server', function() {
         it('should insert a new device in the "devices" collection', function(done) {
             utils.registerClient('ROOM001', function (error) {
-                iotAgentDb.collection('devices').find({}).toArray(function(err, docs) {
+                iotAgentDb.db().collection('devices').find({}).toArray(function(err, docs) {
                     should.not.exist(err);
                     should.exist(docs);
                     should.exist(docs.length);
@@ -99,7 +99,7 @@ describe('MongoDB Device registry', function() {
         });
         it('should store the device with all its attributes', function(done) {
             utils.registerClient('ROOM001', function (error) {
-                iotAgentDb.collection('devices').find({}).toArray(function(err, docs) {
+                iotAgentDb.db().collection('devices').find({}).toArray(function(err, docs) {
                     should.exist(docs[0]);
                     should.exist(docs[0].path);
                     should.exist(docs[0].lifetime);
