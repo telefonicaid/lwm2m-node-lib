@@ -9,6 +9,7 @@
 * [Usage](#libraryusage)
 * [Configuration](#configuration)
 * [Development Documentation](#development)
+* [Deprecated features](#deprecated)
  
 ## <a name="overview"/> Overview
 The [Open Mobile Alliance Lightweight M2M protocol](http://openmobilealliance.org/about-oma/work-program/m2m-enablers/) is a machine to machine communication protocol built over [COAP](https://tools.ietf.org/html/draft-ietf-core-coap), and meant to
@@ -459,3 +460,7 @@ Removes `node_modules` and `coverage` folders, and  `package-lock.json` file so 
 # Use git-bash on Windows
 npm run clean
 ```
+
+## <a name="deprecated"/> Deprecated features
+
+Please check [doc/manuals/deprecated.md].
