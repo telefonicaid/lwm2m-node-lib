@@ -463,4 +463,4 @@ npm run clean
 
 ## <a name="deprecated"/> Deprecated features
 
-Please check [doc/manuals/deprecated.md].
+Please check [deprecated features](docs/deprecated.md).
