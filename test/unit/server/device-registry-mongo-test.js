@@ -61,7 +61,7 @@ describe('MongoDB Device registry', function() {
                 registerHandlers
             ], function (error, results) {
                 deviceLocation = results[2];
-                mongo.connect('mongodb://localhost:27017/lwtm2m', function(err, db) {
+                mongo.connect('mongodb://localhost:27017/lwtm2m', { useNewUrlParser: true }, function(err, db) {
                     iotAgentDb = db;
                     done();
                 });
@@ -73,7 +73,7 @@ describe('MongoDB Device registry', function() {
         delete config.server.deviceRegistry;
         delete config.server.mongodb;
 
-        iotAgentDb.db().collection('devices').remove(function(error) {
+        iotAgentDb.db().collection('devices').deleteOne(function(error) {
             iotAgentDb.close(function(error) {
                 libLwm2m2.stop(testInfo.serverInfo, done);
             });
