@@ -1,0 +1,1 @@
+- Set Nodejs 8 as minimum version in packages.json (effectively removing Nodev6 from supported versions)
