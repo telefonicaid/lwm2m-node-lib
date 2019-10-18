@@ -134,6 +134,7 @@ config
 
 	Print the current config.
 ```
+
 ### Client Command Line Application
 #### Description
 This application simulates the use of a Lightweight M2M Client (typically a device or device hub). It provides the following features:
