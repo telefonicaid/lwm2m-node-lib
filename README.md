@@ -358,6 +358,12 @@ The configuration object should contain the following fields:
 
     }
     ```
+* `server.writeFormat`: configures the Content-Format header value for the write server initiated requests. 
+This header can be useful when the client connected requires an specific content-format value to decode properly the body
+request.
+* `server.defaultAcceptFormat`: configures the Accept header value for the read and observer server initiated requests. 
+This header can be useful when the server needs to specify an specific content-format to properly interoperate with 
+the connected clients.
 * `client.port`: port where the client's COAP server will start listening.
 * `client.lifetime`: lifetime in miliseconds of the client registration. After that lifetime, the registration will be dismissed.
 * `client.version`: version of the Lightweight M2M protocol. Currently `1.0` is the only valid option.
@@ -375,16 +381,18 @@ Devices that arrive to the global `/rd` registration path will be assigned the d
 ### Configuration with environment variables
 Some of the more common variables can be configured using environment variables.
 
-| Environment variable      | Configuration attribute             |
-|:------------------------- |:----------------------------------- |
-| LWM2M_PORT                | port                                |
-| LWM2M_PROTOCOL            | serverProtocol                      |
-| LWM2M_REGISTRY_TYPE       | deviceRegistry.type                 |
-| LWM2M_LOG_LEVEL           | mqtt.password                       |
-| LWM2M_MONGO_HOST          | mongodb.host                        |
-| LWM2M_MONGO_PORT          | mongodb.port                        |
-| LWM2M_MONGO_DB            | mongodb.db                          |
-| LWM2M_MONGO_REPLICASET    | mongodb.replicaSet                  |
+| Environment variable        | Configuration attribute             |
+|:-------------------------   |:----------------------------------- |
+| LWM2M_PORT                  | port                                |
+| LWM2M_PROTOCOL              | serverProtocol                      |
+| LWM2M_REGISTRY_TYPE         | deviceRegistry.type                 |
+| LWM2M_LOG_LEVEL             | mqtt.password                       |
+| LWM2M_WRITE_FORMAT          | writeFormat                         |
+| LWM2M_DEFAULT_ACCEPT_FORMAT | defaultAcceptFormat                 |
+| LWM2M_MONGO_HOST            | mongodb.host                        |
+| LWM2M_MONGO_PORT            | mongodb.port                        |
+| LWM2M_MONGO_DB              | mongodb.db                          |
+| LWM2M_MONGO_REPLICASET      | mongodb.replicaSet                  |
 
 
 ## <a name="development"/> Development documentation
