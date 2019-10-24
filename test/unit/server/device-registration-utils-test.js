@@ -113,5 +113,61 @@ describe('Device registration utils ', function () {
 
     });
 
+    describe('When device registers with type /rd/rd', function () {
+
+        var urlObj = {
+            pathname: '/rd/rd',
+            query: 'ep=testEndpoint&lt=85671&lwm2m=1.0&b=U'
+        };
+
+        it('should return default type', function () {
+            var config = {
+                defaultType: 'defaultType',
+                types: [
+                    {
+                        url: '/service',
+                        name: 'service'
+                    },
+                    {
+                        url: '/rd',
+                        name: 'rd'
+                    }
+                ]
+            };
+            var actual = registrationUtils.getDeviceTypeFromUrlRequest(urlObj, config);
+
+            assert.equal(actual, 'defaultType');
+        });
+
+    });
+
+    describe('When device registers with type /lightConfig/rd', function () {
+
+        var urlObj = {
+            pathname: '/lightConfig/rd',
+            query: 'ep=testEndpoint&lt=85671&lwm2m=1.0&b=U'
+        };
+
+        it('should return LightConfig type', function () {
+            var config = {
+                defaultType: 'defaultType',
+                types: [
+                    {
+                        url: '/light',
+                        name: 'Light'
+                    },
+                    {
+                        url: '/lightConfig',
+                        name: 'LightConfig'
+                    }
+                ]
+            };
+            var actual = registrationUtils.getDeviceTypeFromUrlRequest(urlObj, config);
+
+            assert.equal(actual, 'LightConfig');
+        });
+
+    });
+
 
 });
