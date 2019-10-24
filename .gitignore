@@ -12,5 +12,6 @@
 .project
 .metadata
 npm-debug.log
+package-lock.json
 
 *~
