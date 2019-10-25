@@ -1,5 +1,5 @@
 - Set Nodejs 8 as minimum version in packages.json (effectively removing Nodev6 from supported versions)
-- defaultAcceptFormat variable added to config.js. This variable allows the user to control the Accept header value
+- defaultAcceptFormat variable added to config.js (equivalent to LWM2M_DEFAULT_ACCEPT_FORMAT env var). This variable allows the user to control the Accept header value
 for read and observe server sent requests. This header can be useful when the server needs to specify an specific
 content-format to properly interoperate with the connected clients.
 - Device type can now be taken from the uri query parameter type. e.g. with this url /rd?ep=endpoint&lt=300&b=U&type=Type
