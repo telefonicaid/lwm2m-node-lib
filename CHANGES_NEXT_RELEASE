@@ -1,1 +1,5 @@
 - Set Nodejs 8 as minimum version in packages.json (effectively removing Nodev6 from supported versions)
+- defaultAcceptFormat variable added to config.js (equivalent to LWM2M_DEFAULT_ACCEPT_FORMAT env var). This variable allows the user to control the Accept header value
+for read and observe server sent requests. This header can be useful when the server needs to specify an specific
+content-format to properly interoperate with the connected clients.
+- LWM2M_WRITE_FORMAT env var as equivalence of config.writeFormat
