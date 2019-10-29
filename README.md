@@ -424,6 +424,9 @@ To run tests, type
 npm test
 ```
 
+MongoDB should be up and running in the same host where you run the command above. Otherwise some
+tests may fail.
+
 ### Coding guidelines
 jshint
 
