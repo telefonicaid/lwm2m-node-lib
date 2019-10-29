@@ -34,7 +34,8 @@ config.server = {
             value: 1544
         }
     ],
-    writeFormat: 'application-vnd-oma-lwm2m/text'
+    writeFormat: 'application-vnd-oma-lwm2m/text',
+    defaultAcceptFormat: 'text/plain'
 };
 
 // Configuration of the LWTM2M Client
