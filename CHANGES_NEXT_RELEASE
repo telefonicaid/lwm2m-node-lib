@@ -6,3 +6,4 @@
 for read and observe server sent requests. This header can be useful when the server needs to specify an specific
 content-format to properly interoperate with the connected clients.
 - LWM2M_WRITE_FORMAT env var as equivalence of config.writeFormat
+- Upgrade mongoose dependency from 5.3.10 to 5.7.7 due to security
