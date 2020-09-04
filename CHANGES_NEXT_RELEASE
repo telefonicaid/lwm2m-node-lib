@@ -1,0 +1,1 @@
+- Upgrade mongodb dependecy from 3.1.9 to 3.6.1 due to security risk
