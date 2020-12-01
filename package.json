@@ -31,8 +31,8 @@
     "iotagent-lwm2m-server": "bin/iotagent-lwm2m-server.js"
   },
   "dependencies": {
-    "async": "2.6.1",
-    "coap": "0.22.0",
+    "async": "1.5.2",
+    "coap": "0.17.0",
     "coap-cli": "0.5.1",
     "command-node": "0.1.1",
     "logops": "2.1.0",
