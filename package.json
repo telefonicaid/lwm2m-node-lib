@@ -33,13 +33,13 @@
   "dependencies": {
     "async": "1.5.2",
     "coap": "0.17.0",
-    "coap-cli": "0.5.1",
+    "coap-cli": "0.4.0",
     "command-node": "0.1.1",
     "logops": "2.1.0",
     "mongodb": "2.1.7",
     "mongoose": "4.4.3",
-    "mongoose-plugin-autoinc": "1.1.9",
-    "underscore": "1.9.1"
+    "mongoose-auto-increment": "5.0.1",
+    "underscore": "1.7.0"
   },
   "devDependencies": {
     "istanbul": "~0.4.5",
