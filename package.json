@@ -38,7 +38,7 @@
     "logops": "0.5.0",
     "mongodb": "2.1.7",
     "mongoose": "4.4.3",
-    "mongoose-auto-increment": "5.0.1",
+    "mongoose-plugin-autoinc": "1.1.9",
     "underscore": "1.7.0"
   },
   "devDependencies": {
