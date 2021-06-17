@@ -39,7 +39,7 @@
     "mongodb": "3.6.1",
     "mongoose": "5.7.7",
     "mongoose-plugin-autoinc": "1.1.9",
-    "underscore": "1.9.1"
+    "underscore": "1.12.1"
   },
   "devDependencies": {
     "istanbul": "~0.4.5",
