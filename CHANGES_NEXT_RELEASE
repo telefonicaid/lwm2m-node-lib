@@ -1,4 +1,0 @@
-- Upgrade logops dep from 2.1.0 to 2.1.2 due to colors dependency corruption
-- Upgrade underscore dependecy from 1.9.1 to 1.12.1 due to security risk
-- Upgrade mongodb dependecy from 3.1.9 to 3.6.1 due to security risk
-
