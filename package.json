@@ -16,7 +16,7 @@
   },
   "main": "lib/lwm2m-node-lib",
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "scripts": {
     "clean": "rm -rf package-lock.json && rm -rf node_modules && rm -rf coverage",
