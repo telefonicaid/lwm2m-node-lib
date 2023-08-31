@@ -1,1 +1,2 @@
+- Upgrade mongodb dep from 3.6.1 to 3.6.10
 - Set Nodejs 12 as minimum version in packages.json (effectively removing Nodev8 and Nodev10 from supported versions)
